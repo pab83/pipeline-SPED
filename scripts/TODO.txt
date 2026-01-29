@@ -1,0 +1,3 @@
+Revisar phase_1 scripts
+
+Revisar phase_2.dedup y continuar

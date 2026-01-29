@@ -1,0 +1,40 @@
+Metric,Value
+Total files,57730
+Total PDFs,355
+PDFs needing OCR,307
+
+File type distribution,Count
+.pdf,355
+.rar,12
+.bmp,6
+.jpg,56872
+.mdb,1
+.doc,6
+.dwg,3
+.zip,76
+.xls,69
+.xlsx,129
+.mpp,1
+.xlk,2
+.ppt,1
+.msg,3
+.log,10
+.rtf,27
+.xml,22
+.gif,22
+.htm,88
+.css,22
+.png,1
+.bak,2
+
+Files per depth,Count
+2,13
+3,178
+4,2281
+5,4015
+6,8033
+7,16289
+8,26921
+
+Large files (over 100MB)
+Path,Size (bytes)

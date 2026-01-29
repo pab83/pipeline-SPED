@@ -1,0 +1,16 @@
+=== Phase 0: Audit files ===
+=== Running scan_files.py ===
+Top-level directories detected: 1
+
+Files processed: 57,730
+Total time: 12.06 seconds
+Average speed: 4786 files/s
+CSV saved to: T:\PROYECTO RPR\Pipeline_v0\resources\csv\file_audit.csv
+scan_files.py completed successfully.
+=== Running mark_pdf_ocr.py ===
+OCR flags updated in T:\PROYECTO RPR\Pipeline_v0\resources\csv\file_audit_ocr.csv
+mark_pdf_ocr.py completed successfully.
+=== Running generate_audit_report.py ===
+Audit summary generated: T:\PROYECTO RPR\Pipeline_v0\resources\reports\audit_summary.csv
+generate_audit_report.py completed successfully.
+=== Phase 0 completed ===
