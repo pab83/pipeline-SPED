@@ -34,9 +34,10 @@ CREATE TABLE IF NOT EXISTS files (
     creation_year INT,
     modification_year INT,
     depth INT,
-    pdf_flag BOOLEAN,
+    is_pdf BOOLEAN,
     ocr_needed BOOLEAN,
     text_extracted BOOLEAN DEFAULT FALSE,
+    hash_pending BOOLEAN,
     xxhash TEXT,
     sha256 TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -52,18 +53,19 @@ with open(CSV_OCR_FILE, newline="", encoding="utf-8") as f:
         cur.execute("""
             INSERT INTO files (full_path, file_name, file_type, size_bytes,
                                creation_year, modification_year, depth,
-                               pdf_flag, ocr_needed)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                               is_pdf, ocr_needed,hash_pending)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (full_path) DO UPDATE
-            SET pdf_flag = EXCLUDED.pdf_flag,
+            SET is_pdf = EXCLUDED.is_pdf,
                 ocr_needed = EXCLUDED.ocr_needed,
                 updated_at = NOW();
         """, (
             row["full_path"], row["file_name"], row["file_type"],
             int(row["size_bytes"]), int(row["creation_year"]),
             int(row["modification_year"]), int(row["depth"]),
-            row["pdf_flag"].lower() == "true",
-            row["ocr_needed"] == "True"
+            row["is_pdf"].lower() == "true",
+            row["ocr_needed"] == "True",
+            row["hash_pending"] == "True"
         ))
 
 conn.commit()

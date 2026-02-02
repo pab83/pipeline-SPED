@@ -36,7 +36,7 @@ with open(CSV_OCR_FILE, newline="", encoding="utf-8") as f:
         file_types[row["file_type"]] += 1
         depth_counts[int(row["depth"])] += 1
 
-        if row["pdf_flag"].lower() == "true":
+        if row["is_pdf"].lower() == "true":
             pdf_files += 1
             if str(row["ocr_needed"]).lower() == "true":
                 ocr_needed_count += 1

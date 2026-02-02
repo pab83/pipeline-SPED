@@ -41,7 +41,7 @@ rows_out = []
 with open(CSV_FILE, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in tqdm(reader, desc="Marking PDFs (OCR)", unit="files"):
-        if row["pdf_flag"].lower() == "true":
+        if row["is_pdf"].lower() == "true":
             row["ocr_needed"] = pdf_needs_ocr(row["full_path"])
         else:
             row["ocr_needed"] = False

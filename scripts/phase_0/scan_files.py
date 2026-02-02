@@ -95,7 +95,7 @@ def audit():
         writer.writerow([
             "full_path", "file_name", "file_type", "size_bytes",
             "creation_year", "modification_year",
-            "depth", "pdf_flag"
+            "depth", "is_pdf"
         ])
 
         with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
