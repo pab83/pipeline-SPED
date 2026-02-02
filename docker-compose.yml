@@ -28,7 +28,7 @@ services:
     environment:
       # libpq envs (usable by psycopg2 if you switch to them)
       PGHOST: db
-      PGPORT: 5432
+      PGPORT: ${POSTGRES_PORT}
       PGDATABASE: ${POSTGRES_DB}
       PGUSER: ${POSTGRES_USER}
       PGPASSWORD: ${POSTGRES_PASSWORD}
