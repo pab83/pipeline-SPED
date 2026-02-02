@@ -1,0 +1,7 @@
+PyPDF2
+tqdm
+psycopg2-binary
+xxhash
+
+
+

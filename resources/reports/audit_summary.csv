@@ -5,27 +5,27 @@ PDFs needing OCR,307
 
 File type distribution,Count
 .pdf,355
-.rar,12
 .bmp,6
+.rar,12
 .jpg,56872
-.mdb,1
-.doc,6
-.dwg,3
-.zip,76
-.xls,69
 .xlsx,129
-.mpp,1
-.xlk,2
-.ppt,1
+.mdb,1
 .msg,3
-.log,10
-.rtf,27
-.xml,22
-.gif,22
+.mpp,1
+.xls,69
+.zip,76
 .htm,88
 .css,22
+.gif,22
+.xml,22
+.log,10
+.rtf,27
 .png,1
 .bak,2
+.dwg,3
+.doc,6
+.xlk,2
+.ppt,1
 
 Files per depth,Count
 2,13

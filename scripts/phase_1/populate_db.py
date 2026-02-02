@@ -1,3 +1,4 @@
+import os
 import psycopg2
 from scripts.config import CSV_OCR_FILE, LOG_FILE
 
@@ -6,7 +7,20 @@ def log(msg):
         f.write(msg + "\n")
     print(msg)
 
-conn = psycopg2.connect(dbname="auditdb", user="user", password="pass")
+# Permite configurar la conexión vía variables de entorno (funciona bien con Docker Compose)
+DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
+DB_USER = os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user"))
+DB_PASSWORD = os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass"))
+DB_HOST = os.getenv("PGHOST", "localhost")
+DB_PORT = int(os.getenv("PGPORT", "5432"))
+
+conn = psycopg2.connect(
+    dbname=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST,
+    port=DB_PORT,
+)
 cur = conn.cursor()
 
 # Create table if not exists

@@ -1,7 +1,10 @@
 from scripts.config.general import *
+import os
 
 # Directory to scan
-BASE_PATH = os.path.join("Z:\\2012")
+# - En Windows (sin Docker) usará por defecto Z:\2012
+# - En Docker usará la variable de entorno BASE_PATH (por defecto /data)
+BASE_PATH = os.getenv("BASE_PATH")#, os.path.join("Z:\\\\2012"))
 
 # CSV outputs
 CSV_FILE = os.path.join(CSV_DIR, "file_audit.csv")

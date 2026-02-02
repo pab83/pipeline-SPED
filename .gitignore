@@ -1,0 +1,35 @@
+# Entorno Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Archivos de logs y temporales
+*.log
+resources/logs/
+resources/tmp/
+
+# Salidas generadas por la pipeline
+resources/csv/
+resources/reports/
+
+# Ficheros de entorno / secretos
+.env
+
+# Archivos de editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+*.pid
+*.tar
+
+# Varios
+db_diagrams/
+db_diagrams.svg
