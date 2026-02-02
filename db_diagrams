@@ -1,0 +1,104 @@
+┌───────────────────────────────┐
+│ Phase 0 – Audit               │
+│ (OLTP: files metadata)        │
+├───────────────────────────────┤
+│ files                         │
+│ ├─ id (PK)                    │
+│ ├─ full_path                  │
+│ ├─ file_name                  │
+│ ├─ extension                  │
+│ ├─ size_bytes                 │
+│ ├─ creation_year              │
+│ ├─ modification_year          │
+│ ├─ depth                      │
+│ ├─ is_pdf                     │
+│ ├─ ocr_needed                 │
+│ ├─ hash_pending               │
+│ ├─ sha256                     │
+│ ├─ xxhash64                   │
+│ ├─ first_seen                 │
+│ └─ last_seen                  │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 1 – Hashing & Dedup     │
+│ (OLTP)                        │
+├───────────────────────────────┤
+│ Update files → sha256, xxhash │
+│ Deduplicate using hashes      │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 2 – Classification      │
+│ (OLTP)                        │
+├───────────────────────────────┤
+│ file_classification           │
+│ ├─ id (PK)                    │
+│ ├─ file_id (FK → files.id)    │
+│ ├─ category                   │
+│ ├─ confidence                 │
+│ └─ classified_at              │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 3 – Normalization       │
+│ (OLTP)                        │
+├───────────────────────────────┤
+│ file_normalization            │
+│ ├─ id (PK)                    │
+│ ├─ file_id (FK → files.id)    │
+│ ├─ normalized_path            │
+│ ├─ normalized_name            │
+│ └─ rules_applied              │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 4 – Semantic Extraction │
+│ (OLTP)                        │
+├───────────────────────────────┤
+│ file_content                  │
+│ ├─ id (PK)                    │
+│ ├─ file_id (FK → files.id)    │
+│ ├─ text_content               │
+│ ├─ keywords ARRAY             │
+│ ├─ entities JSONB             │
+│ └─ summary                    │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 5 – Analytic Modeling   │
+│ (OLAP)                        │
+├───────────────────────────────┤
+│ analytics_files               │
+│ ├─ id (PK)                    │
+│ ├─ full_path                  │
+│ ├─ extension                  │
+│ ├─ size_bytes                 │
+│ ├─ is_pdf                     │
+│ ├─ ocr_needed                 │
+│ ├─ sha256                     │
+│ ├─ xxhash64                   │
+│ ├─ category                   │
+│ ├─ confidence                 │
+│ ├─ normalized_path            │
+│ ├─ normalized_name            │
+│ ├─ keywords ARRAY             │
+│ ├─ entities JSONB             │
+│ └─ summary                    │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 6 – BI / Visualization  │
+│ (Superset / Dashboards)       │
+├───────────────────────────────┤
+│ Reads analytics_files         │
+│ KPI: OCR pending, duplicates │
+│ KPI: file type distributions  │
+│ KPI: content stats, etc.      │
+└───────────────────────────────┘
