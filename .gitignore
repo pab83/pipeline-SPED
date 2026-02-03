@@ -33,3 +33,4 @@ resources/reports/
 # Varios
 db_diagrams/
 db_diagrams.svg
+mount_share.sh

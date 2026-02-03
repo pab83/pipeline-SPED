@@ -40,6 +40,8 @@ services:
       - ./resources:/app/resources
       # Share de TrueNAS montada como /data dentro del contenedor
       - /mnt/share:/data:ro
+      #Para desarrollo con actualiaciones rapidas
+      - .:/app
     networks:
       - rpr-net
 
