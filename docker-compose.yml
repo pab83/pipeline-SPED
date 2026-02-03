@@ -39,7 +39,7 @@ services:
       # Persist logs/reports/csv outside the container
       - ./resources:/app/resources
       # Share de TrueNAS montada como /data dentro del contenedor
-      - /mnt/rpr_share:/data:ro
+      - /mnt/share:/data:ro
     networks:
       - rpr-net
 

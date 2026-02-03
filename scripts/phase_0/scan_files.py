@@ -54,7 +54,7 @@ def process_file(entry):
     try:
         stat = entry.stat()
         ext = os.path.splitext(entry.name)[1].lower()
-        full_path = entry.path
+        full_path = normalize_path(entry.path)
 
         return [
             full_path,
@@ -68,6 +68,33 @@ def process_file(entry):
         ]
     except Exception:
         return [entry.path, None, None, None, None, None, None, None]
+
+def normalize_path(path: str, base_path: str = None) -> str:
+    """
+    Normaliza una ruta de archivo:
+    - Quita espacios al inicio y al final
+    - Convierte separadores a '/' (cross-platform)
+    - Opcional: relativiza respecto a base_path
+    - Expande ~ y variables de entorno
+    """
+    if not path:
+        return ""
+
+    # Quita espacios, saltos de línea, tabulaciones
+    path = path.strip()
+
+    # Expande home y variables de entorno
+    path = os.path.expanduser(os.path.expandvars(path))
+
+    # Convierte separadores a '/'
+    path = os.path.normpath(path)
+
+    # Asegura que es absoluta si se pasa base_path
+    if base_path and not os.path.isabs(path):
+        path = os.path.join(base_path, path)
+        path = os.path.normpath(path)
+
+    return path
 
 def chunks(iterable, size):
     """Yield successive chunks from iterable"""

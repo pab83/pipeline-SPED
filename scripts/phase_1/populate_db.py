@@ -1,11 +1,14 @@
 import os
 import psycopg2
-from scripts.config import CSV_OCR_FILE, LOG_FILE
+from scripts.config.phase_0 import CSV_OCR_FILE
+from scripts.config.general import LOG_FILE
+
 
 def log(msg):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
+
 
 # Permite configurar la conexión vía variables de entorno (funciona bien con Docker Compose)
 DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
@@ -23,50 +26,74 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-# Create table if not exists
-cur.execute("""
-CREATE TABLE IF NOT EXISTS files (
-    file_id SERIAL PRIMARY KEY,
-    full_path TEXT UNIQUE NOT NULL,
-    file_name TEXT,
-    file_type TEXT,
-    size_bytes BIGINT,
-    creation_year INT,
-    modification_year INT,
-    depth INT,
-    is_pdf BOOLEAN,
-    ocr_needed BOOLEAN,
-    text_extracted BOOLEAN DEFAULT FALSE,
-    hash_pending BOOLEAN,
-    xxhash TEXT,
-    sha256 TEXT,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-""")
+# Esquema base de files (alineado con lo que usan Phase 1 y Phase 2)
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS files (
+        id SERIAL PRIMARY KEY,
+        full_path TEXT UNIQUE NOT NULL,
+        file_name TEXT,
+        file_type TEXT,
+        size_bytes BIGINT,
+        creation_year INT,
+        modification_year INT,
+        depth INT,
+        is_pdf BOOLEAN,
+        ocr_needed BOOLEAN,
+        hash_pending BOOLEAN DEFAULT TRUE,
+        xxhash64 TEXT,
+        sha256 TEXT,
+        first_seen TIMESTAMP DEFAULT NOW(),
+        last_seen TIMESTAMP DEFAULT NOW()
+    );
+    """
+)
 conn.commit()
 
 import csv
+
+
 with open(CSV_OCR_FILE, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        cur.execute("""
-            INSERT INTO files (full_path, file_name, file_type, size_bytes,
-                               creation_year, modification_year, depth,
-                               is_pdf, ocr_needed,hash_pending)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        cur.execute(
+            """
+            INSERT INTO files (
+                full_path,
+                file_name,
+                file_type,
+                size_bytes,
+                creation_year,
+                modification_year,
+                depth,
+                is_pdf,
+                ocr_needed
+            )
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (full_path) DO UPDATE
-            SET is_pdf = EXCLUDED.is_pdf,
+            SET
+                file_name = EXCLUDED.file_name,
+                file_type = EXCLUDED.file_type,
+                size_bytes = EXCLUDED.size_bytes,
+                creation_year = EXCLUDED.creation_year,
+                modification_year = EXCLUDED.modification_year,
+                depth = EXCLUDED.depth,
+                is_pdf = EXCLUDED.is_pdf,
                 ocr_needed = EXCLUDED.ocr_needed,
-                updated_at = NOW();
-        """, (
-            row["full_path"], row["file_name"], row["file_type"],
-            int(row["size_bytes"]), int(row["creation_year"]),
-            int(row["modification_year"]), int(row["depth"]),
-            row["is_pdf"].lower() == "true",
-            row["ocr_needed"] == "True",
-            row["hash_pending"] == "True"
-        ))
+                last_seen = NOW();
+            """,
+            (
+                row["full_path"],
+                row["file_name"],
+                row["file_type"],
+                int(row["size_bytes"]),
+                int(row["creation_year"]),
+                int(row["modification_year"]),
+                int(row["depth"]),
+                row["is_pdf"].lower() == "true",
+                str(row["ocr_needed"]).lower() == "true",
+            ),
+        )
 
 conn.commit()
 cur.close()

@@ -17,7 +17,7 @@ def run_script(script_name):
 
 if __name__ == "__main__":
     log("=== Phase 2: Deduplication ===")
-    scripts = ["deduplicate.py"]
+    scripts = ["dedup.py"]
 
     for script in scripts:
         run_script(script)

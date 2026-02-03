@@ -1,7 +1,9 @@
 import os
 
 PHASES = [
-    "scripts.phase_0.run_phase_0"
+    "scripts.phase_0.run_phase_0",
+    "scripts.phase_1.run_phase_1",
+    #"scripts.phase_2.run_phase_2"
 ]
 
 def run_phase(module):
@@ -16,4 +18,4 @@ if __name__ == "__main__":
     for phase in PHASES:
         run_phase(phase)
 
-    print("\n=== Pipeline completed successfully ===")
+    print("\n=== Pipeline completed  ===")

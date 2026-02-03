@@ -3,7 +3,7 @@ import psycopg2
 import xxhash
 import hashlib
 from tqdm import tqdm
-from scripts.config import LOG_FILE
+from scripts.config.general import LOG_FILE
 
 
 def log(msg):

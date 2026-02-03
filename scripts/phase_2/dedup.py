@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from scripts.config import LOG_FILE
+from scripts.config.general import LOG_FILE
 
 
 def log(msg):
