@@ -7,5 +7,5 @@ DB_PASS = "pass"
 DB_HOST = "localhost"
 DB_PORT = 5432
 
-DUPLICATES_FILE = os.path.join(CSV_DIR, "duplicates_summary.csv")
+DUPLICATES_FILE = os.path.join(CSV_DIR, "duplicates.csv")
 SUMMARY_FILE = os.path.join(REPORTS_DIR, "phase_1_summary.csv")

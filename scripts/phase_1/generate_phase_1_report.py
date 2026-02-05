@@ -92,10 +92,13 @@ def main():
             f.write(f"Total duplicate groups: {total_groups}\n")
             f.write(f"Total files involved in duplicates: {total_files}\n")
             if largest_group:
-                f.write(f"Largest duplicate group: {largest_group[2]} files (xxhash64={largest_group[0]})\n")
+                first_file_name = os.path.basename(largest_group[3][0]) if largest_group[3] else "N/A"
+                f.write(f"Largest duplicate group: {largest_group[2]} files, {first_file_name}, xxhash64={largest_group[0]}\n")
+
             f.write("\nSummary of all duplicate groups:\n")
             for xxh, sha, count, paths in duplicates:
-                f.write(f"- {count} files, xxhash64={xxh}\n")
+                first_file_name = os.path.basename(paths[0]) if paths else "N/A"
+                f.write(f"- {count} files, {first_file_name}, xxhash64={xxh}\n")
                 for path in paths:
                     f.write(f"    {path}\n")
             f.write("\nReport generation completed ✅\n")

@@ -611,3 +611,13 @@ generate_phase_1_report.py completed successfully.
 Phase 1 report generated: /app/resources/reports/phase_1_summary.csv
 generate_phase_1_report.py completed successfully.
 === Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+Phase 1 report generated: /app/resources/reports/phase_1_summary.csv
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+Phase 1 report generated: /app/resources/reports/phase_1_summary.csv
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===
