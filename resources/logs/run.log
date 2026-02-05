@@ -431,3 +431,183 @@ WARNING: generate_phase1_report.py exited with code 256
 === Running generate_phase1_report.py ===
 WARNING: generate_phase1_report.py exited with code 256
 === Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase1_report.py ===
+WARNING: generate_phase1_report.py exited with code 256
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+✅ Connected to DB on attempt 1
+Generating Phase 1 report on duplicates...
+Found 7604 duplicate groups involving 16562 files.
+CSV report saved to /app/resources/reports/duplicates_summary.csv
+=== Phase 1 duplicates summary ===
+Duplicate groups: 7604
+Total files involved in duplicates: 16562
+Largest duplicate group: 17 files, xxhash64=111aa144a65aab83
+Phase 1 report generation completed ✅
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+WARNING: generate_phase_1_report.py exited with code 256
+=== Phase 1 completed ===
+✅ Connected to DB on attempt 1
+Generating Phase 1 report on duplicates...
+Found 7604 duplicate groups involving 16562 files.
+CSV report saved to /app/resources/csv/duplicates_summary.csv
+=== Phase 1 duplicates summary ===
+Duplicate groups: 7604
+Total files involved in duplicates: 16562
+Largest duplicate group: 17 files, xxhash64=111aa144a65aab83
+Phase 1 report generation completed ✅
+❌ Fatal error in generate_phase1_report
+name 'REPORT_DIR' is not defined
+✅ Connected to DB on attempt 1
+Generating Phase 1 report on duplicates...
+Found 7604 duplicate groups involving 16562 files.
+CSV report saved to /app/resources/csv/duplicates_summary.csv
+=== Phase 1 duplicates summary ===
+Duplicate groups: 7604
+Total files involved in duplicates: 16562
+Largest duplicate group: 17 files, xxhash64=111aa144a65aab83
+Phase 1 report generation completed ✅
+❌ Fatal error in generate_phase1_report
+name 'largest_group' is not defined
+✅ Connected to DB on attempt 1
+Generating Phase 1 report on duplicates...
+Found 7604 duplicate groups involving 16562 files.
+CSV report saved to /app/resources/csv/duplicates_summary.csv
+=== Phase 1 duplicates summary ===
+Duplicate groups: 7604
+Total files involved in duplicates: 16562
+Largest duplicate group: 17 files, xxhash64=111aa144a65aab83
+Human-readable report saved to /app/resources/reports/phase_1_summary.txt
+Phase 1 report generation completed ✅
+✅ Connected to DB on attempt 1
+Generating Phase 1 report on duplicates...
+Found 7604 duplicate groups involving 16562 files.
+CSV report saved to /app/resources/csv/duplicates_summary.csv
+=== Phase 1 duplicates summary ===
+Duplicate groups: 7604
+Total files involved in duplicates: 16562
+Largest duplicate group: 17 files, xxhash64=111aa144a65aab83
+Human-readable report saved to /app/resources/reports/phase_1_summary.csv
+Phase 1 report generation completed ✅
+Phase 1 report generation completed ✅
+Phase 1 report generation completed successfully.
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+Phase 1 report generation completed successfully.
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+Phase 1 report generation completed successfully.
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===
+=== Phase 1 ===
+=== Running generate_phase_1_report.py ===
+Phase 1 report generated: /app/resources/reports/phase_1_summary.csv
+generate_phase_1_report.py completed successfully.
+=== Phase 1 completed ===

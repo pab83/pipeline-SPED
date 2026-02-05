@@ -1,3 +1,2 @@
-Revisar phase_1.hash_files.py
 Revisar phase 2
 

@@ -21,7 +21,7 @@ if __name__ == "__main__":
     scripts = [
         "scan_files.py",           # Generate initial CSV
         "mark_pdf_ocr.py",         # Add OCR flags
-        "generate_audit_report.py" # Generate audit summary
+        "generate_phase_0_report.py" # Generate audit summary
     ]
 
     for script in scripts:

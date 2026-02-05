@@ -24,7 +24,7 @@ if __name__ == "__main__":
     scripts = [
         #"populate_db.py",   # Llena la DB con metadata inicial
         #"hash_files.py",    # Calcula hashes de los archivos
-        "generate_phase1_report.py"    
+        "generate_phase_1_report.py"    
     ]
 
     for script in scripts:
