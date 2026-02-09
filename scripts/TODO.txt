@@ -1,2 +1,10 @@
-Revisar phase 2
+no rebuild +25min
 
+
+Revisar phase 2 -> 
+                
+    migrate ✅
+    extract_text ✅ - saca poco texto pq hay pocos documentos con texto plano
+    img_looks_like_doc ✅ - Marca ocr_needed para img que sean documentos(optimizado en tiempos sin probar pero ya en bbdd)
+    compute_embeddings - pendiente probar(esperar a OCR para tener buena base) montar en server?
+    dedup - pendiente probar

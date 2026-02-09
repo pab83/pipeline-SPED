@@ -2,8 +2,8 @@ import os
 
 PHASES = [
     #"scripts.phase_0.run_phase_0",
-    "scripts.phase_1.run_phase_1",
-    #"scripts.phase_2.run_phase_2"
+    #"scripts.phase_1.run_phase_1",
+    "scripts.phase_2.run_phase_2"
 ]
 
 def run_phase(module):

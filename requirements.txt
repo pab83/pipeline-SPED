@@ -2,6 +2,6 @@ PyPDF2
 tqdm
 psycopg2-binary
 xxhash
-
-
-
+numpy
+python-docx
+opencv-python-headless

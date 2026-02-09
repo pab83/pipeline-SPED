@@ -25,8 +25,14 @@ conn = psycopg2.connect(
     port=DB_PORT,
 )
 cur = conn.cursor()
+try:
+    cur.execute("SELECT inet_server_addr(), inet_server_port()")
+    addr, port = cur.fetchone()
+    log(f"Connected to DB at {addr}:{port}")
+except Exception as e:
+    log(f"Could not determine DB server address: {e}")
 
-# Esquema base de files (alineado con lo que usan Phase 1 y Phase 2)
+# Esquema base de files 
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS files (
@@ -59,28 +65,19 @@ with open(CSV_OCR_FILE, newline="", encoding="utf-8") as f:
         cur.execute(
             """
             INSERT INTO files (
-                full_path,
-                file_name,
-                file_type,
-                size_bytes,
-                creation_year,
-                modification_year,
-                depth,
-                is_pdf,
-                ocr_needed
+                full_path, file_name, file_type, size_bytes, 
+                creation_year, modification_year, depth, is_pdf, ocr_needed
             )
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (full_path) DO UPDATE
             SET
+                -- Solo actualizamos si el tamaño cambió (indica cambio en el archivo)
                 file_name = EXCLUDED.file_name,
-                file_type = EXCLUDED.file_type,
                 size_bytes = EXCLUDED.size_bytes,
-                creation_year = EXCLUDED.creation_year,
                 modification_year = EXCLUDED.modification_year,
-                depth = EXCLUDED.depth,
-                is_pdf = EXCLUDED.is_pdf,
-                ocr_needed = EXCLUDED.ocr_needed,
-                last_seen = NOW();
+                last_seen = NOW()
+            WHERE files.size_bytes != EXCLUDED.size_bytes 
+            OR files.modification_year != EXCLUDED.modification_year;
             """,
             (
                 row["full_path"],

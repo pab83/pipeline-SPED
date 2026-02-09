@@ -17,7 +17,11 @@
 │ ├─ sha256                     │
 │ ├─ xxhash64                   │
 │ ├─ first_seen                 │
-│ └─ last_seen                  │
+│ ├─ last_seen                  │
+│ ├─ text_excerpt               │  ← Phase 2: texto resumido
+│ ├─ text_chars_extracted       │
+│ ├─ is_canonical               │  ← dedup hash + semántico
+│ └─ canonical_id (FK → files)  │
 └───────────────────────────────┘
             │
             ▼
@@ -26,12 +30,26 @@
 │ (OLTP)                        │
 ├───────────────────────────────┤
 │ Update files → sha256, xxhash │
-│ Deduplicate using hashes      │
+│ Hash-level canonicalization   │
 └───────────────────────────────┘
             │
             ▼
 ┌───────────────────────────────┐
-│ Phase 2 – Classification      │
+│ Phase 2 – Semantic Dedup      │
+│ & Embeddings (OLTP)           │
+├───────────────────────────────┤
+│ files (text_excerpt,          │
+│        is_canonical,          │
+│        canonical_id)          │
+│                               │
+│ file_embeddings               │
+│ ├─ file_id (FK → files.id)    │
+│ └─ embedding vector(384)      │
+└───────────────────────────────┘
+            │
+            ▼
+┌───────────────────────────────┐
+│ Phase 3 – Classification      │
 │ (OLTP)                        │
 ├───────────────────────────────┤
 │ file_classification           │
@@ -44,7 +62,7 @@
             │
             ▼
 ┌───────────────────────────────┐
-│ Phase 3 – Normalization       │
+│ Phase 4 – Normalization       │
 │ (OLTP)                        │
 ├───────────────────────────────┤
 │ file_normalization            │
@@ -57,7 +75,7 @@
             │
             ▼
 ┌───────────────────────────────┐
-│ Phase 4 – Semantic Extraction │
+│ Phase 5 – Semantic Extraction │
 │ (OLTP)                        │
 ├───────────────────────────────┤
 │ file_content                  │
@@ -71,7 +89,7 @@
             │
             ▼
 ┌───────────────────────────────┐
-│ Phase 5 – Analytic Modeling   │
+│ Phase 6 – Analytic Modeling   │
 │ (OLAP)                        │
 ├───────────────────────────────┤
 │ analytics_files               │
@@ -94,11 +112,11 @@
             │
             ▼
 ┌───────────────────────────────┐
-│ Phase 6 – BI / Visualization  │
+│ Phase 7 – BI / Visualization  │
 │ (Superset / Dashboards)       │
 ├───────────────────────────────┤
 │ Reads analytics_files         │
-│ KPI: OCR pending, duplicates │
+│ KPI: OCR pending, duplicates  │
 │ KPI: file type distributions  │
 │ KPI: content stats, etc.      │
 └───────────────────────────────┘

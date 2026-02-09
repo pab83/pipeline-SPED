@@ -1,207 +1,156 @@
 import os
-import hashlib
-import xxhash
+from multiprocessing import Pool, cpu_count
 import psycopg2
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from tqdm import tqdm
-from scripts.config.phase_1 import LOG_FILE
+from psycopg2 import OperationalError
+import cv2
 
-# =========================
-# Configuración
-# =========================
-CHUNK_SIZE = 8192
-BATCH_DB_SIZE = 500
-LOG_EVERY = 100
-MAX_WORKERS = os.cpu_count() or 4
+from scripts.config.general import LOG_FILE
 
-# =========================
-# Logging
-# =========================
-def log(msg):
+# Extensiones de imagen a procesar
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".webp"}
+
+# Tamaño máximo para redimensionar imágenes grandes
+MAX_IMAGE_SIZE = 1024
+
+# Batch size
+BATCH_SIZE = 500
+
+
+def log(msg: str) -> None:
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-# =========================
-# DB connection
-# =========================
-DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
-DB_USER = os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user"))
-DB_PASSWORD = os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass"))
-DB_HOST = os.getenv("PGHOST", "localhost")
-DB_PORT = int(os.getenv("PGPORT", "5432"))
 
-# =========================
-# Hashing helpers
-# =========================
-def compute_xxhash(file_id, full_path):
+def get_db_connection(retries: int = 10, delay: int = 3):
+    import time
+    for attempt in range(1, retries + 1):
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv("PGDATABASE", "auditdb"),
+                user=os.getenv("PGUSER", "user"),
+                password=os.getenv("PGPASSWORD", "pass"),
+                host=os.getenv("PGHOST", "localhost"),
+                port=int(os.getenv("PGPORT", 5432)),
+            )
+            return conn
+        except OperationalError as e:
+            log(f"Postgres not ready (attempt {attempt}/{retries}): {e}")
+            time.sleep(delay)
+    raise RuntimeError("Could not connect to Postgres after multiple attempts.")
+
+
+def process_image(row):
+    """
+    Procesa la imagen y devuelve (ocr_needed, file_id).
+    """
+    file_id, full_path = row
     try:
-        h = xxhash.xxh64()
-        with open(full_path, "rb") as f:
-            for chunk in iter(lambda: f.read(CHUNK_SIZE), b""):
-                h.update(chunk)
-        return (file_id, h.hexdigest(), None)
-    except Exception as e:
-        return (file_id, None, str(e))
+        ext = os.path.splitext(full_path)[1].lower()
+        if ext not in IMAGE_EXTENSIONS:
+            return None  # Ignorar no-imagenes
 
-def compute_sha256(file_id, full_path):
-    try:
-        h = hashlib.sha256()
-        with open(full_path, "rb") as f:
-            for chunk in iter(lambda: f.read(CHUNK_SIZE), b""):
-                h.update(chunk)
-        return (file_id, h.hexdigest(), None)
-    except Exception as e:
-        return (file_id, None, str(e))
+        img = cv2.imread(full_path, cv2.IMREAD_GRAYSCALE)
+        if img is None:
+            log(f"No se pudo leer la imagen: {full_path}")
+            return (False, file_id)
 
-# =========================
-# Main
-# =========================
+        # Redimensionar si es muy grande
+        h, w = img.shape[:2]
+        if max(h, w) > MAX_IMAGE_SIZE:
+            scale = MAX_IMAGE_SIZE / max(h, w)
+            img = cv2.resize(img, (int(w * scale), int(h * scale)))
+
+        # Determina si parece un documento
+        is_doc = looks_like_document(img)
+        return (is_doc, file_id)
+
+    except Exception as e:
+        log(f"Error procesando imagen {full_path}: {e}")
+        return (False, file_id)
+
+
 def main():
-    conn = psycopg2.connect(
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST,
-        port=DB_PORT,
-    )
+    conn = get_db_connection()
     cur = conn.cursor()
 
-    # =========================
-    # PHASE A — XXHASH ONLY
-    # =========================
-    cur.execute("""
-        SELECT id, full_path
+    # Mostrar info DB
+    try:
+        cur.execute("SELECT inet_server_addr(), inet_server_port()")
+        addr, port = cur.fetchone()
+        log(f"Connected to DB at {addr}:{port}")
+    except Exception as e:
+        log(f"Could not determine DB server address: {e}")
+
+    log("Starting image OCR_needed marking (deduplicated by xxhash64)...")
+
+    # Obtenemos hashes únicos de imágenes que NO necesitan OCR
+    cur.execute(
+        f"""
+        SELECT DISTINCT xxhash64
         FROM files
-        WHERE hash_pending = TRUE
-          AND xxhash64 IS NULL
-    """)
-    files = cur.fetchall()
-
-    if not files:
-        log("No files pending xxhash.")
-    else:
-        log(f"Calculating xxhash64 for {len(files)} files...")
-
-        batch = []
-        processed = 0
-
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = {
-                executor.submit(compute_xxhash, fid, path): fid
-                for fid, path in files
-            }
-
-            for future in tqdm(as_completed(futures), total=len(files), desc="xxhash"):
-                file_id, xxh, error = future.result()
-                processed += 1
-
-                if error:
-                    log(f"ERROR xxhash file_id={file_id}: {error}")
-                    continue
-
-                batch.append((xxh, file_id))
-
-                if len(batch) >= BATCH_DB_SIZE:
-                    cur.executemany("""
-                        UPDATE files
-                        SET xxhash64 = %s
-                        WHERE id = %s
-                    """, batch)
-                    conn.commit()
-                    batch.clear()
-
-                if processed % LOG_EVERY == 0:
-                    log(f"xxhash {processed}/{len(files)}")
-
-        if batch:
-            cur.executemany("""
-                UPDATE files
-                SET xxhash64 = %s
-                WHERE id = %s
-            """, batch)
-            conn.commit()
-
-    # =========================
-    # PHASE B — FIND COLLISIONS
-    # =========================
-    cur.execute("""
-        SELECT xxhash64
-        FROM files
-        WHERE hash_pending = TRUE
+        WHERE ocr_needed IS FALSE
+          AND LOWER(SPLIT_PART(full_path,'.', -1)) IN %s
           AND xxhash64 IS NOT NULL
-        GROUP BY xxhash64
-        HAVING COUNT(*) > 1
-    """)
-    collisions = {row[0] for row in cur.fetchall()}
+        """,
+        (tuple(ext.strip('.') for ext in IMAGE_EXTENSIONS),),
+    )
+    unique_hashes = {row[0] for row in cur.fetchall()}
+    log(f"Unique xxhash64 to process: {len(unique_hashes)}")
 
-    log(f"Detected {len(collisions)} xxhash collisions.")
+    offset = 0
+    pool = Pool(processes=cpu_count())
 
-    # =========================
-    # PHASE C — SHA256 ONLY FOR COLLISIONS
-    # =========================
-    if collisions:
-        cur.execute("""
-            SELECT id, full_path
+    while True:
+        # Seleccionamos solo imágenes con hashes que aún no hemos procesado
+        cur.execute(
+            f"""
+            SELECT id, full_path, xxhash64
             FROM files
-            WHERE hash_pending = TRUE
-              AND xxhash64 = ANY(%s)
-        """, (list(collisions),))
-        colliding_files = cur.fetchall()
+            WHERE ocr_needed IS FALSE
+              AND LOWER(SPLIT_PART(full_path,'.', -1)) IN %s
+              AND xxhash64 IS NOT NULL
+            ORDER BY id
+            LIMIT %s OFFSET %s
+            """,
+            (tuple(ext.strip('.') for ext in IMAGE_EXTENSIONS), BATCH_SIZE, offset),
+        )
 
-        log(f"Calculating sha256 for {len(colliding_files)} colliding files...")
+        batch = cur.fetchall()
+        if not batch:
+            break
 
-        batch = []
+        # Filtrar duplicados por xxhash64 antes de procesar
+        filtered_batch = []
+        seen_hashes = set()
+        for file_id, full_path, xxhash64 in batch:
+            if xxhash64 not in seen_hashes and xxhash64 in unique_hashes:
+                filtered_batch.append((file_id, full_path))
+                seen_hashes.add(xxhash64)
 
-        with ThreadPoolExecutor(max_workers=max(1, MAX_WORKERS // 2)) as executor:
-            futures = {
-                executor.submit(compute_sha256, fid, path): fid
-                for fid, path in colliding_files
-            }
+        if not filtered_batch:
+            offset += BATCH_SIZE
+            continue
 
-            for future in tqdm(as_completed(futures), total=len(colliding_files), desc="sha256"):
-                file_id, sha, error = future.result()
+        # Multiprocesamiento
+        results = pool.map(process_image, filtered_batch)
+        results = [r for r in results if r is not None]
 
-                if error:
-                    log(f"ERROR sha256 file_id={file_id}: {error}")
-                    continue
-
-                batch.append((sha, file_id))
-
-                if len(batch) >= BATCH_DB_SIZE:
-                    cur.executemany("""
-                        UPDATE files
-                        SET sha256 = %s
-                        WHERE id = %s
-                    """, batch)
-                    conn.commit()
-                    batch.clear()
-
-        if batch:
-            cur.executemany("""
-                UPDATE files
-                SET sha256 = %s
-                WHERE id = %s
-            """, batch)
+        if results:
+            cur.executemany(
+                "UPDATE files SET ocr_needed=%s WHERE id=%s", results
+            )
             conn.commit()
+            log(f"Processed batch of {len(results)} images (offset {offset})")
 
-    # =========================
-    # PHASE D — FINALIZE
-    # =========================
-    cur.execute("""
-        UPDATE files
-        SET
-            hash_pending = FALSE,
-            last_seen = NOW()
-        WHERE hash_pending = TRUE
-          AND xxhash64 IS NOT NULL
-    """)
-    conn.commit()
+        offset += BATCH_SIZE
 
+    pool.close()
+    pool.join()
     cur.close()
     conn.close()
-    log("Hashing completed (xxhash + sha256 on collision).")
+    log("Image OCR_needed marking completed.")
 
-# =========================
+
 if __name__ == "__main__":
     main()

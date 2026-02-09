@@ -1,4 +1,22 @@
-# config/phase_2.py
 from scripts.config.general import *
+import os
 
-# No additional config needed yet (deduplication uses SHA256)
+# =========================
+# Phase 2 specific config
+# =========================
+
+# Límite de caracteres de texto que guardaremos por documento
+TEXT_CHAR_LIMIT = int(os.getenv("TEXT_CHAR_LIMIT", "8000"))
+
+# Umbral de similitud coseno para considerar dos documentos casi duplicados
+SEMANTIC_SIM_THRESHOLD = float(os.getenv("SEMANTIC_SIM_THRESHOLD", "0.9"))
+
+# Modelo por defecto para embeddings (SentenceTransformers)
+EMBEDDING_MODEL_NAME = os.getenv(
+    "EMBEDDING_MODEL_NAME",
+    "sentence-transformers/all-MiniLM-L6-v2",
+)
+
+# Tamaño aproximado de bucket por tamaño de fichero (en bytes) para limitar comparaciones
+SIZE_BUCKET_BYTES = int(os.getenv("SIZE_BUCKET_BYTES", str(10 * 1024 * 1024)))
+
