@@ -30,7 +30,11 @@ resources/reports/
 *.pid
 *.tar
 
+# Backup bbdd
+*.sql
+
 # Varios
 db_diagrams/
 db_diagrams.svg
 mount_share.sh
+

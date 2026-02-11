@@ -28,8 +28,8 @@ if __name__ == "__main__":
     scripts = [
         #"migrate_phase_2.py",
         #"extract_text.py",
-        "img_looks_like_document.py",
-        #####"compute_embeddings.py",
+        #"img_looks_like_document.py",
+        "compute_embeddings.py",
         #####"dedup.py",
     ]
 

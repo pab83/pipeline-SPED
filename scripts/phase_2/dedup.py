@@ -147,7 +147,7 @@ def semantic_canonicalization(cur, conn):
     next_cluster_id = 1
 
     # Número de vecinos a consultar por documento (incluyéndose a sí mismo).
-    # Cuanto más alto, más chances de capturar duplicados; también más coste.
+    # Cuanto más alto, más posibilidades de capturar duplicados; también más coste.
     K = 20
 
     for fid in candidate_ids:
