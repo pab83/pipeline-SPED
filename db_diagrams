@@ -6,7 +6,7 @@
 │ ├─ id (PK)                    │
 │ ├─ full_path                  │
 │ ├─ file_name                  │
-│ ├─ extension                  │
+│ ├─ file_type                  │
 │ ├─ size_bytes                 │
 │ ├─ creation_year              │
 │ ├─ modification_year          │

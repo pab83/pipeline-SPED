@@ -32,6 +32,7 @@ resources/reports/
 
 # Backup bbdd
 *.sql
+pgdata/
 
 # Varios
 db_diagrams/

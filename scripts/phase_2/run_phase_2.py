@@ -24,12 +24,13 @@ def run_script(script_name):
         raise
 
 if __name__ == "__main__":
-    log("=== Phase 2: Deduplication ===")
+    log("=== Phase 2 ===")
     scripts = [
         #"migrate_phase_2.py",
         #"extract_text.py",
         #"img_looks_like_document.py",
-        "compute_embeddings.py",
+        #"process_ocr_tasks.py",
+        #"compute_embeddings.py",
         #####"dedup.py",
     ]
 

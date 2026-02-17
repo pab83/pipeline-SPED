@@ -16,27 +16,20 @@ RUN apt-get update \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Dependencias pesadas (casi nunca cambian)
-RUN pip install --no-cache-dir \
-        torch sentence-transformers
 
 # Dependencias ligeras (cambian más a menudo)
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir \
-        numpy \
-        PyPDF2 \
-        tqdm \
-        psycopg2-binary \
-        xxhash \
-        python-docx \
-        opencv-python-headless
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copiar código que cambia constantemente
 COPY scripts/ /app/scripts/
 COPY resources/ /app/resources/
+COPY messaging/ /app/messaging
+COPY schemas/ /app/schemas
 
 # PYTHONPATH
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app:$PYTHONPATH
+
 
 # DB defaults
 ENV PGHOST=db \

@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-auditdb}
       POSTGRES_USER: ${POSTGRES_USER:-user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -31,9 +33,12 @@ services:
       PGDATABASE: ${POSTGRES_DB}
       PGUSER: ${POSTGRES_USER}
       PGPASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
 
       # Optional: let your config read a base path for scan (if you wire it later)
       BASE_PATH: ${BASE_PATH:-/data}
+
     volumes:
       # Persist logs/reports/csv outside the container
       - ./resources:/app/resources
@@ -53,6 +58,7 @@ volumes:
   #    o: "username=${TRUENAS_USER},password=${TRUENAS_PASS},domain=${DOMAIN},uid=1000,gid=1000,ro,noserverino,vers=3.0"
   pgdata:
   
+
 
 networks:
   rpr-net:
