@@ -2,7 +2,9 @@ services:
   db:
     image: pgvector/pgvector:pg16
     container_name: rpr-db
-    environment:
+    env_file:
+      - .env
+    environment:   
       POSTGRES_DB: ${POSTGRES_DB:-auditdb}
       POSTGRES_USER: ${POSTGRES_USER:-user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
@@ -27,6 +29,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
       PGHOST: db
       PGPORT: ${POSTGRES_PORT}
