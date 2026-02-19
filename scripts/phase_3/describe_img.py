@@ -1,53 +1,176 @@
-#!/usr/bin/env python3
 import os
-import time
-import logging
+from typing import Dict
 import psycopg2
 from psycopg2 import OperationalError
 
+from messaging.redis_client import RedisQueueClient
+from schemas.result import ResultMessage, Status
 from schemas.task import TargetModel
 from scripts.producer import send_task
 from scripts.config.general import LOG_FILE
 
-logging.basicConfig(level=logging.INFO)
+# Update results comentado para pruebas.
 
 DEFAULT_PROMPT = "Describe la imagen en detalle."
-BATCH_SIZE = 50
+BATCH_SIZE = 500
+RESULT_QUEUE = "cola_resultados_moondream"
 
-
-# --------------------------------------------------
+# -------------------------------------------------------------------
 # Logging
-# --------------------------------------------------
-def log(msg: str):
+# -------------------------------------------------------------------
+def log(msg: str) -> None:
+    """Log a archivo y stdout."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-
-# --------------------------------------------------
-# DB connection with retries
-# --------------------------------------------------
+# -------------------------------------------------------------------
+# Conexión a PostgreSQL
+# -------------------------------------------------------------------
 def get_db_connection(retries: int = 10, delay: int = 3):
     for attempt in range(1, retries + 1):
         try:
-            return psycopg2.connect(
+            conn = psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb")),
                 user=os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user")),
                 password=os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", "5432")),
             )
+            return conn
         except OperationalError as e:
-            log(f"Postgres not ready ({attempt}/{retries}): {e}")
+            log(f"Postgres no listo (intento {attempt}/{retries}): {e}")
+            import time
             time.sleep(delay)
+    raise RuntimeError("No se pudo conectar a Postgres tras múltiples intentos.")
 
-    raise RuntimeError("Could not connect to Postgres.")
+# -------------------------------------------------------------------
+# Contar imágenes pendientes
+# -------------------------------------------------------------------
+def count_pending_images(conn) -> int:
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT COUNT(*) FROM files f
+        LEFT JOIN moondream_task_map m ON f.id = m.file_id
+        WHERE LOWER(f.file_type) IN ('.png','.jpg','.jpeg','.gif','.bmp','.tiff','.webp')
+          AND m.file_id IS NULL
+    """)
+    total = cur.fetchone()[0]
+    cur.close()
+    return total
 
+# -------------------------------------------------------------------
+# Envío de un batch de tareas a Redis
+# -------------------------------------------------------------------
+def send_moondream_batch(conn, correlation_to_file_id: Dict[str, int], batch_size=BATCH_SIZE) -> int:
+    """Envía un batch y devuelve cuántas tareas se han enviado"""
+    total_pending = count_pending_images(conn)
+    if total_pending == 0:
+        return 0
 
-# --------------------------------------------------
-# Create moondream_task_map if not exists
-# --------------------------------------------------
-def ensure_task_table(conn):
+    cur = conn.cursor()
+    cur.execute(f"""
+        SELECT f.id, f.full_path
+        FROM files f
+        LEFT JOIN moondream_task_map m ON f.id = m.file_id
+        WHERE LOWER(f.file_type) IN ('.png','.jpg','.jpeg','.gif','.bmp','.tiff','.webp')
+          AND m.file_id IS NULL
+        ORDER BY f.id
+        LIMIT {batch_size}
+    """)
+    rows = cur.fetchall()
+    sent_count = 0
+
+    for file_id, full_path in rows:
+        try:
+            message_id, correlation_id = send_task(
+                file_path=full_path,
+                target_model=TargetModel.MOONDREAM,
+                prompt=DEFAULT_PROMPT,
+                source="describe_img"
+            )
+
+            cur.execute(
+                """
+                INSERT INTO moondream_task_map (correlation_id, file_id, status)
+                VALUES (%s, %s, 'pending')
+                ON CONFLICT (correlation_id) DO NOTHING
+                """,
+                (correlation_id, file_id),
+            )
+            conn.commit()
+            correlation_to_file_id[correlation_id] = file_id
+            sent_count += 1
+
+        except Exception as e:
+            log(f"Error enviando tarea file_id={file_id}: {e}")
+
+    cur.close()
+    log(f"Batch enviado: {sent_count} / {total_pending} imágenes pendientes")
+    return sent_count
+
+# -------------------------------------------------------------------
+# Consumo de resultados y envío automático de batches
+# -------------------------------------------------------------------
+def process_moondream_results(conn, correlation_to_file_id: Dict[str, int], batch_size=BATCH_SIZE):
+    """Consume resultados y lanza nuevos batches automáticamente"""
+    mq_client = RedisQueueClient()
+    processed_count = 0
+
+    def handle_result(result_dict: dict):
+        nonlocal processed_count
+        try:
+            result = ResultMessage.model_validate(result_dict)
+            if result.model != "MoondreamWorker":
+                return
+
+            file_id = correlation_to_file_id.get(result.correlation_id)
+            if not file_id:
+                return
+
+            cur = conn.cursor()
+            if result.status == Status.SUCCESS:
+                # BD comentada para pruebas
+                # cur.execute("UPDATE files SET text_excerpt=%s, last_seen=NOW() WHERE id=%s",
+                #             (result.result, file_id))
+                # cur.execute("UPDATE moondream_task_map SET status='completed', updated_at=NOW() WHERE correlation_id=%s",
+                #             (result.correlation_id,))
+                log(f"Descripción guardada file_id={file_id}")
+            else:
+                log(f"Error para file_id={file_id}: {result.error}")
+            conn.commit()
+            cur.close()
+
+            processed_count += 1
+
+            # Cada vez que se procesa un batch completo
+            if processed_count % batch_size == 0 or count_pending_images(conn) < batch_size:
+                remaining = count_pending_images(conn)
+                if remaining > 0:
+                    log(f"Batch de {batch_size} finalizado. Enviando siguiente batch...")
+                    sent = send_moondream_batch(conn, correlation_to_file_id, batch_size=batch_size)
+                    if sent:
+                        log(f"Siguiente batch enviado: {sent} tareas")
+                else:
+                    log(f"Último batch procesado. No quedan más imágenes.")
+
+        except Exception as e:
+            log(f"Error procesando resultado: {e}")
+
+    try:
+        mq_client.consume(RESULT_QUEUE, handle_result)
+    except KeyboardInterrupt:
+        log("Consumo interrumpido por usuario")
+
+# -------------------------------------------------------------------
+# Main
+# -------------------------------------------------------------------
+def main():
+    log("="*60)
+    log("=== Pipeline Moondream continuo (envío + consumo) ===")
+    log("="*60)
+
+    conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS moondream_task_map (
@@ -60,144 +183,25 @@ def ensure_task_table(conn):
             created_at TIMESTAMP NOT NULL DEFAULT NOW(),
             updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
             UNIQUE(file_id)
-        );
+        )
     """)
-
-    # Índices para rendimiento
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_moondream_file_id
-        ON moondream_task_map(file_id);
-    """)
-
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_moondream_status
-        ON moondream_task_map(status);
-    """)
-
-    conn.commit()
-    cur.close()
-    log("Tabla moondream_task_map verificada/creada.")
-
-
-# --------------------------------------------------
-# Fetch images not yet in task_map
-def fetch_new_images(conn, batch_size):
-    cur = conn.cursor()
-
-    # 1️⃣ Cuántos archivos totales hay
-    cur.execute("SELECT COUNT(*) FROM files;")
-    total_files = cur.fetchone()[0]
-
-    # 2️⃣ Cuántos parecen imágenes (solo por file_type)
-    cur.execute("""
-        SELECT COUNT(*)
-        FROM files
-        WHERE LOWER(file_type) IN ('png','jpg','jpeg','gif','bmp','tiff','webp');
-    """)
-    total_images = cur.fetchone()[0]
-
-    # 3️⃣ Cuántos ya están en task_map
-    cur.execute("SELECT COUNT(*) FROM moondream_task_map;")
-    total_tasks = cur.fetchone()[0]
-
-    log(f"[DEBUG] Total files: {total_files}")
-    log(f"[DEBUG] Total image-like files: {total_images}")
-    log(f"[DEBUG] Total in moondream_task_map: {total_tasks}")
-
-    # 4️⃣ Query real
-    cur.execute(f"""
-        SELECT f.id, f.full_path, COALESCE(f.file_name,'')
-        FROM files f
-        LEFT JOIN moondream_task_map m
-            ON f.id = m.file_id
-        WHERE LOWER(f.file_type) IN ('.png','.jpg','.jpeg','.gif','.bmp','.tiff','.webp')
-          AND m.file_id IS NULL
-        ORDER BY f.id
-        LIMIT {batch_size};
-    """)
-
-    rows = cur.fetchall()
-
-    log(f"[DEBUG] Rows returned by query: {len(rows)}")
-
-    if len(rows) > 0:
-        log(f"[DEBUG] First returned ID: {rows[0][0]}")
-
-    cur.close()
-    return rows
-
-
-
-# --------------------------------------------------
-# Insert task map entry
-# --------------------------------------------------
-def insert_task_map(conn, file_id, correlation_id):
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO moondream_task_map (file_id, correlation_id, status)
-        VALUES (%s, %s, 'pending')
-        ON CONFLICT (file_id) DO NOTHING;
-    """, (file_id, correlation_id))
     conn.commit()
     cur.close()
 
+    correlation_to_file_id: Dict[str, int] = {}
 
-# --------------------------------------------------
-# Send batch
-# --------------------------------------------------
-def send_batch(conn):
-    rows = fetch_new_images(conn, BATCH_SIZE)
+    # Primer batch
+    log("Enviando primer batch a Redis...")
+    sent_count = send_moondream_batch(conn, correlation_to_file_id, batch_size=BATCH_SIZE)
+    if sent_count == 0:
+        log("No hay tareas nuevas. Saliendo.")
+        conn.close()
+        return
 
-    if not rows:
-        return 0
-
-    sent_count = 0
-
-    for file_id, full_path, file_name in rows:
-        try:
-            message_id, correlation_id = send_task(
-                file_path=full_path,
-                target_model=TargetModel.MOONDREAM,
-                source="describe_img_pipeline",
-                prompt=DEFAULT_PROMPT
-            )
-
-            insert_task_map(conn, file_id, correlation_id)
-
-            log(f"Tarea enviada: {file_name or 'sin nombre'} (file_id={file_id})")
-            sent_count += 1
-
-        except Exception as e:
-            log(f"Error enviando archivo {file_id}: {e}")
-
-    return sent_count
-
-
-# --------------------------------------------------
-# Main
-# --------------------------------------------------
-def main():
-    log("=" * 60)
-    log("Iniciando envío incremental de imágenes a Moondream")
-    log("=" * 60)
-
-    conn = get_db_connection()
-
-    ensure_task_table(conn)
-
-    while True:
-        sent = send_batch(conn)
-
-        if sent == 0:
-            log("No hay más imágenes nuevas para enviar.")
-            break
-
-        log(f"Batch enviado: {sent} imágenes")
-        time.sleep(1)
+    # Consumo 
+    process_moondream_results(conn, correlation_to_file_id, batch_size=BATCH_SIZE)
 
     conn.close()
-    log("Envío completado.")
-
 
 if __name__ == "__main__":
     main()

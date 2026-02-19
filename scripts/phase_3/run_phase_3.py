@@ -26,7 +26,7 @@ def run_script(script_name):
 if __name__ == "__main__":
     log("=== Phase 3 ===")
     scripts = [
-        "describe_img.py",
+        #"describe_img.py",
         #"process_files.py",
     ]
 

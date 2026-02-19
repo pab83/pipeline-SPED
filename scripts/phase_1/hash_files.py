@@ -1,26 +1,18 @@
 import os
-from multiprocessing import Pool, cpu_count
+import hashlib
+import xxhash
 import psycopg2
 from psycopg2 import OperationalError
-import cv2
+from multiprocessing import Pool, cpu_count
 
 from scripts.config.general import LOG_FILE
 
-# Extensiones de imagen a procesar
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".webp"}
-
-# Tamaño máximo para redimensionar imágenes grandes
-MAX_IMAGE_SIZE = 1024
-
-# Batch size
 BATCH_SIZE = 500
-
 
 def log(msg: str) -> None:
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
-
 
 def get_db_connection(retries: int = 10, delay: int = 3):
     import time
@@ -39,118 +31,111 @@ def get_db_connection(retries: int = 10, delay: int = 3):
             time.sleep(delay)
     raise RuntimeError("Could not connect to Postgres after multiple attempts.")
 
-
-def process_image(row):
-    """
-    Procesa la imagen y devuelve (ocr_needed, file_id).
-    """
-    file_id, full_path = row
+def compute_xxhash64(file_path):
+    """Calcula xxhash64 de un archivo dado"""
     try:
-        ext = os.path.splitext(full_path)[1].lower()
-        if ext not in IMAGE_EXTENSIONS:
-            return None  # Ignorar no-imagenes
-
-        img = cv2.imread(full_path, cv2.IMREAD_GRAYSCALE)
-        if img is None:
-            log(f"No se pudo leer la imagen: {full_path}")
-            return (False, file_id)
-
-        # Redimensionar si es muy grande
-        h, w = img.shape[:2]
-        if max(h, w) > MAX_IMAGE_SIZE:
-            scale = MAX_IMAGE_SIZE / max(h, w)
-            img = cv2.resize(img, (int(w * scale), int(h * scale)))
-
-        # Determina si parece un documento
-        is_doc = looks_like_document(img)
-        return (is_doc, file_id)
-
+        h = xxhash.xxh64()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                h.update(chunk)
+        return h.intdigest()
     except Exception as e:
-        log(f"Error procesando imagen {full_path}: {e}")
-        return (False, file_id)
+        log(f"Error calculando xxhash64 para {file_path}: {e}")
+        return None
 
+def compute_sha256(file_path):
+    """Calcula sha256 de un archivo dado"""
+    try:
+        h = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    except Exception as e:
+        log(f"Error calculando sha256 para {file_path}: {e}")
+        return None
+
+def process_xxhash(row):
+    file_id, full_path = row
+    hash64 = compute_xxhash64(full_path)
+    return (hash64, file_id) if hash64 is not None else None
+
+def process_sha256(row):
+    file_id, full_path = row
+    hash256 = compute_sha256(full_path)
+    return (hash256, file_id) if hash256 is not None else None
 
 def main():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # Mostrar info DB
-    try:
-        cur.execute("SELECT inet_server_addr(), inet_server_port()")
-        addr, port = cur.fetchone()
-        log(f"Connected to DB at {addr}:{port}")
-    except Exception as e:
-        log(f"Could not determine DB server address: {e}")
-
-    log("Starting image OCR_needed marking (deduplicated by xxhash64)...")
-
-    # Obtenemos hashes únicos de imágenes que NO necesitan OCR
-    cur.execute(
-        f"""
-        SELECT DISTINCT xxhash64
-        FROM files
-        WHERE ocr_needed IS FALSE
-          AND LOWER(SPLIT_PART(full_path,'.', -1)) IN %s
-          AND xxhash64 IS NOT NULL
-        """,
-        (tuple(ext.strip('.') for ext in IMAGE_EXTENSIONS),),
-    )
-    unique_hashes = {row[0] for row in cur.fetchall()}
-    log(f"Unique xxhash64 to process: {len(unique_hashes)}")
+    log("Starting xxhash64 calculation for all files without xxhash64...")
 
     offset = 0
     pool = Pool(processes=cpu_count())
 
+    # 1️⃣ Calcular xxhash64 para todos los archivos que no lo tengan
     while True:
-        # Seleccionamos solo imágenes con hashes que aún no hemos procesado
         cur.execute(
-            f"""
-            SELECT id, full_path, xxhash64
-            FROM files
-            WHERE ocr_needed IS FALSE
-              AND LOWER(SPLIT_PART(full_path,'.', -1)) IN %s
-              AND xxhash64 IS NOT NULL
-            ORDER BY id
-            LIMIT %s OFFSET %s
-            """,
-            (tuple(ext.strip('.') for ext in IMAGE_EXTENSIONS), BATCH_SIZE, offset),
+            "SELECT id, full_path FROM files WHERE xxhash64 IS NULL ORDER BY id LIMIT %s OFFSET %s",
+            (BATCH_SIZE, offset)
         )
-
         batch = cur.fetchall()
         if not batch:
             break
 
-        # Filtrar duplicados por xxhash64 antes de procesar
-        filtered_batch = []
-        seen_hashes = set()
-        for file_id, full_path, xxhash64 in batch:
-            if xxhash64 not in seen_hashes and xxhash64 in unique_hashes:
-                filtered_batch.append((file_id, full_path))
-                seen_hashes.add(xxhash64)
-
-        if not filtered_batch:
-            offset += BATCH_SIZE
-            continue
-
-        # Multiprocesamiento
-        results = pool.map(process_image, filtered_batch)
+        results = pool.map(process_xxhash, batch)
         results = [r for r in results if r is not None]
 
         if results:
             cur.executemany(
-                "UPDATE files SET ocr_needed=%s WHERE id=%s", results
+                "UPDATE files SET xxhash64=%s WHERE id=%s",
+                results
             )
             conn.commit()
-            log(f"Processed batch of {len(results)} images (offset {offset})")
+            log(f"Updated xxhash64 for batch of {len(results)} files (offset {offset})")
 
         offset += BATCH_SIZE
+
+    log("xxhash64 calculation completed.")
+
+    # 2️⃣ Encontrar posibles duplicados por xxhash64
+    log("Finding possible duplicates using xxhash64...")
+    cur.execute(
+        """
+        SELECT xxhash64, array_agg(id ORDER BY id) AS ids
+        FROM files
+        WHERE xxhash64 IS NOT NULL
+        GROUP BY xxhash64
+        HAVING COUNT(*) > 1
+        """
+    )
+    groups = cur.fetchall()
+    log(f"Found {len(groups)} xxhash64 groups with potential duplicates.")
+
+    # 3️⃣ Calcular sha256 solo para estos posibles duplicados
+    for xxh, ids in groups:
+        cur.execute(
+            "SELECT id, full_path FROM files WHERE id = ANY(%s)",
+            (ids,)
+        )
+        files_to_hash = cur.fetchall()
+        results = pool.map(process_sha256, files_to_hash)
+        results = [r for r in results if r is not None]
+
+        if results:
+            cur.executemany(
+                "UPDATE files SET sha256=%s WHERE id=%s",
+                results
+            )
+            conn.commit()
+            log(f"Calculated sha256 for {len(results)} files in xxhash64 group {xxh}")
 
     pool.close()
     pool.join()
     cur.close()
     conn.close()
-    log("Image OCR_needed marking completed.")
-
+    log("SHA256 calculation for possible duplicates completed.")
 
 if __name__ == "__main__":
     main()

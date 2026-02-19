@@ -7,7 +7,6 @@ from tqdm import tqdm
 import json
 import re
 
-
 # ----------------------------
 # CONFIG
 # ----------------------------
@@ -18,7 +17,7 @@ DB_USER = os.environ.get("POSTGRES_USER")
 DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 
 LLM_URL = os.environ.get("LLM_URL")  
-BATCH_SIZE = 500
+BATCH_SIZE = 50
 
 # ----------------------------
 # LOGGING
@@ -35,28 +34,30 @@ logger = logging.getLogger(__name__)
 def clasificar_documento(file):
     """
     file: dict con campos de la BBDD
-    Devuelve la categoría como string
+    Devuelve un dict con keys: 'categoria', 'proyecto', 'anio'
     """
-    # Sanitizamos los campos antes de crear el prompt
     file['text_excerpt'] = sanitize_text(file.get('text_excerpt', ''), max_chars=3000)
-    file['file_name'] = sanitize_text(file.get('file_name', ''), max_chars=500)
-    #file['descripcion_imagen'] = sanitize_text(file.get('descripcion_imagen', ''), max_chars=1000)
+    file['full_path'] = sanitize_text(file.get('full_path', ''), max_chars=1000)
 
     prompt = f"""
-Eres un clasificador documental. Categoriza SOLO en: Factura, Presupuesto, Boletines, Informe, Fotografia, Otro.
+Eres un clasificador documental. Categorias: Factura, Presupuesto, Boletines, Informe, Fotografia, Otro. 
 
-Nombre archivo: {file['file_name']}
+Para cada archivo:
+- Usa el full_path del archivo para inferir el proyecto o tarea al que pertenece (El proyecto se suele indicar con código de 6 letras, por ejemplo CSBORA, CSBORB, CSBORC). 
+- Usa el creation_year proporcionado SOLO si no hay un año explícito en el texto del archivo.
+- Responde SOLO con un objeto JSON con keys "categoria", "anio" y "proyecto".
+- Si no puedes determinar alguno de los campos, pon "Desconocido" para ese campo.
+
+Ruta completa del archivo: {file['full_path']}
 Tipo archivo: {file['file_type']}
-Año de creación: {file['creation_year']}
-OCR necesario: {file['ocr_needed']}
+Año de creación: {file.get('creation_year', 'Desconocido')}
+
 
 Texto OCR:
 {file['text_excerpt']}
 
 Descripcion imagen:
 {file.get('descripcion_imagen', '')} 
-
-Responde SOLO con la categoria exacta.
 """
 
     payload = {
@@ -68,87 +69,84 @@ Responde SOLO con la categoria exacta.
         "temperature": 0
     }
 
-    try:    
-        # Validación rápida de JSON
-        json.dumps(payload)  # esto falla si hay caracteres no UTF-8 o None
+    try:
+        json.dumps(payload)
     except Exception as e:
-        logger.error(f"JSON inválido para archivo {file['file_name']}: {e}")
-        return None
+        logger.error(f"JSON inválido para archivo {file.get('full_path', 'Desconocido')}: {e}")
+        return {"categoria": "Desconocido", "proyecto": "Desconocido", "anio": "Desconocido"}
 
-    # Reintentos para 400 Bad Request
     for attempt in range(3):
         try:
             response = requests.post(LLM_URL, json=payload, timeout=60)
             response.raise_for_status()
-            return response.json()["choices"][0]["message"]["content"].strip()
+            raw_text = response.json()["choices"][0]["message"]["content"].strip()
+
+            # Parsear JSON
+            resultado = json.loads(clean_llm_json(raw_text))
+            return {
+                "categoria": resultado.get("categoria", "Desconocido"),
+                "anio": resultado.get("anio", "Desconocido"),
+                "proyecto": resultado.get("proyecto", "Desconocido")
+            }
+
+        except json.JSONDecodeError:
+            logger.error(f"Respuesta JSON inválida para {file.get('full_path', 'Desconocido')}: {raw_text}")
+            return {"categoria": "Desconocido", "proyecto": "Desconocido", "anio": "Desconocido"}
         except requests.HTTPError as e:
-            if response.status_code == 400:
-                logger.warning(f"400 Bad Request para {file['file_name']}, intento {attempt+1}/3")
-                # Pequeña pausa antes de reintentar
+            if e.response and e.response.status_code == 400:
+                logger.warning(f"400 Bad Request para {file.get('full_path', 'Desconocido')}, intento {attempt+1}/3")
                 import time
                 time.sleep(2)
                 continue
             else:
-                logger.error(f"Error clasificando archivo {file['file_name']}: {e}")
-                return None
+                logger.error(f"Error clasificando archivo {file.get('full_path', 'Desconocido')}: {e}")
+                return {"categoria": "Desconocido", "proyecto": "Desconocido", "anio": "Desconocido"}
         except Exception as e:
-            logger.error(f"Error clasificando archivo {file['file_name']}: {e}")
-            return None
+            logger.error(f"Error clasificando archivo {file.get('full_path', 'Desconocido')}: {e}")
+            return {"categoria": "Desconocido", "proyecto": "Desconocido", "anio": "Desconocido"}
 
-    logger.error(f"No se pudo clasificar {file['file_name']} tras 3 intentos por 400 Bad Request")
-    return None
+    logger.error(f"No se pudo clasificar {file.get('full_path', 'Desconocido')} tras 3 intentos por 400 Bad Request")
+    return {"categoria": "Desconocido", "proyecto": "Desconocido", "anio": "Desconocido"}
 
-    
-    
 # ----------------------------
 # FUNCIONES AUXILIARES
 # ----------------------------
 def sanitize_text(text: str, max_chars: int = 3000) -> str:
-    """
-    Limpia un texto para enviarlo a un LLM:
-    - Reemplaza caracteres no UTF-8 por espacio
-    - Elimina caracteres de control
-    - Acorta a `max_chars` para evitar requests demasiado largos
-    """
     if not text:
         return ""
-    
-    # Asegura UTF-8 y reemplaza caracteres inválidos
     text = text.encode("utf-8", errors="replace").decode("utf-8")
-    
-    # Elimina caracteres de control (excepto salto de línea)
     text = re.sub(r"[\x00-\x09\x0b-\x1f\x7f]", " ", text)
-    
-    # Acorta el texto para no saturar la request
     if len(text) > max_chars:
         text = text[:max_chars] + " …[truncated]…"
-    
     return text
 
-
+def clean_llm_json(raw_text: str) -> str:
+    """
+    Elimina backticks y encabezados de tipo ```json para obtener JSON limpio.
+    """
+    # Eliminamos ```json o ``` al inicio y ``` al final
+    cleaned = re.sub(r"^```(json)?", "", raw_text.strip())
+    cleaned = re.sub(r"```$", "", cleaned.strip())
+    return cleaned.strip()
 # ----------------------------
 # PROCESAMIENTO DE BBDD
 # ----------------------------
 def procesar_archivos():
     conn_str = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
     
-    # Abrimos conexión con psycopg2
     with psycopg2.connect(conn_str, cursor_factory=DictCursor) as conn:
         with conn.cursor() as cur:
-            # Crear columna categoria y last_classified si no existen
             cur.execute("""
                 DO $$
                 BEGIN
                     IF NOT EXISTS (
-                        SELECT 1 
-                        FROM information_schema.columns
+                        SELECT 1 FROM information_schema.columns
                         WHERE table_name='files' AND column_name='categoria'
                     ) THEN
                         ALTER TABLE files ADD COLUMN categoria TEXT;
                     END IF;
                     IF NOT EXISTS (
-                        SELECT 1 
-                        FROM information_schema.columns
+                        SELECT 1 FROM information_schema.columns
                         WHERE table_name='files' AND column_name='last_classified'
                     ) THEN
                         ALTER TABLE files ADD COLUMN last_classified TIMESTAMP;
@@ -157,7 +155,6 @@ def procesar_archivos():
             """)
             conn.commit()
 
-            # Seleccionar batch de archivos pendientes
             cur.execute("""
                 SELECT *
                 FROM files
@@ -172,18 +169,21 @@ def procesar_archivos():
                 return
 
             for row in tqdm(rows, desc="Procesando archivos"):
-                categoria = clasificar_documento(row)
-                if categoria:
-                #    cur.execute("""
-                #        UPDATE files
-                #        SET categoria = %s,
-                #            last_classified = NOW()
-                #        WHERE id = %s
-                #    """, (categoria, row['id']))
-                #    conn.commit()
-                    logger.info(f"Archivo {row['file_name']} clasificado como '{categoria}'")
-                else:
-                    logger.warning(f"No se pudo clasificar archivo {row['file_name']}")
+                resultado = clasificar_documento(row)
+                categoria = resultado["categoria"]
+                proyecto  = resultado["proyecto"]
+                anio      = resultado["anio"]
+                
+                # Guardar en BBDD (descomentarlo si quieres)
+                # cur.execute("""
+                #     UPDATE files
+                #     SET categoria = %s,
+                #         last_classified = NOW()
+                #     WHERE id = %s
+                # """, (categoria, row['id']))
+                # conn.commit()
+
+                logger.info(f"Archivo {row.get('full_path', 'Desconocido')} clasificado como '{categoria}', pertenece al proyecto '{proyecto}' y año '{anio}'")
 
             logger.info("Batch finalizado.")
 

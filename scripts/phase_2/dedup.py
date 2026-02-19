@@ -330,11 +330,11 @@ def main():
     hash_level_canonicalization(cur)
     conn.commit()
 
-    semantic_canonicalization(cur, conn)
+    #semantic_canonicalization(cur, conn)
 
     cur.close()
     conn.close()
-    log("Phase 2 deduplication (hash + semantic) completed.")
+    log("Phase 2 deduplication (hash only) completed.")
 
 
 if __name__ == "__main__":

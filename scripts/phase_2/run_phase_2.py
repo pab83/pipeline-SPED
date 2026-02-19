@@ -26,12 +26,11 @@ def run_script(script_name):
 if __name__ == "__main__":
     log("=== Phase 2 ===")
     scripts = [
-        #"migrate_phase_2.py",
-        #"extract_text.py",
-        #"img_looks_like_document.py",
-        #"process_ocr_tasks.py",
-        #"compute_embeddings.py",
-        #####"dedup.py",
+        "migrate_phase_2.py",
+        "extract_text.py",
+        "dedup.py", # Only dedup by hash for now.
+        "img_looks_like_document.py",
+        "process_ocr_tasks.py",
     ]
 
     for script in scripts:
