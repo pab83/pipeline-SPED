@@ -21,11 +21,16 @@ RUN apt-get update \
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
+# Copiar dependencias de la API
+COPY api/requirements.txt /app/api/requirements.txt
+RUN pip install --no-cache-dir -r /app/api/requirements.txt
+
 # Copiar código que cambia constantemente
 COPY scripts/ /app/scripts/
 COPY resources/ /app/resources/
 COPY messaging/ /app/messaging
 COPY schemas/ /app/schemas
+COPY api/ /app/api/
 
 # PYTHONPATH
 ENV PYTHONPATH=/app:$PYTHONPATH
@@ -38,6 +43,9 @@ ENV PGHOST=db \
     PGUSER=user \
     PGPASSWORD=pass
 
-# Default command
-CMD ["python", "-m", "scripts.run_pipeline"]
+# Puerto para API 
+EXPOSE 8000
 
+# Default command
+#CMD ["python", "-m", "scripts.run_pipeline"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

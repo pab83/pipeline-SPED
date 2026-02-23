@@ -31,6 +31,9 @@ services:
         condition: service_healthy
     env_file:
       - .env
+
+    ports:
+      - "8000:8000"
     environment:
       PGHOST: db
       PGPORT: ${POSTGRES_PORT}

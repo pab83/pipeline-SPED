@@ -1,5 +1,7 @@
 import os
+form scripts.helpers.db_status import *
 
+RUN_ID = int(os.environ.get("RUN_ID", 0))  
 PHASES = [
     #"scripts.phase_0.run_phase_0",
     #"scripts.phase_1.run_phase_1",
@@ -12,11 +14,16 @@ def run_phase(module):
     code = os.system(f"python -m {module}")
     if code != 0:
         raise RuntimeError(f"Phase failed: {module}")
+    
 
-if __name__ == "__main__":
+def main():
     print("=== Starting full pipeline ===")
-
+    mark_run_started(RUN_ID)
     for phase in PHASES:
         run_phase(phase)
-
+        
+    mark_run_finished(RUN_ID)
     print("\n=== Pipeline completed  ===")
+    
+if __name__ == "__main__":
+    main()
