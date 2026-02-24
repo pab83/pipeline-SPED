@@ -134,6 +134,7 @@ def mark_phase_finished(phase_id: int):
             db.commit()
     finally:
         db.close()
+        
 
 def mark_run_started(run_id: int):
     """Rellena started_at y marca el run como running"""
@@ -156,6 +157,19 @@ def mark_run_finished(run_id: int):
             run.finished_at = datetime.now()
             if run.status != "error":
                 run.status = "finished"
+            db.commit()
+    finally:
+        db.close()
+        
+
+def mark_run_cancelled(run_id: int):
+    """Rellena finished_at y marca el run como cancelled"""
+    db = SessionLocal()
+    try:
+        run = db.query(PipelineRun).filter_by(run_id=run_id).first()
+        if run:
+            run.finished_at = datetime.now()
+            run.status = "cancelled"
             db.commit()
     finally:
         db.close()

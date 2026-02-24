@@ -29,7 +29,7 @@ def get_db():
 def recover_stale_runs(db: Session):
     running = db.query(PipelineRun).filter(PipelineRun.status == "running").all()
     for run in running:
-        mark_run_finished(run.run_id)
+        mark_run_cancelled(run.run_id)
 
 # ---------------------------------
 # Helper: lanzar script python externo
@@ -54,7 +54,7 @@ def start_pipeline(db: Session = Depends(get_db)):
     active_runs = db.query(PipelineRun).filter(PipelineRun.status == "running").count()
     if active_runs > 0:
         recover_stale_runs(db)
-        raise HTTPException(status_code=400, detail="Another run is already running. Stale runs have been marked as finished. Please try again.")
+        raise HTTPException(status_code=400, detail="Another run is already running. Stale runs have been marked as cancelled. Please try again.")
     
 
     # Crear run
