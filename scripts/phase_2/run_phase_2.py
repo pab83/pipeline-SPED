@@ -1,8 +1,9 @@
 import subprocess
 from scripts.helpers.db_status import *
-from db import SessionLocal
-from models import PipelinePhase
+from api.db import SessionLocal
+from api.models import PipelinePhase
 from typing import List
+from scripts.config.phase_2 import *  # Importamos configuración específica de la fase 2
 
 # ----------------------------
 # Parámetros de ejecución
@@ -11,11 +12,17 @@ RUN_ID = int(os.getenv("RUN_ID", "0"))
 PHASE_NUMBER = 2
 SCRIPTS: List[str] = [
         "migrate_phase_2.py",
-        "extract_text.py",
         "dedup.py", # Only dedup by hash for now.
+        "extract_text.py",
         "img_looks_like_document.py",
         "process_ocr_tasks.py",
     ]
+
+# -----------------------------
+# Archivo de log
+# -----------------------------
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, f"run_{RUN_ID}_phase_{PHASE_NUMBER}.log")
 
 # ----------------------------
 # Helpers
@@ -45,9 +52,9 @@ def get_or_create_phase_id(run_id, phase_number):
 def run_script(phase_id, script_name, phase_module):
     logs_buffer = []
     log(f"=== Running {script_name} ===", logs_buffer)
-
+    
     module = f"{phase_module}.{script_name.replace('.py','')}"
-
+    update_script_status(phase_id, script_name, status="running", logs=logs_buffer)
     try:
         result = subprocess.run(
             ["python", "-m", module],
@@ -77,6 +84,13 @@ def run_script(phase_id, script_name, phase_module):
         update_script_status(phase_id, script_name, status="error", logs=logs_buffer, error=str(e))
         raise
 
+def check_cancelled(run_id):
+    db = SessionLocal() 
+    try:
+        run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
+        return run.status == "cancelled" if run else False
+    finally:
+        db.close()
 # ----------------------------
 # Main
 # ----------------------------
@@ -88,6 +102,9 @@ def main():
     PHASE_MODULE = f"scripts.phase_{PHASE_NUMBER}"
 
     for script in SCRIPTS:
+        if check_cancelled(RUN_ID):
+            print(f"Run {RUN_ID} was cancelled. Stopping execution.")
+            raise RuntimeError("Cancelled")
         run_script(phase_id=PHASE_ID, script_name=script, phase_module=PHASE_MODULE)
         
     mark_phase_finished(PHASE_ID)

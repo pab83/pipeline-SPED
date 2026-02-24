@@ -12,10 +12,9 @@ class PipelineRun(Base):
     __tablename__ = "pipeline_runs"
     __table_args__ = {"schema": "pipeline_status"}  # <--- schema separado
 
-    run_id = Column(BigInteger, primary_key=True)
+    run_id = Column(BigInteger, primary_key=True,autoincrement=True)
     status = Column(String(20), nullable=False, default="pending")  # pending, running, finished, error, cancelled
     current_phase = Column(Integer, default=0)
-    total_files = Column(BigInteger, default=0)
     processed_files = Column(BigInteger, default=0)
     started_at = Column(TIMESTAMP)
     updated_at = Column(TIMESTAMP)
@@ -33,8 +32,6 @@ class PipelinePhase(Base):
     run_id = Column(BigInteger, ForeignKey("pipeline_status.pipeline_runs.run_id", ondelete="CASCADE"))
     phase_number = Column(Integer, nullable=False)
     status = Column(String(20), nullable=False, default="pending")  # pending, running, finished, error
-    processed_files = Column(BigInteger, default=0)
-    total_files = Column(BigInteger, default=0)
     started_at = Column(TIMESTAMP)
     finished_at = Column(TIMESTAMP)
     error_message = Column(Text)
@@ -52,8 +49,6 @@ class PipelineScript(Base):
     script_name = Column(Text, nullable=False)
     status = Column(String(20), nullable=False, default="pending")  # pending, running, finished, error
     logs = Column(Text)
-    processed_files = Column(BigInteger, default=0)
-    total_files = Column(BigInteger, default=0)
     error_message = Column(Text)
 
     phase = relationship("PipelinePhase", back_populates="scripts")
@@ -66,8 +61,6 @@ class PipelineScript(Base):
 class ScriptStatus(BaseModel):
     script_name: str
     status: str
-    processed_files: Optional[int] = 0
-    total_files: Optional[int] = 0
     error_message: Optional[str] = None
     logs: Optional[List[str]] = []
 
@@ -75,8 +68,6 @@ class PhaseStatus(BaseModel):
     phase_number: int
     status: str
     scripts: List[ScriptStatus] = []
-    processed_files: Optional[int] = 0
-    total_files: Optional[int] = 0
     error_message: Optional[str] = None
 
 class RunStatus(BaseModel):
@@ -84,5 +75,4 @@ class RunStatus(BaseModel):
     status: str
     current_phase: int
     processed_files: Optional[int] = 0
-    total_files: Optional[int] = 0
     phases: List[PhaseStatus] = []

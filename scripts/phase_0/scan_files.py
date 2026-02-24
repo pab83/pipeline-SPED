@@ -5,6 +5,7 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from itertools import islice
 from tqdm import tqdm
+from scripts.helpers.db_status import update_run_status
 from scripts.config.phase_0 import BASE_PATH, CSV_FILE, LOG_FILE, MAX_THREADS, BUFFER_SIZE, BATCH_SIZE
 from scripts.config.general import CSV_DIR  # Para crear carpeta CSV si no existe
 
@@ -151,6 +152,7 @@ def audit():
                 if buffer:
                     writer.writerows(buffer)
 
+    update_run_status(int(os.getenv("RUN_ID")), processed_files=total)  # Actualiza el número total de archivos procesados en la base de datos
     duracion = time.time() - inicio
     log(f"\nFiles processed: {total:,}")
     log(f"Total time: {duracion:.2f} seconds")
@@ -160,4 +162,3 @@ def audit():
 
 if __name__ == "__main__":
     audit()
-    log("Funciona")

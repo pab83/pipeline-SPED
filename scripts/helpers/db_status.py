@@ -1,6 +1,7 @@
 from api.db import SessionLocal
 from api.models import *
 from datetime import datetime
+from sqlalchemy.orm import Session
 
 def update_script_status(phase_id, script_name, status, logs=None, error=None):
     db = SessionLocal()
@@ -27,6 +28,11 @@ def update_phase_status(phase_id: int):
     db = SessionLocal()
     try:
         scripts = db.query(PipelineScript).filter_by(phase_id=phase_id).all()
+        
+        for s in scripts:                           # Actualizar para tener logs del script que esta corriendo o con error
+            if s.status in ["running", "error"]:
+                update_script_status(phase_id, s.script_name, s.status, s.logs.split("\n") if s.logs else None, s.error_message)
+            
         if not scripts:
             return  # No hay scripts registrados aún
 
@@ -62,35 +68,46 @@ def update_phase_status(phase_id: int):
     finally:
         db.close()
         
-from sqlalchemy.orm import Session
 
-def update_run_status(run_id: int, db: Session):
+def update_run_status(run_id: int, processed_files: int = None):
     """
     Recalcula el estado de un run completo basado en el estado de sus fases.
     - Si alguna fase = 'error' -> run = 'error'
     - Si todas las fases = 'finished' -> run = 'finished'
     - Si alguna fase = 'running' y ninguna error -> run = 'running'
     """
-    # Obtener todas las fases del run
-    phases = db.query(PipelinePhase).filter_by(run_id=run_id).all()
-    if not phases:
-        return  # No hay fases registradas aún
+    db = SessionLocal()  # Crear sesión propia
+    try:    
+        # Obtener todas las fases del run
+        phases = db.query(PipelinePhase).filter_by(run_id=run_id).all()
+        
+        for p in phases:                           # Actualizar para tener logs de la fase que esta corriendo o con error
+            if p.status in ["running", "error"]:
+                update_phase_status(p.phase_id) 
+                
+        if not phases:
+            return  # No hay fases registradas aún
 
-    # Calcular estado del run
-    statuses = [p.status for p in phases]
+        # Calcular estado del run
+        statuses = [p.status for p in phases]
 
-    if "error" in statuses:
-        new_status = "error"
-    elif all(s == "finished" for s in statuses):
-        new_status = "finished"
-    else:
-        new_status = "running"
+        if "error" in statuses:
+            new_status = "error"
+        elif all(s == "finished" for s in statuses):
+            new_status = "finished"
+        else:
+            new_status = "running"
 
-    # Actualizar el run
-    run = db.query(PipelineRun).filter_by(run_id=run_id).first()
-    if run:
-        run.status = new_status
-        db.commit()
+        # Actualizar el run
+        run = db.query(PipelineRun).filter_by(run_id=run_id).first()
+        if run:
+            run.status = new_status
+            db.commit()
+        if processed_files is not None and run:
+            run.processed_files = processed_files
+            db.commit()
+    finally:
+        db.close()  # Cerrar sesión
         
 # Tiempos de ejecución
 def mark_phase_started(phase_id: int):

@@ -1,9 +1,10 @@
 import os
 import subprocess
 from scripts.helpers.db_status import *
-from db import SessionLocal
-from models import PipelinePhase
+from api.db import SessionLocal
+from api.models import PipelinePhase
 from typing import List
+from scripts.config.phase_1 import *  # Importamos configuración específica de la fase 1
 
 # ----------------------------
 # Parámetros de ejecución
@@ -46,7 +47,7 @@ def run_script(phase_id, script_name, phase_module):
     log(f"=== Running {script_name} ===", logs_buffer)
 
     module = f"{phase_module}.{script_name.replace('.py','')}"
-
+    update_script_status(phase_id, script_name, status="running", logs=logs_buffer)
     try:
         result = subprocess.run(
             ["python", "-m", module],
@@ -75,6 +76,14 @@ def run_script(phase_id, script_name, phase_module):
         log(f"EXCEPTION: {e}", logs_buffer)
         update_script_status(phase_id, script_name, status="error", logs=logs_buffer, error=str(e))
         raise
+    
+def check_cancelled(run_id):
+    db = SessionLocal() 
+    try:
+        run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
+        return run.status == "cancelled" if run else False
+    finally:
+        db.close()
 
 # ----------------------------
 # Main
@@ -87,6 +96,9 @@ def main():
     PHASE_MODULE = f"scripts.phase_{PHASE_NUMBER}"
 
     for script in SCRIPTS:
+        if check_cancelled(RUN_ID):
+            print(f"Run {RUN_ID} was cancelled. Stopping execution.")
+            raise RuntimeError("Cancelled")
         run_script(PHASE_ID, script, PHASE_MODULE)
 
     mark_phase_finished(PHASE_ID)

@@ -20,3 +20,9 @@ EMBEDDING_MODEL_NAME = os.getenv(
 # Tamaño aproximado de bucket por tamaño de fichero (en bytes) para limitar comparaciones
 SIZE_BUCKET_BYTES = int(os.getenv("SIZE_BUCKET_BYTES", str(10 * 1024 * 1024)))
 
+# -----------------------------
+# Archivo de log
+# -----------------------------
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, f"run_{os.getenv('RUN_ID', 'X')}_phase_2.log")
+
