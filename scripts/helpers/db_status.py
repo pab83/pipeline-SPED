@@ -42,6 +42,8 @@ def update_phase_status(phase_id: int):
             new_status = "error"
         elif all(s == "finished" for s in statuses):
             new_status = "finished"
+        elif all(s == "cancelled" for s in statuses):
+            new_status = "cancelled"
         else:
             new_status = "running"
 
@@ -61,8 +63,7 @@ def update_phase_status(phase_id: int):
                 run.status = "error"
             elif all(s == "finished" for s in phase_statuses):
                 run.status = "finished"
-            else:
-                run.status = "running"
+            
             db.commit()
 
     finally:
@@ -88,15 +89,27 @@ def update_run_status(run_id: int, processed_files: int = None):
         if not phases:
             return  # No hay fases registradas aún
 
-        # Calcular estado del run
+        # Calcular estados del run
         statuses = [p.status for p in phases]
 
-        if "error" in statuses:
+        if not statuses:
+            new_status = "pending"
+        elif "running" in statuses:
+            # Si hay al menos uno corriendo, el padre sigue corriendo
+            new_status = "running"
+        elif "error" in statuses:
+            # Si nada corre y hay un error, el resultado es error
             new_status = "error"
+        elif "cancelled" in statuses:
+            # Si nada corre y hay una cancelación, el resultado es cancelled
+            new_status = "cancelled"
         elif all(s == "finished" for s in statuses):
+            # Solo si TODOS terminaron bien, es finished
             new_status = "finished"
         else:
-            new_status = "running"
+            # Por seguridad, si no hay nada corriendo pero no todo terminó, 
+            # probablemente se quedó huérfano (stale)
+            new_status = "failed"
 
         # Actualizar el run
         run = db.query(PipelineRun).filter_by(run_id=run_id).first()
@@ -171,5 +184,39 @@ def mark_run_cancelled(run_id: int):
             run.finished_at = datetime.now()
             run.status = "cancelled"
             db.commit()
+    finally:
+        db.close()
+   
+   
+def mark_phase_cancelled(phase_id: int):
+    db = SessionLocal()
+    try:
+        phase = db.query(PipelinePhase).filter_by(phase_id=phase_id).first()
+        if phase:
+            phase.status = "cancelled"
+            phase.finished_at = datetime.now()
+            db.commit()
+    finally:
+        db.close()
+
+def get_or_create_phase_id(run_id, phase_number):
+    """Obtiene el phase_id en DB o lo crea si no existe"""
+    db = SessionLocal()
+    try:
+        phase = db.query(PipelinePhase).filter_by(run_id=run_id, phase_number=phase_number).first()
+        if not phase:
+            phase = PipelinePhase(run_id=run_id, phase_number=phase_number, status="running")
+            db.add(phase)
+            db.commit()
+            db.refresh(phase)
+        return phase.phase_id
+    finally:
+        db.close()
+
+def check_cancelled(run_id):
+    db = SessionLocal() 
+    try:
+        run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
+        return run.status == "cancelled" if run else False
     finally:
         db.close()

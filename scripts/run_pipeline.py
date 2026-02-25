@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 from scripts.helpers.db_status import *
+from scripts.exceptions import PipelineCancelledException
 
 RUN_ID = int(os.environ.get("RUN_ID", 0))  
 PHASES = [
@@ -19,19 +20,32 @@ def run_phase(module):
         [sys.executable, "-m", module],
         env=env
     )
+    # Si el proceso hijo (la fase) salió con nuestro código 64
+    if result.returncode == 64:
+        raise PipelineCancelledException()
 
     if result.returncode != 0:
         raise RuntimeError(f"Phase failed: {module}")
     
 
 def main():
-    print("=== Starting full pipeline ===")
-    mark_run_started(RUN_ID)
-    for phase in PHASES:
-        run_phase(phase)
+        try:
+            print("=== Starting full pipeline ===")
+            mark_run_started(RUN_ID)
+            for phase in PHASES:
+                run_phase(phase)
+            
+            mark_run_finished(RUN_ID)
+            print("\n=== Pipeline completed  ===")
+                    
+        except PipelineCancelledException:
+            print(f"--- Pipeline {RUN_ID} stopped by user ---")
+            mark_run_cancelled(RUN_ID)
+            sys.exit(0)
+        except Exception as e:
+            print(f"--- Pipeline {RUN_ID} failed with error: {e} ---")
+            mark_run_finished(RUN_ID)  # Marca como finished pero con status "error"
+            sys.exit(1)
         
-    mark_run_finished(RUN_ID)
-    print("\n=== Pipeline completed  ===")
-    
 if __name__ == "__main__":
     main()

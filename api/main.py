@@ -65,7 +65,7 @@ def start_pipeline(db: Session = Depends(get_db)):
     run_id = new_run.run_id
     mark_run_started(run_id)
 
-    script_path = "scripts/run_pipeline.py"
+    script_path = os.path.join(PROJECT_ROOT, "scripts", "run_pipeline.py")
     if not os.path.exists(script_path):
         raise HTTPException(status_code=404, detail="Pipeline script not found")
 
@@ -111,7 +111,7 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
 # ---------------------------------
 @app.get("/status/{run_id}", response_model=RunStatus)
 def get_run_status(run_id: int, db: Session = Depends(get_db)):
-    update_run_status(run_id)
+    # update_run_status(run_id)
 
     run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
     if not run:
@@ -146,6 +146,9 @@ def get_run_status(run_id: int, db: Session = Depends(get_db)):
         phases=phases_list,
     )
     
+# ---------------------------------
+# Endpoint:detener pipeline activo(s) por run_id o todos los activos
+# ---------------------------------
 @app.post("/stop")
 def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
     """
@@ -158,7 +161,7 @@ def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
     
     if run_id:
         # Caso 1: Detener uno específico
-        active_runs = query.filter(PipelineRun.run_id == run_id).all()
+        active_runs = query.filter(PipelineRun.run_id == run_id).first()
         if not active_runs:
             raise HTTPException(status_code=404, detail=f"Active run {run_id} not found")
     else:
@@ -181,4 +184,31 @@ def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
         "message": "Termination signal sent",
         "stopped_count": len(stopped_ids),
         "run_ids": stopped_ids
+    }
+    
+# ---------------------------------
+# Endpoint: cambiar variable de entorno por URL
+# ---------------------------------
+@app.post("/change_focus/{folder_path:path}")
+def change_focus(folder_path: str):
+    """
+    Cambia el path base de trabajo. 
+    Ejemplo: POST http://api:8000/change_focus/2024
+    """
+    if not folder_path:
+        new_path = "/data"
+    else:
+        # Construir el path absoluto basado en tu lógica (ejemplo usando PROJECT_ROOT)
+        new_path = os.path.join( "/data", folder_path)
+    
+    # Actualizar la variable de entorno en el proceso de la API
+    # Esto servirá para que launch_script lo herede
+    os.environ["BASE_PATH"] = new_path
+    
+    print(f"DEBUG: BASE_PATH actualizado a: {new_path}")
+    
+    return {
+        "message": "Focus path updated",
+        "new_folder": folder_path,
+        "full_path": new_path
     }
