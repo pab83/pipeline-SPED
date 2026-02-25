@@ -1,4 +1,4 @@
-from config.general import *
+from scripts.config.general import *
 import os
 # -----------------------------
 # Archivo de log
