@@ -116,7 +116,7 @@ def main():
     # 3️⃣ Calcular sha256 solo para estos posibles duplicados
     for xxh, ids in groups:
         cur.execute(
-            "SELECT id, full_path FROM files WHERE id = ANY(%s)",
+            "SELECT id, full_path FROM files WHERE id = ANY(%s) AND sha256 IS NULL",
             (ids,)
         )
         files_to_hash = cur.fetchall()

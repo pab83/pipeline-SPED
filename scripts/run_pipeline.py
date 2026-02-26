@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 from scripts.helpers.db_status import *
+from scripts.helpers.orchestrate import run_phase
 from scripts.exceptions import PipelineCancelledException
 
 RUN_ID = int(os.environ.get("RUN_ID", 0))  
@@ -12,40 +13,33 @@ PHASES = [
     "scripts.phase_3.run_phase_3",
 ]
 
-def run_phase(module):
-    print(f"\n=== Running {module} ===")
-    env = os.environ.copy()
 
-    result = subprocess.run(
-        [sys.executable, "-m", module],
-        env=env
-    )
-    # Si el proceso hijo (la fase) salió con nuestro código 64
-    if result.returncode == 64:
-        raise PipelineCancelledException()
-
-    if result.returncode != 0:
-        raise RuntimeError(f"Phase failed: {module}")
     
 
 def main():
-        try:
-            print("=== Starting full pipeline ===")
-            mark_run_started(RUN_ID)
-            for phase in PHASES:
-                run_phase(phase)
+    try:
+        print("=== Starting full pipeline ===")
+        mark_run_started(RUN_ID)
+
+        for idx, phase_module in enumerate(PHASES):
+            # Obtener o crear phase_id
+            phase_id = get_or_create_phase_id(RUN_ID, phase_number=idx)
             
-            mark_run_finished(RUN_ID)
-            print("\n=== Pipeline completed  ===")
-                    
-        except PipelineCancelledException:
-            print(f"--- Pipeline {RUN_ID} stopped by user ---")
-            mark_run_cancelled(RUN_ID)
-            sys.exit(0)
-        except Exception as e:
-            print(f"--- Pipeline {RUN_ID} failed with error: {e} ---")
-            mark_run_finished(RUN_ID)  # Marca como finished pero con status "error"
-            sys.exit(1)
+            # Ejecutar la fase pasando phase_id
+            run_phase(phase_module, phase_id)
+
+        mark_run_finished(RUN_ID)
+        print("\n=== Pipeline completed ===")
+
+    except PipelineCancelledException:
+        print(f"--- Pipeline {RUN_ID} stopped by user ---")
+        mark_run_cancelled(RUN_ID)
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"--- Pipeline {RUN_ID} failed with error: {e} ---")
+        mark_run_finished(RUN_ID)  # marca finished pero con status "error"
+        sys.exit(1)
         
 if __name__ == "__main__":
     main()

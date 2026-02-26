@@ -30,6 +30,7 @@ def recover_stale_runs(db: Session):
     running = db.query(PipelineRun).filter(PipelineRun.status == "running").all()
     for run in running:
         mark_run_cancelled(run.run_id)
+    close_db() # Cerrar sesión de los helpers para evitar conflictos(se abre CURRENT_DB_SESSION al llamar a mark_run_cancelled)
 
 # ---------------------------------
 # Helper: lanzar script python externo
@@ -56,14 +57,13 @@ def start_pipeline(db: Session = Depends(get_db)):
         recover_stale_runs(db)
         raise HTTPException(status_code=400, detail="Another run is already running. Stale runs have been marked as cancelled. Please try again.")
     
-
     # Crear run
     new_run = PipelineRun(status="running")
     db.add(new_run)
     db.commit()
     db.refresh(new_run)
     run_id = new_run.run_id
-    mark_run_started(run_id)
+    
 
     script_path = os.path.join(PROJECT_ROOT, "scripts", "run_pipeline.py")
     if not os.path.exists(script_path):
@@ -74,6 +74,9 @@ def start_pipeline(db: Session = Depends(get_db)):
     except Exception as e:
         mark_run_finished(run_id)
         raise HTTPException(status_code=500, detail=str(e))
+    
+    finally:
+        close_db() # Cerrar sesión de los helpers para evitar conflictos
 
     return {"message": "Pipeline started", "run_id": run_id}
 
@@ -92,7 +95,6 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_run)
     run_id = new_run.run_id
-    mark_run_started(run_id)
 
     script_path = os.path.join(PROJECT_ROOT, "scripts", f"phase_{phase_number}", f"run_phase_{phase_number}.py")
     if not os.path.exists(script_path):
@@ -103,6 +105,9 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
     except Exception as e:
         mark_run_finished(run_id)
         raise HTTPException(status_code=500, detail=str(e))
+    
+    finally:
+        close_db() # Cerrar sesión de los helpers para evitar conflictos
 
     return {"message": f"Phase {phase_number} started", "run_id": run_id}
 
@@ -111,7 +116,6 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
 # ---------------------------------
 @app.get("/status/{run_id}", response_model=RunStatus)
 def get_run_status(run_id: int, db: Session = Depends(get_db)):
-    # update_run_status(run_id)
 
     run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
     if not run:

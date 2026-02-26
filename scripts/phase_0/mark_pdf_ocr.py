@@ -1,55 +1,67 @@
-import csv
+import os
+import psycopg2
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from PyPDF2 import PdfReader
 from tqdm import tqdm
-from scripts.config.phase_0 import CSV_FILE, CSV_OCR_FILE, LOG_FILE
+from scripts.config.phase_0 import LOG_FILE
 
-# ================= UTILITIES =================
 
 def log(msg):
-    """Append message to log file and print"""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-# ================= CORE =================
 
 def pdf_needs_ocr(pdf_path):
-    """
-    Fast heuristic OCR check.
-    Returns True if PDF is likely scanned (needs OCR).
-    """
     try:
         reader = PdfReader(pdf_path)
-
         for page in reader.pages:
             resources = page.get("/Resources")
-            if not resources:
-                continue
-
-            # Presence of fonts strongly indicates real text
-            if "/Font" in resources:
+            if resources and "/Font" in resources:
                 return False
-
         return True
     except Exception:
-        # If unreadable, assume OCR needed (safe default)
         return True
 
-# ================= PROCESS CSV =================
 
-rows_out = []
-with open(CSV_FILE, newline="", encoding="utf-8") as f:
-    reader = csv.DictReader(f)
-    for row in tqdm(reader, desc="Marking PDFs (OCR)", unit="files"):
-        if row["is_pdf"].lower() == "true":
-            row["ocr_needed"] = pdf_needs_ocr(row["full_path"])
-        else:
-            row["ocr_needed"] = False
-        rows_out.append(row)
+DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
+DB_USER = os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user"))
+DB_PASSWORD = os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass"))
+DB_HOST = os.getenv("PGHOST", "localhost")
+DB_PORT = int(os.getenv("PGPORT", "5432"))
 
-with open(CSV_OCR_FILE, "w", newline="", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=rows_out[0].keys())
-    writer.writeheader()
-    writer.writerows(rows_out)
+conn = psycopg2.connect(
+    dbname=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST,
+    port=DB_PORT,
+)
+cur = conn.cursor()
 
-log(f"OCR flags updated in {CSV_OCR_FILE}")
+cur.execute("SELECT id, full_path FROM files WHERE is_pdf = TRUE;")
+pdf_rows = cur.fetchall()
+
+log(f"PDFs detected: {len(pdf_rows)}")
+
+updates = []
+
+with ThreadPoolExecutor(max_workers=4) as executor:
+    futures = {executor.submit(pdf_needs_ocr, path): file_id for file_id, path in pdf_rows}
+
+    for future in tqdm(as_completed(futures), total=len(futures), desc="Marking PDFs"):
+        file_id = futures[future]
+        needs_ocr = future.result()
+        updates.append((needs_ocr, file_id))
+
+for ocr_needed, file_id in updates:
+    cur.execute(
+        "UPDATE files SET ocr_needed = %s WHERE id = %s;",
+        (ocr_needed, file_id),
+    )
+
+conn.commit()
+cur.close()
+conn.close()
+
+log("OCR flags updated in database")

@@ -8,8 +8,8 @@ BASE_PATH = os.getenv("BASE_PATH")#, os.path.join("Z:\\\\2012"))
 
 # CSV outputs
 CSV_FILE = os.path.join(CSV_DIR, "file_audit_2.csv")
-CSV_OCR_FILE = os.path.join(CSV_DIR, "file_audit_ocr.csv")
-AUDIT_SUMMARY_FILE = os.path.join(REPORTS_DIR, "audit_summary.csv")
+CSV_OCR_FILE = os.path.join(CSV_DIR, "file_audit_ocr_2.csv")
+AUDIT_SUMMARY_FILE = os.path.join(REPORTS_DIR, "audit_summary_2.csv")
 
 # -----------------------------
 # Archivo de log

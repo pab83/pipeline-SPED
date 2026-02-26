@@ -16,6 +16,7 @@ RUN_ID = int(os.getenv("RUN_ID", "0"))
 PHASE_NUMBER = 0
 # Lista de scripts a ejecutar en esta fase
 SCRIPTS = [
+    "create_db.py",
     "scan_files.py",
     "mark_pdf_ocr.py",
     "generate_phase_0_report.py"

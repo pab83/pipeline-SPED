@@ -15,7 +15,6 @@ from scripts.helpers.orchestrate import (
 RUN_ID = int(os.getenv("RUN_ID", "0"))  
 PHASE_NUMBER = 1
 SCRIPTS = [
-        "populate_db.py",   # Llena la DB con metadata inicial
         "hash_files.py",    # Calcula hashes de los archivos
         "generate_phase_1_report.py"    
     ] 
