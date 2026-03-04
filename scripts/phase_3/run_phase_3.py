@@ -16,7 +16,9 @@ RUN_ID = int(os.getenv("RUN_ID", "0"))
 PHASE_NUMBER = 3  
 SCRIPTS = [
         #"describe_img.py",
+        #"process_ocr_tasks.py",
         #"process_files.py",
+
     ] 
 
 def main():

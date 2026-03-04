@@ -19,7 +19,6 @@ SCRIPTS = [
         "dedup.py", # Only dedup by hash for now.
         "extract_text.py",
         "img_looks_like_document.py",
-        "process_ocr_tasks.py",
     ]
 
 def main():

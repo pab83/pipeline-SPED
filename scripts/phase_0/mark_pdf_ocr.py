@@ -92,12 +92,12 @@ def main():
                 # CHECKPOINT: Guardado cada 100 archivos
                 if processed_count % BATCH_SIZE == 0 and processed_count > 0:
                     conn.commit()
-                    pbar.set_postfix({"status": "Batch Committed"})
+                    log(f"Checkpoint: {processed_count} archivos procesados y guardados en la base de datos.")
 
             except Exception as e:
                 log(f"Error en hilo para ID {file_id}: {e}")
 
-    # Commit final para los restantes
+    # Commit final para los restantes   
     conn.commit()
     cur.close()
     conn.close()

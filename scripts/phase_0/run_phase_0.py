@@ -18,8 +18,8 @@ PHASE_NUMBER = 0
 SCRIPTS = [
     #"create_db.py",
     #"scan_files.py",
-    "mark_pdf_ocr.py",
-    "generate_phase_0_report.py"
+    #"mark_pdf_ocr.py",
+    #"generate_phase_0_report.py"
 ]
 
 def main():

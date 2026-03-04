@@ -4,17 +4,23 @@ import xxhash
 import psycopg2
 from psycopg2 import OperationalError
 from multiprocessing import Pool, cpu_count
-from scripts.config.general import LOG_FILE
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from tqdm import tqdm
+from scripts.config.phase_1 import LOG_FILE
+
 
 BATCH_SIZE = 1000
-MAX_WORKERS = min(cpu_count(), 8)
+MAX_WORKERS = min(cpu_count(), 6)
 
-def log(msg: str) -> None:
+# ------------------------
+# UTILS
+# ------------------------
+def log(msg):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-def get_db_connection(retries: int = 10, delay: int = 3):
+def get_db_connection(retries=10, delay=3):
     import time
     for attempt in range(1, retries + 1):
         try:
@@ -33,7 +39,6 @@ def get_db_connection(retries: int = 10, delay: int = 3):
 # =========================
 # HASH FUNCTIONS
 # =========================
-
 def compute_xxhash64(file_path):
     try:
         h = xxhash.xxh64()
@@ -56,139 +61,68 @@ def compute_sha256(file_path):
         log(f"sha256 error {file_path}: {e}")
         return None
 
+# =========================
+# WORKERS
+# =========================
 def process_xxhash(row):
     file_id, full_path = row
-    result = compute_xxhash64(full_path)
-    return (result, file_id) if result is not None else None
+    h = compute_xxhash64(full_path)
+    return (h, file_id) if h is not None else None
 
 def process_sha256(row):
     file_id, full_path = row
-    result = compute_sha256(full_path)
-    return (result, file_id) if result is not None else None
+    h = compute_sha256(full_path)
+    return (h, file_id) if h is not None else None
 
 # =========================
 # MAIN
 # =========================
-
 def main():
     conn = get_db_connection()
     cur = conn.cursor()
-    pool = Pool(processes=MAX_WORKERS)
+    
+    # Contar total archivos pendientes
+    cur.execute("SELECT COUNT(*) FROM files WHERE xxhash64 IS NULL;")
+    total_files = cur.fetchone()[0]
+    log(f"Total archivos pendientes: {total_files}")
 
-    # ======================================
-    # XXHASH64 CALCULATION
-    # ======================================
-    log("Starting xxhash64 calculation...")
-
+    processed_count = 0
     last_id = 0
+
+    pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
+
+    pbar = tqdm(total=total_files, desc="Hashing xxhash64", unit="file")
 
     while True:
         cur.execute(
-            """
-            SELECT id, full_path
-            FROM files
-            WHERE xxhash64 IS NULL AND id > %s
-            ORDER BY id
-            LIMIT %s
-            """,
+            "SELECT id, full_path FROM files WHERE xxhash64 IS NULL AND id > %s ORDER BY id LIMIT %s",
             (last_id, BATCH_SIZE),
         )
-
         batch = cur.fetchall()
         if not batch:
             break
 
         last_id = batch[-1][0]
 
-        results = pool.map(process_xxhash, batch)
-        results = [r for r in results if r]
+        futures = {pool.submit(process_xxhash, row): row[0] for row in batch}
+        results = []
+        for future in as_completed(futures):
+            res = future.result()
+            if res:
+                results.append(res)
+            processed_count += 1
+            pbar.update(1)  
 
         if results:
-            cur.executemany(
-                "UPDATE files SET xxhash64=%s WHERE id=%s",
-                results
-            )
+            cur.executemany("UPDATE files SET xxhash64=%s WHERE id=%s", results)
             conn.commit()
-            log(f"Updated xxhash64 for {len(results)} files (last_id={last_id})")
+            log(f"Batch committed ({len(results)} files)")
 
-    log("xxhash64 phase completed.")
-
-    # ======================================
-    # DETEC XXHASH64 DUPLICATES
-    # ======================================
-    log("Scanning for duplicate xxhash64 groups...")
-
-    cur.execute(
-        """
-        SELECT id, xxhash64
-        FROM files
-        WHERE xxhash64 IS NOT NULL
-        ORDER BY xxhash64, id
-        """
-    )
-
-    current_hash = None
-    group_ids = []
-
-    while True:
-        rows = cur.fetchmany(BATCH_SIZE)
-        if not rows:
-            break
-
-        for file_id, xxh in rows:
-            if xxh != current_hash:
-                # Procesar grupo anterior
-                if current_hash is not None and len(group_ids) > 1:
-                    process_duplicate_group(cur, pool, group_ids)
-
-                current_hash = xxh
-                group_ids = [file_id]
-            else:
-                group_ids.append(file_id)
-
-    # Último grupo
-    if current_hash is not None and len(group_ids) > 1:
-        process_duplicate_group(cur, pool, group_ids)
-
-    conn.commit()
-    pool.close()
-    pool.join()
+    pbar.close()
+    pool.shutdown(wait=True)
     cur.close()
     conn.close()
-
-    log("Duplicate verification completed.")
-
-# =========================
-# DUPLICATE PROCESSING
-# =========================
-
-def process_duplicate_group(cur, pool, ids):
-    """
-    Calcula sha256 solo para IDs sin sha256.
-    Se ejecuta grupo por grupo, evitando arrays gigantes.
-    """
-    cur.execute(
-        """
-        SELECT id, full_path
-        FROM files
-        WHERE id = ANY(%s)
-        AND sha256 IS NULL
-        """,
-        (ids,),
-    )
-
-    files = cur.fetchall()
-    if not files:
-        return
-
-    results = pool.map(process_sha256, files)
-    results = [r for r in results if r]
-
-    if results:
-        cur.executemany(
-            "UPDATE files SET sha256=%s WHERE id=%s",
-            results
-        )
+    log(f"XXHASH64 hashing completed. Total processed: {processed_count}")
 
 if __name__ == "__main__":
     main()
