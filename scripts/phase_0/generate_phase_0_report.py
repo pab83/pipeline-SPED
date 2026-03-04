@@ -9,76 +9,89 @@ from scripts.config.phase_0 import AUDIT_SUMMARY_FILE
 REPORT_FILE = AUDIT_SUMMARY_FILE
 os.makedirs(os.path.dirname(REPORT_FILE), exist_ok=True)
 
-
 def log(msg):
+    print(msg)
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
-    print(msg)
-
-
-DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
-DB_USER = os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user"))
-DB_PASSWORD = os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass"))
-DB_HOST = os.getenv("PGHOST", "localhost")
-DB_PORT = int(os.getenv("PGPORT", "5432"))
 
 conn = psycopg2.connect(
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST,
-    port=DB_PORT,
+    dbname=os.getenv("PGDATABASE", "auditdb"),
+    user=os.getenv("PGUSER", "user"),
+    password=os.getenv("PGPASSWORD", "pass"),
+    host=os.getenv("PGHOST", "localhost"),
+    port=int(os.getenv("PGPORT", "5432")),
 )
-cur = conn.cursor()
 
-cur.execute("""
-    SELECT file_type, depth, is_pdf, ocr_needed, size_bytes, full_path
-    FROM files;
-""")
-
-rows = cur.fetchall()
-
-total_files = 0
-pdf_files = 0
-ocr_needed_count = 0
-file_types = Counter()
-depth_counts = Counter()
-large_files = []
-
-for file_type, depth, is_pdf, ocr_needed, size_bytes, full_path in rows:
-    total_files += 1
-    file_types[file_type] += 1
-    depth_counts[depth] += 1
-
-    if is_pdf:
-        pdf_files += 1
-        if ocr_needed:
-            ocr_needed_count += 1
-
-    if size_bytes >= LARGE_FILE_THRESHOLD:
-        large_files.append((full_path, size_bytes))
-
-with open(REPORT_FILE, "w", newline="", encoding="utf-8") as f:
+with conn.cursor() as cur, open(REPORT_FILE, "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
+
+    # =========================================
+    # 1️⃣ MÉTRICAS GLOBALES (100% SQL)
+    # =========================================
+    cur.execute("""
+        SELECT 
+            COUNT(*) AS total_files,
+            COUNT(*) FILTER (WHERE is_pdf) AS total_pdfs,
+            COUNT(*) FILTER (WHERE is_pdf AND ocr_needed) AS ocr_needed
+        FROM files;
+    """)
+    total_files, pdf_files, ocr_needed_count = cur.fetchone()
+
     writer.writerow(["Metric", "Value"])
     writer.writerow(["Total files", total_files])
     writer.writerow(["Total PDFs", pdf_files])
     writer.writerow(["PDFs needing OCR", ocr_needed_count])
     writer.writerow([])
+
+    # =========================================
+    # 2️⃣ DISTRIBUCIÓN POR TIPO
+    # =========================================
     writer.writerow(["File type distribution", "Count"])
-    for ft, count in file_types.items():
-        writer.writerow([ft, count])
+    cur.execute("""
+        SELECT file_type, COUNT(*)
+        FROM files
+        GROUP BY file_type
+        ORDER BY COUNT(*) DESC;
+    """)
+    for row in cur:
+        writer.writerow(row)
     writer.writerow([])
+
+    # =========================================
+    # 3️⃣ DISTRIBUCIÓN POR PROFUNDIDAD
+    # =========================================
     writer.writerow(["Files per depth", "Count"])
-    for depth, count in sorted(depth_counts.items()):
-        writer.writerow([depth, count])
+    cur.execute("""
+        SELECT depth, COUNT(*)
+        FROM files
+        GROUP BY depth
+        ORDER BY depth;
+    """)
+    for row in cur:
+        writer.writerow(row)
     writer.writerow([])
+
+    # =========================================
+    # 4️⃣ ARCHIVOS GRANDES (STREAMING)
+    # =========================================
     writer.writerow(["Large files (over threshold)"])
     writer.writerow(["Path", "Size (bytes)"])
-    for path, size in large_files:
-        writer.writerow([path, size])
 
-cur.close()
+    # Server-side cursor para no cargar todo en RAM
+    large_cur = conn.cursor(name="large_files_cursor")
+    large_cur.itersize = 10000
+
+    large_cur.execute("""
+        SELECT full_path, size_bytes
+        FROM files
+        WHERE size_bytes >= %s
+        ORDER BY size_bytes DESC;
+    """, (LARGE_FILE_THRESHOLD,))
+
+    for row in large_cur:
+        writer.writerow(row)
+
+    large_cur.close()
+
 conn.close()
-
 log(f"Audit summary generated: {REPORT_FILE}")
