@@ -43,7 +43,8 @@ def launch_script(script_path: str, run_id: int, phase_number: int = None):
 
     subprocess.Popen(
         ["python", "-u", script_path],
-        env=env
+        env=env,
+        start_new_session=True
     )
 
 # ---------------------------------
@@ -165,7 +166,7 @@ def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
     
     if run_id:
         # Caso 1: Detener uno específico
-        active_runs = query.filter(PipelineRun.run_id == run_id).first()
+        active_runs = query.filter(PipelineRun.run_id == run_id).all()
         if not active_runs:
             raise HTTPException(status_code=404, detail=f"Active run {run_id} not found")
     else:

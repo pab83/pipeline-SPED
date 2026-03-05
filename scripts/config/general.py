@@ -19,3 +19,7 @@ LARGE_FILE_THRESHOLD = 100 * 1024 * 1024  # 100MB
 # ENSURE DIRECTORIES EXIST
 for d in [CSV_DIR, LOG_DIR, REPORTS_DIR, TMP_DIR]:
     os.makedirs(d, exist_ok=True)
+    
+# RETRIES
+MAX_RETRIES = 5
+RETRY_DELAY = 60 # seconds

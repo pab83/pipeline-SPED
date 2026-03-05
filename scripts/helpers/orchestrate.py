@@ -3,6 +3,7 @@ import sys
 import psutil
 import subprocess
 from typing import List
+from scripts.config.general import MAX_RETRIES, RETRY_DELAY
 
 from scripts.exceptions import PipelineCancelledException
 from scripts.helpers.db_status import (
@@ -61,65 +62,82 @@ def execute_phase_logic(run_id, phase_number, scripts_list):
 #----------- Función para ejecutar scripts -----------        
 def run_script(phase_id, script_name, phase_module):
     logs_buffer = []
-    log(f"=== Running {script_name} ===", logs_buffer)
+    attempt = 0
+    while attempt < MAX_RETRIES:
+        attempt += 1
+        success = False
+        log(f"=== Running {script_name} == Attempt {attempt}/{MAX_RETRIES}:  ===", logs_buffer)
 
-    module = f"{phase_module}.{script_name.replace('.py','')}"
-    
-    db = get_db()
-    try:
-        mark_script_running(phase_id, script_name, logs=logs_buffer)
-        process = subprocess.Popen(
-            [sys.executable, "-m", module],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1,
-        )
+        module = f"{phase_module}.{script_name.replace('.py','')}"
+        
+        db = get_db()
+        try:
+            mark_script_running(phase_id, script_name, logs=logs_buffer)
+            process = subprocess.Popen(
+                [sys.executable, "-m", module],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
 
-        # Leer línea a línea mientras corre
-        for line in process.stdout:
-            line = line.rstrip()
-            log(line, logs_buffer)
-            update_script_status(phase_id, script_name, logs=logs_buffer)
+            # Leer línea a línea mientras corre
+            for line in process.stdout:
+                line = line.rstrip()
+                log(line, logs_buffer)
+                update_script_status(phase_id, script_name, logs=logs_buffer)
 
-            if check_cancelled(RUN_ID):
-                log(f"CANCEL SIGNAL DETECTED. Killing {script_name}...", logs_buffer)
+                if check_cancelled(RUN_ID):
+                    log(f"CANCEL SIGNAL DETECTED. Killing {script_name}...", logs_buffer)
+                    p = psutil.Process(process.pid)
+                    for child in p.children(recursive=True):
+                        child.kill()
+                    p.kill()
+
+                    mark_script_cancelled(phase_id, script_name, logs=logs_buffer)
+                    raise PipelineCancelledException(f"Run {RUN_ID} was cancelled by user.")
+
+            process.wait()
+
+            if process.returncode == 0:
+                mark_script_finished(phase_id, script_name, logs=logs_buffer)
+            else:
+                # FALLO DEL SCRIPT (Exit code != 0)
+                error_msg = f"Exit code {process.returncode}"
+                log(f"⚠️ {script_name} failed (Attempt {attempt}) with {error_msg}", logs_buffer)
+                
+                if attempt < MAX_RETRIES:
+                    log(f"Retrying in {RETRY_DELAY}s...", logs_buffer)
+                    update_script_status(phase_id, script_name, logs=logs_buffer)
+                    time.sleep(RETRY_DELAY)
+                else:
+                    # Agotamos intentos
+                    mark_script_error(phase_id, script_name, error_msg=error_msg, logs=logs_buffer)
+                    raise RuntimeError(f"{script_name} failed after {MAX_RETRIES} attempts.")
+            
+        except KeyboardInterrupt:
+            log("KeyboardInterrupt detected. Cancelling run...", logs_buffer)
+            try:
                 p = psutil.Process(process.pid)
                 for child in p.children(recursive=True):
                     child.kill()
                 p.kill()
-
-                mark_script_cancelled(phase_id, script_name, logs=logs_buffer)
-                raise PipelineCancelledException(f"Run {RUN_ID} was cancelled by user.")
-
-        process.wait()
-
-        if process.returncode == 0:
-            mark_script_finished(phase_id, script_name, logs=logs_buffer)
-        else:
-            mark_script_error(phase_id, script_name, error_msg=f"Exit code {process.returncode}", logs=logs_buffer)
-            raise RuntimeError(f"{script_name} failed with exit code {process.returncode}")
+            except Exception:
+                pass
+            
+            mark_script_cancelled(phase_id, script_name, logs=logs_buffer)
+            raise PipelineCancelledException("Pipeline interrupted by user (Ctrl+C)")
         
-    except KeyboardInterrupt:
-        log("KeyboardInterrupt detected. Cancelling run...", logs_buffer)
-        try:
-            p = psutil.Process(process.pid)
-            for child in p.children(recursive=True):
-                child.kill()
-            p.kill()
-        except Exception:
+        except Exception as e:
+            log(f"EXCEPTION: {e}", logs_buffer)
+            mark_script_error(phase_id, script_name, error_msg=str(e), logs=logs_buffer)
+            raise
+
+        finally:
             pass
         
-        mark_script_cancelled(phase_id, script_name, logs=logs_buffer)
-        raise PipelineCancelledException("Pipeline interrupted by user (Ctrl+C)")
+    close_db()  
     
-    except Exception as e:
-        log(f"EXCEPTION: {e}", logs_buffer)
-        mark_script_error(phase_id, script_name, error_msg=str(e), logs=logs_buffer)
-        raise
-
-    finally:
-        close_db()  
 
 #----------- Función para ejecutar fases completas -----------  
 def run_phase(module, phase_id):

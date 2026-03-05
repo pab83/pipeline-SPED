@@ -1,16 +1,18 @@
 import os
+import time
 import hashlib
 import xxhash
 import psycopg2
-from psycopg2 import OperationalError
+from psycopg2 import OperationalError, InterfaceError, DatabaseError
+from psycopg2.extras import execute_values
 from multiprocessing import Pool, cpu_count
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from scripts.config.phase_1 import LOG_FILE
 
 
-BATCH_SIZE = 1000
-MAX_WORKERS = min(cpu_count(), 6)
+BATCH_SIZE = 2000
+MAX_WORKERS = min(cpu_count(), 16)
 
 # ------------------------
 # UTILS
@@ -36,14 +38,68 @@ def get_db_connection(retries=10, delay=3):
             time.sleep(delay)
     raise RuntimeError("Could not connect to Postgres.")
 
+def update_with_retries(conn, results, max_retries=5, initial_delay=2):
+    """
+    Intenta ejecutar el bulk update con reintentos exponenciales.
+    Si la conexión se pierde, intenta reestablecerla.
+    """
+    retries = 0
+    delay = initial_delay
+    
+    while retries < max_retries:
+        try:
+            # Necesitamos un cursor fresco por si el anterior quedó corrupto
+            with conn.cursor() as cur:
+                execute_values(
+                    cur,
+                    """
+                    UPDATE files AS f 
+                    SET xxhash64 = v.hash 
+                    FROM (VALUES %s) AS v(hash, id) 
+                    WHERE f.id = v.id
+                    """,
+                    results
+                )
+                conn.commit()
+                return True # Éxito
+        
+        except (OperationalError, InterfaceError, DatabaseError) as e:
+            retries += 1
+            log(f"⚠️ Error de DB (Intento {retries}/{max_retries}): {e}")
+            
+            try:
+                conn.rollback() # Intentar limpiar la transacción fallida
+            except:
+                pass 
+
+            if retries == max_retries:
+                log("❌ Máximos reintentos alcanzados. Abortando lote.")
+                return False
+
+            log(f"⏱️ Esperando {delay}s antes de reintentar...")
+            time.sleep(delay)
+            delay *= 2 # Backoff exponencial (2, 4, 8, 16...)
+
+            # Si la conexión está muerta, intentamos recrearla
+            if conn.closed != 0:
+                log("🔄 Conexión cerrada. Intentando reconectar...")
+                try:
+                    conn = get_db_connection()
+                except:
+                    log("🚫 No se pudo recuperar la conexión.")
+    
+    return False
+
 # =========================
 # HASH FUNCTIONS
 # =========================
+CHUNK_SIZE = 128 * 1024
+
 def compute_xxhash64(file_path):
     try:
         h = xxhash.xxh64()
-        with open(file_path, "rb") as f:
-            for chunk in iter(lambda: f.read(8192), b""):
+        with open(file_path, "rb", buffering=CHUNK_SIZE) as f:
+            for chunk in iter(lambda: f.read(CHUNK_SIZE), b""):
                 h.update(chunk)
         return h.intdigest()
     except Exception as e:
@@ -53,8 +109,8 @@ def compute_xxhash64(file_path):
 def compute_sha256(file_path):
     try:
         h = hashlib.sha256()
-        with open(file_path, "rb") as f:
-            for chunk in iter(lambda: f.read(8192), b""):
+        with open(file_path, "rb", buffering=CHUNK_SIZE) as f:
+            for chunk in iter(lambda: f.read(CHUNK_SIZE), b""):
                 h.update(chunk)
         return h.hexdigest()
     except Exception as e:
@@ -104,6 +160,7 @@ def main():
 
         last_id = batch[-1][0]
 
+        # prallelizar hashing 
         futures = {pool.submit(process_xxhash, row): row[0] for row in batch}
         results = []
         for future in as_completed(futures):
@@ -114,10 +171,12 @@ def main():
             pbar.update(1)  
 
         if results:
-            cur.executemany("UPDATE files SET xxhash64=%s WHERE id=%s", results)
-            conn.commit()
-            log(f"Batch committed ({len(results)} files)")
-
+            success = update_with_retries(conn, results)
+            if success:
+                log(f"✅ Batch actualizado exitosamente. Total procesados: {processed_count}")
+            else:
+                log(f"🚨 Error crítico: El lote de {len(results)} se perdió.")
+                sys.exit(1)
     pbar.close()
     pool.shutdown(wait=True)
     cur.close()
