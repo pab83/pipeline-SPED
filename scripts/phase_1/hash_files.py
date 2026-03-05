@@ -11,7 +11,7 @@ from tqdm import tqdm
 from scripts.config.phase_1 import LOG_FILE
 
 
-BATCH_SIZE = 2000
+BATCH_SIZE = 5000
 MAX_WORKERS = min(cpu_count(), 16)
 
 # ------------------------
@@ -147,7 +147,7 @@ def main():
 
     pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
-    pbar = tqdm(total=total_files, desc="Hashing xxhash64", unit="file")
+    pbar = tqdm(total=total_files, desc="Hashing xxhash64", unit="file",miniters=500,mininterval=5) #No se imprime mas de 1 cada 5s y cada 500files
 
     while True:
         cur.execute(
