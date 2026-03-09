@@ -13,6 +13,8 @@ def log(msg: str) -> None:
 
 
 def get_db_connection(retries: int = 10, delay: int = 3):
+    """Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     import time
 
     for attempt in range(1, retries + 1):

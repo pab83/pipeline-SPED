@@ -22,6 +22,7 @@ SCRIPTS = [
     ]
 
 def main():
+    """ Orquesta la ejecución de la Fase 2 del pipeline, que incluye migraciones a la base de datos, deduplicación de archivos, extracción de texto y análisis de imágenes para identificar documentos. La función establece el archivo de log, obtiene o crea el ID de la fase actual y ejecuta cada script en orden, registrando el progreso en el log. Cada script se ejecuta dentro de su propia función para mantener una estructura clara y modular."""
     # Establecer el archivo de log antes de ejecutar la lógica
     set_log_file(LOG_FILE)
     

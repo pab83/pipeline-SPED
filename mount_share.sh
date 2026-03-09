@@ -15,7 +15,7 @@ else
     
     # Montar el share
     sudo mount -t cifs "$TRUENAS_IP" "$TRUENAS_MOUNT" \
-      -o "username=$TRUENAS_USER,password=$TRUENAS_PASS,domain=$TRUENAS_DOMAIN,uid=1000,gid=1000,ro,noserverino,vers=3.0"
+      -o "username=$TRUENAS_USER,password=$TRUENAS_PASS,domain=$TRUENAS_DOMAIN,uid=1000,gid=1000,vers=3.0,serverino,cache=loose,rsize=1048576,wsize=1048576,actimeo=60"
     
     if [ $? -eq 0 ]; then
         echo "CIFS share montado en $TRUENAS_MOUNT correctamente ✅"

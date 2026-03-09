@@ -17,6 +17,7 @@ PHASES = [
     
 
 def main():
+    """ Función principal que ejecuta el pipeline completo. Marca el inicio del run, ejecuta cada fase en orden, y maneja cualquier excepción que pueda ocurrir durante la ejecución. Si el usuario interrumpe el proceso (por ejemplo, con Ctrl+C), se captura la excepción PipelineCancelledException y se marca el run como cancelado. Si ocurre cualquier otro error, se marca el run como terminado con error. Al finalizar correctamente todas las fases, se marca el run como terminado exitosamente."""
     try:
         print("=== Starting full pipeline ===")
         mark_run_started(RUN_ID)

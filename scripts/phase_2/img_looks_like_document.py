@@ -29,6 +29,8 @@ def log(msg: str) -> None:
 
 
 def get_db_connection(retries=10, delay=3):
+    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     import time
     for attempt in range(1, retries + 1):
         try:
@@ -92,6 +94,7 @@ def looks_like_document(img) -> bool:
 
 
 def process_image(row):
+    """Procesa una imagen para determinar si parece un documento escaneado. Recibe una fila con file_id y path_str, verifica la extensión, normaliza la ruta, intenta leer la imagen, la redimensiona si es muy grande y aplica la función looks_like_document para decidir si marcarla para OCR. Devuelve el file_id si parece un documento, o None si no lo es o si ocurre algún error durante el procesamiento."""
     file_id, path_str = row
     try:
         ext = os.path.splitext(path_str)[1].lower()
@@ -128,6 +131,8 @@ def process_image(row):
         return None
 
 def main():
+    """ Analiza imágenes para detectar cuáles parecen documentos escaneados y marca esos archivos con ocr_needed=True en la base de datos.
+    El script selecciona imágenes únicas (por hash) que aún no están marcadas para OCR, procesa cada imagen para determinar si parece un documento escaneado (basado en tamaño, proporción, bordes y textura) y actualiza la base de datos para marcar aquellas que parecen documentos con ocr_needed=True. El procesamiento se realiza en paralelo usando multiprocessing para mejorar el rendimiento, y se registran los resultados en el log."""
     log("=== Running img_looks_like_document.py ===")
 
     conn = get_db_connection()

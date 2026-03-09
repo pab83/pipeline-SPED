@@ -6,6 +6,7 @@ mq_client = RedisQueueClient()
 RESULT_QUEUE = "cola_resultados"
 
 def handle_result(result_dict):
+    """ Maneja un resultado recibido de la cola. Valida el mensaje, extrae el file_id usando el correlation_id, extrae el texto del resultado y actualiza la base de datos. Si ocurre algún error durante el procesamiento, lo loguea y continúa con el siguiente resultado. """
     result = ResultMessage.model_validate(result_dict)
     print(f"Resultado recibido: {result.message_id} - Modelo: {result.model}")
 

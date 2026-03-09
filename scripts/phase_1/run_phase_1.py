@@ -21,6 +21,10 @@ SCRIPTS = [
 
 
 def main():
+    """
+    Orquesta la ejecución de la fase 0 de la pipeline.
+    Configura el archivo de log específico para esta fase.    
+    """
     # Establecer el archivo de log antes de ejecutar la lógica
     set_log_file(LOG_FILE)
     

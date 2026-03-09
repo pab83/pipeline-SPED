@@ -11,6 +11,7 @@ def log(msg: str):
     print(msg)
 
 def get_db_connection(retries=10, delay=3):
+    """ Intenta conectarse a la base de datos Postgres con reintentos. Intenta establecer una conexión a la base de datos utilizando las credenciales y parámetros de conexión definidos en las variables de entorno. Si la conexión falla, espera un tiempo definido por delay (en segundos) antes de intentar nuevamente, hasta un máximo de retries intentos. Si después de todos los intentos no se logra establecer la conexión, lanza una excepción RuntimeError. Esto es útil para manejar situaciones en las que la base de datos puede no estar disponible inmediatamente (por ejemplo, durante el arranque del contenedor) y para evitar que el script falle inmediatamente debido a problemas temporales de conexión."""
     import time
     for attempt in range(1, retries + 1):
         try:

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, BigInteger, String, Text, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 from api.db import Base
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 
 # ----------------------------
@@ -9,6 +9,7 @@ from typing import List, Optional
 # ----------------------------
 
 class PipelineRun(Base):
+    """ Modelo ORM que representa una ejecución completa del pipeline. Contiene información general sobre la ejecución, como su estado global, la fase actual, el número de archivos procesados, y timestamps para seguimiento. Este modelo se relaciona con PipelinePhase para mantener un desglose jerárquico de las fases dentro de cada ejecución del pipeline."""
     __tablename__ = "pipeline_runs"
     __table_args__ = {"schema": "pipeline_status"}  # <--- schema separado
 
@@ -25,6 +26,7 @@ class PipelineRun(Base):
 
 
 class PipelinePhase(Base):
+    """ Modelo ORM que representa una fase específica dentro de una ejecución del pipeline. Cada fase tiene un número identificador, un estado, timestamps para seguimiento, y un campo para mensajes de error en caso de que la fase falle. Este modelo se relaciona con PipelineRun para mantener la jerarquía de ejecución y con PipelineScript para mantener un desglose detallado de los scripts ejecutados dentro de cada fase."""
     __tablename__ = "pipeline_phases"
     __table_args__ = {"schema": "pipeline_status"}
 
@@ -41,6 +43,7 @@ class PipelinePhase(Base):
 
 
 class PipelineScript(Base):
+    """ Modelo ORM que representa la ejecución de un script específico dentro de una fase del pipeline. Contiene información detallada sobre el script, como su nombre, estado, logs capturados durante su ejecución, y mensajes de error si el script falla. Este modelo se relaciona con PipelinePhase para mantener la jerarquía de fases y scripts dentro de cada ejecución del pipeline."""
     __tablename__ = "pipeline_scripts"
     __table_args__ = {"schema": "pipeline_status"}
 
@@ -59,20 +62,62 @@ class PipelineScript(Base):
 # ----------------------------
 
 class ScriptStatus(BaseModel):
-    script_name: str
-    status: str
-    error_message: Optional[str] = None
-    logs: Optional[List[str]] = []
+    """
+    Representa el estado de una ejecución de un script.
+    Contiene el nombre, estado, logs y detalles de error si lo hubiera.
+    """
+    script_name: str = Field(
+        ..., 
+        example="process_data.py", 
+        description="Nombre del archivo script que se está ejecutando"
+    )
+    status: str = Field(
+        ..., 
+        example="finished", 
+        description="Estado del script: pending, running, finished, error o cancelled"
+    )
+    error_message: Optional[str] = Field(
+        None, 
+        example="File not found", 
+        description="Detalle del error si el script falló"
+    )
+    logs: Optional[List[str]] = Field(
+        [], 
+        example=["Iniciando...", "Cargando CSV...", "Proceso completado"], 
+        description="Lista de líneas de log capturadas durante la ejecución del script"
+    )
 
 class PhaseStatus(BaseModel):
-    phase_number: int
-    status: str
-    scripts: List[ScriptStatus] = []
-    error_message: Optional[str] = None
+    """
+    Representa el estado de una ejecución de una fase.
+    Contiene numero de fase, estado, desglose jerárquico de scripts y detalles de error si lo hubiera.
+    """
+    phase_number: int = Field(
+        ..., 
+        example=1, 
+        description="Número de la fase dentro del ciclo de la pipeline (0-3)"
+    )
+    status: str = Field(
+        ..., 
+        example="running", 
+        description="Estado actual de la fase completa"
+    )
+    scripts: List[ScriptStatus] = Field(
+        [], 
+        description="Lista detallada de todos los scripts ejecutados en esta fase"
+    )
+    error_message: Optional[str] = Field(
+        None, 
+        description="Error general a nivel de fase si lo hubiera"
+    )
 
 class RunStatus(BaseModel):
-    run_id: int
-    status: str
-    current_phase: int
-    processed_files: Optional[int] = 0
-    phases: List[PhaseStatus] = []
+    """
+    Representa el estado global de una ejecución de la pipeline.
+    Contiene numero de run, estado, desglose jerárquico de fases y scripts y detalles de error si lo hubiera.
+    """
+    run_id: int = Field(..., example=101, description="ID único de la ejecución")
+    status: str = Field(..., example="running", description="Estado global del proceso")
+    current_phase: int = Field(..., description="Fase que se está ejecutando actualmente")
+    processed_files: Optional[int] = Field(0, description="Contador de archivos procesados hasta el momento")
+    phases: List[PhaseStatus] = Field([], description="Detalle de cada una de las fases del run")

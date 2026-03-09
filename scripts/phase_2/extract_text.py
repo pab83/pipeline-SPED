@@ -17,6 +17,8 @@ def log(msg: str) -> None:
 
 
 def get_db_connection(retries: int = 10, delay: int = 3):
+    """Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     import time
 
     for attempt in range(1, retries + 1):
@@ -39,6 +41,8 @@ def get_db_connection(retries: int = 10, delay: int = 3):
 
 
 def safe_read_text_file(path: str, max_chars: int) -> str:
+    """Lee un archivo de texto con diferentes codificaciones, limitando la cantidad de caracteres leídos.
+    Intenta leer el archivo con varias codificaciones comunes (UTF-8, Latin-1, CP1252) y devuelve el contenido leído hasta el límite de caracteres especificado. Si ocurre algún error durante la lectura con una codificación, se intenta con la siguiente. Si todas las codificaciones fallan, se devuelve una cadena vacía."""   
     for enc in ("utf-8", "latin-1", "cp1252"):
         try:
             with open(path, "r", encoding=enc, errors="ignore") as f:
@@ -50,6 +54,8 @@ def safe_read_text_file(path: str, max_chars: int) -> str:
 
 
 def extract_text_from_pdf(path: str, max_chars: int, ocr_needed: bool) -> str:
+    """Extrae texto de un archivo PDF, limitando la cantidad de caracteres extraídos.
+    Si ocr_needed es True, se omite la extracción (se deja para una futura fase de OCR). De lo contrario, se utiliza PyPDF2 para extraer texto de las páginas del PDF, acumulando texto hasta alcanzar el límite de caracteres especificado. Si ocurre algún error durante la lectura, se captura y se devuelve una cadena vacía."""
     if ocr_needed:
         log(f"Skipping OCR for now (ocr_needed=True) for: {path}")
         return ""
@@ -80,6 +86,8 @@ def extract_text_from_pdf(path: str, max_chars: int, ocr_needed: bool) -> str:
 
 
 def extract_text_from_docx(path: str, max_chars: int) -> str:
+    """Extrae texto de un archivo DOCX, limitando la cantidad de caracteres extraídos.
+    Lee los párrafos y tablas del documento, acumulando texto hasta alcanzar el límite de caracteres especificado. Si ocurre algún error durante la lectura, se captura y se devuelve una cadena vacía."""
     try:
         doc = Document(path)
         parts = []
@@ -112,6 +120,8 @@ def extract_text_from_docx(path: str, max_chars: int) -> str:
 
 
 def main(batch_size: int = 500):
+    """Extrae texto de archivos PDF, DOCX y TXT que aún no tienen texto extraído en la base de datos.
+    Para PDFs, si ocr_needed es True, se omite la extracción (se deja para una futura fase de OCR). Para otros archivos, se extrae el texto usando métodos específicos según el tipo de archivo. El texto extraído se guarda en la base de datos junto con la cantidad de caracteres extraídos."""
     conn = get_db_connection()
     cur = conn.cursor()
 

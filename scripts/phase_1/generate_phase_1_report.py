@@ -37,6 +37,8 @@ def get_db_connection(retries=10, delay=3):
 # Main
 # =============================
 def main():
+    """Genera un informe de los archivos duplicados en la base de datos.
+    Consulta la base de datos para encontrar grupos de archivos con el mismo hash, guarda un CSV con los detalles y genera un informe legible con estadísticas sobre los duplicados encontrados."""
     # Definir por defecto para que no falle si no hay duplicados
     largest_group = None
 

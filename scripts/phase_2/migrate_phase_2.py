@@ -11,7 +11,8 @@ def log(msg: str) -> None:
 
 
 def get_db_connection(retries: int = 10, delay: int = 3):
-
+    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     import time
 
     for attempt in range(1, retries + 1):
@@ -33,7 +34,7 @@ def get_db_connection(retries: int = 10, delay: int = 3):
 
 
 def run_migrations():
-
+    """Ejecuta las migraciones necesarias para la Fase 2, incluyendo la adición de nuevas columnas a la tabla files y la creación de la tabla file_embeddings para almacenar embeddings usando pgvector. También se asegura de que la extensión pgvector esté activada en la base de datos. Las migraciones se ejecutan dentro de una transacción y se registran en el log."""
     conn = get_db_connection()
     cur = conn.cursor()
     

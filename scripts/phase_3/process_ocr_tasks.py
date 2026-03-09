@@ -19,7 +19,8 @@ def log(msg: str) -> None:
 
 
 def get_db_connection(retries: int = 10, delay: int = 3):
-    """Conecta a PostgreSQL con reintentos."""
+    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     for attempt in range(1, retries + 1):
         try:
             conn = psycopg2.connect(
@@ -147,6 +148,7 @@ def process_ocr_results(
     processed_count = 0
     
     def handle_result(result_dict: dict):
+        """ Maneja un resultado recibido de la cola. Valida el mensaje, extrae el file_id usando el correlation_id, extrae el texto del resultado y actualiza la base de datos. Si ocurre algún error durante el procesamiento, lo loguea y continúa con el siguiente resultado. """
         nonlocal processed_count
         
         try:

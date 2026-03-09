@@ -17,6 +17,7 @@ PROJECT_ROOT = os.path.dirname(BASE_DIR)
 # Helper: DB session
 # ---------------------------------
 def get_db():
+    """ Proporciona una sesión de base de datos para los endpoints. Esta función se utiliza como dependencia en los endpoints para asegurar que cada solicitud tenga acceso a una sesión de base de datos que se cierra automáticamente al finalizar la solicitud, evitando así problemas de conexiones abiertas o fugas de memoria. La función utiliza un contexto de generador para manejar la apertura y cierre de la sesión de manera eficiente."""
     db = SessionLocal()
     try:
         yield db
@@ -27,6 +28,7 @@ def get_db():
 # Helper: Chequeo zombies
 # ---------------------------------
 def recover_stale_runs(db: Session):
+    """ Marca como cancelados los runs que estén en estado 'running' al iniciar un nuevo run, asumiendo que son ejecuciones colgadas. Esto es útil para evitar conflictos y asegurar que solo haya una ejecución activa del pipeline a la vez. El helper se llama desde el endpoint de inicio del pipeline para hacer un chequeo rápido antes de permitir una nueva ejecución."""
     running = db.query(PipelineRun).filter(PipelineRun.status == "running").all()
     for run in running:
         mark_run_cancelled(run.run_id)
@@ -36,6 +38,7 @@ def recover_stale_runs(db: Session):
 # Helper: lanzar script python externo
 # ---------------------------------
 def launch_script(script_path: str, run_id: int, phase_number: int = None):
+    """ Lanza un script Python en un proceso independiente, pasando el run_id y opcionalmente el phase_number como variables de entorno. Esto permite que el script ejecutado tenga acceso a esta información para actualizar el estado del pipeline en la base de datos. El script se ejecuta con la opción -u para asegurar que la salida se imprima en tiempo real, lo que es útil para el monitoreo de logs."""
     env = os.environ.copy()
     env["RUN_ID"] = str(run_id)
     if phase_number is not None:
@@ -52,6 +55,14 @@ def launch_script(script_path: str, run_id: int, phase_number: int = None):
 # ---------------------------------
 @app.post("/start")
 def start_pipeline(db: Session = Depends(get_db)):
+    """
+    Inicia la ejecución de la pipeline completa.
+    
+    Este endpoint realiza un chequeo previo de 'zombies' (ejecuciones colgadas). 
+    Si detecta una ejecución activa, la cancela antes de permitir una nueva.
+    Lanza el script 'run_pipeline.py' en un proceso independiente.
+    """
+    
     # Chequeo rápido de zombies
     active_runs = db.query(PipelineRun).filter(PipelineRun.status == "running").count()
     if active_runs > 0:
@@ -86,7 +97,14 @@ def start_pipeline(db: Session = Depends(get_db)):
 # ---------------------------------
 @app.post("/run_phase/{phase_number}")
 def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
-
+    """
+    Ejecuta una fase específica de la pipeline (0, 1, 2 o 3).
+    
+    Permite correr una etapa de forma independiente sin disparar todo el flujo.
+    Valida que el número de fase sea correcto y lanza el script correspondiente 
+    ubicado en la carpeta de la fase.
+    """
+    
     if phase_number not in [0, 1, 2, 3]:
         raise HTTPException(status_code=400, detail="Phase number out of range")
 
@@ -117,7 +135,12 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
 # ---------------------------------
 @app.get("/status/{run_id}", response_model=RunStatus)
 def get_run_status(run_id: int, db: Session = Depends(get_db)):
-
+    """
+    Obtiene el reporte detallado de un run específico por su ID.
+    
+    Devuelve el estado general, la fase actual y un desglose de cada script ejecutado, 
+    incluyendo mensajes de error y logs de salida si están disponibles.
+    """
     run = db.query(PipelineRun).filter(PipelineRun.run_id == run_id).first()
     if not run:
         raise HTTPException(status_code=404, detail="Run not found")
@@ -157,9 +180,11 @@ def get_run_status(run_id: int, db: Session = Depends(get_db)):
 @app.post("/stop")
 def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
     """
-    Detiene ejecuciones activas. 
-    Si se provee run_id, detiene ese run específico.
-    Si no se provee, detiene TODOS los runs con estado 'running'.
+    Detiene ejecuciones en curso y las marca como canceladas.
+    
+    - Si se proporciona **run_id**: Cancela solo esa ejecución específica.
+    - Si NO se proporciona: Cancela **TODAS** las ejecuciones que tengan estado 'running'.
+    Ideal para paradas de emergencia o limpieza de procesos.
     """
     # Base de la consulta para buscar solo los que están en ejecución
     query = db.query(PipelineRun).filter(PipelineRun.status == "running")
@@ -197,8 +222,10 @@ def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
 @app.post("/change_focus/{folder_path:path}")
 def change_focus(folder_path: str):
     """
-    Cambia el path base de trabajo. 
-    Ejemplo: POST http://api:8000/change_focus/2024
+    Actualiza el directorio de trabajo base (BASE_PATH) mediante la URL.
+    
+    Permite redirigir dinámicamente dónde operarán los scripts de la pipeline.
+    El path proporcionado se concatenará con el prefijo '/data'.
     """
     if not folder_path:
         new_path = "/data"

@@ -14,7 +14,7 @@ SEMANTIC_SIM_THRESHOLD = float(os.getenv("SEMANTIC_SIM_THRESHOLD", "0.9"))
 # Modelo por defecto para embeddings (SentenceTransformers)
 EMBEDDING_MODEL_NAME = os.getenv(
     "EMBEDDING_MODEL_NAME",
-    "sentence-transformers/all-MiniLM-L6-v2",
+    "sentence-transformers/all-MiniLM-L6-v2"
 )
 
 # Tamaño aproximado de bucket por tamaño de fichero (en bytes) para limitar comparaciones

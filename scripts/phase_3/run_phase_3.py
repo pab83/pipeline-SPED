@@ -22,6 +22,7 @@ SCRIPTS = [
     ] 
 
 def main():
+    """ Función principal que se ejecuta al iniciar el script. Establece el archivo de log y luego delega la orquestación de la fase a la función genérica execute_phase_logic, pasando el run_id, phase_number y la lista de scripts a ejecutar. Cada script en la lista SCRIPTS se ejecutará en orden dentro de execute_phase_logic, que se encargará de manejar la ejecución, logging y cualquier error que pueda ocurrir durante la ejecución de los scripts individuales."""
     # Establecer el archivo de log antes de ejecutar la lógica
     set_log_file(LOG_FILE)
     

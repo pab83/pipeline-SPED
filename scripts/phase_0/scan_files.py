@@ -104,6 +104,11 @@ def chunks(iterable, size):
 # ================= CORE =================
 
 def audit():
+    """Escanea el sistema de archivos desde BASE_PATH, extrae metadata de cada archivo y la guarda en la base de datos.
+    Utiliza múltiples hilos para acelerar el proceso y una estrategia de buffer para optimizar las inserciones en la base de datos.
+    Al finalizar, actualiza el estado del run en la base de datos con el total de archivos procesados y el tiempo de ejecución.
+    """
+    
     inicio = time.time()
     total = 0
     buffer = []

@@ -7,7 +7,7 @@ from messaging.redis_client import RedisQueueClient
 from schemas.result import ResultMessage, Status
 from schemas.task import TargetModel
 from scripts.producer import send_task
-from scripts.config.general import LOG_FILE
+from scripts.config.phase_3 import LOG_FILE
 
 # Update results comentado para pruebas.
 
@@ -28,6 +28,8 @@ def log(msg: str) -> None:
 # Conexión a PostgreSQL
 # -------------------------------------------------------------------
 def get_db_connection(retries: int = 10, delay: int = 3):
+    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
     for attempt in range(1, retries + 1):
         try:
             conn = psycopg2.connect(
@@ -48,6 +50,7 @@ def get_db_connection(retries: int = 10, delay: int = 3):
 # Contar imágenes pendientes
 # -------------------------------------------------------------------
 def count_pending_images(conn) -> int:
+    """ Cuenta cuántas imágenes únicas (por hash) aún no están marcadas para OCR y no tienen tarea pendiente en moondream_task_map. Esto se hace para saber cuántas tareas quedan por procesar y cuándo detener el pipeline. Devuelve el número total de imágenes pendientes que cumplen esos criterios."""
     cur = conn.cursor()
     cur.execute("""
         SELECT COUNT(*) FROM files f
@@ -166,6 +169,7 @@ def process_moondream_results(conn, correlation_to_file_id: Dict[str, int], batc
 # Main
 # -------------------------------------------------------------------
 def main():
+    """ Pipeline continuo que envía tareas a Moondream y consume resultados, lanzando nuevos batches automáticamente hasta procesar todas las imágenes pendientes. El script establece el archivo de log, se conecta a la base de datos, crea la tabla de mapeo si no existe, envía el primer batch de tareas a Redis y luego entra en un loop de consumo de resultados. Cada vez que se procesa un batch completo, verifica si quedan más imágenes pendientes y envía el siguiente batch automáticamente. El proceso continúa hasta que no queden más imágenes por procesar."""
     log("="*60)
     log("=== Pipeline Moondream continuo (envío + consumo) ===")
     log("="*60)

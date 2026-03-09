@@ -61,6 +61,7 @@ def execute_phase_logic(run_id, phase_number, scripts_list):
 
 #----------- Función para ejecutar scripts -----------        
 def run_script(phase_id, script_name, phase_module):
+    """ Ejecuta un script específico dentro de una fase, manejando logs, cancelación, errores y actualizando la DB automáticamente. Implementa una lógica de reintentos en caso de que el script falle, con un número máximo de intentos definido por MAX_RETRIES y un retraso entre intentos definido por RETRY_DELAY. Durante la ejecución del script, se capturan las salidas estándar y de error para actualizar los logs en tiempo real, y se verifica periódicamente si el usuario ha solicitado cancelar la ejecución del pipeline para detener el script de manera ordenada si es necesario."""
     logs_buffer = []
     attempt = 0
     while attempt < MAX_RETRIES:

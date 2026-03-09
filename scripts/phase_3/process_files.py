@@ -32,10 +32,7 @@ logger = logging.getLogger(__name__)
 # FUNCIÓN DE CLASIFICACIÓN
 # ----------------------------
 def clasificar_documento(file):
-    """
-    file: dict con campos de la BBDD
-    Devuelve un dict con keys: 'categoria', 'proyecto', 'anio'
-    """
+    """ Clasifica un documento usando un LLM. Recibe un dict con campos del archivo (incluyendo full_path, file_type, text_excerpt y descripcion_imagen) y construye un prompt para el LLM que le pide inferir la categoría, proyecto y año del documento. La función maneja la respuesta del LLM, parsea el JSON resultante y devuelve un dict con las claves 'categoria', 'proyecto' y 'anio'. Si ocurre algún error durante la clasificación o el JSON es inválido, devuelve 'Desconocido' para cada campo. Se implementan retries para manejar errores temporales de conexión o respuestas 400 Bad Request del LLM."""
     file['text_excerpt'] = sanitize_text(file.get('text_excerpt', ''), max_chars=3000)
     file['full_path'] = sanitize_text(file.get('full_path', ''), max_chars=1000)
 
@@ -112,6 +109,7 @@ Descripcion imagen:
 # FUNCIONES AUXILIARES
 # ----------------------------
 def sanitize_text(text: str, max_chars: int = 3000) -> str:
+    """ Limpia el texto de caracteres no imprimibles, asegura que esté en UTF-8 y lo trunca a un máximo de caracteres si es necesario. Esto es útil para evitar problemas con texto corrupto o demasiado largo al enviarlo al LLM. Devuelve el texto limpio y truncado si es necesario."""
     if not text:
         return ""
     text = text.encode("utf-8", errors="replace").decode("utf-8")
@@ -132,6 +130,7 @@ def clean_llm_json(raw_text: str) -> str:
 # PROCESAMIENTO DE BBDD
 # ----------------------------
 def procesar_archivos():
+    """ Procesa archivos que aún no tienen categoría, obteniendo su texto y descripción de imagen, clasificándolos con el LLM y actualizando la base de datos con la categoría, proyecto y año inferidos. El script se conecta a la base de datos, crea la columna 'categoria' si no existe, selecciona archivos sin categoría, procesa cada archivo llamando a la función de clasificación y actualiza la base de datos con los resultados. Se utiliza tqdm para mostrar el progreso del procesamiento."""
     conn_str = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
     
     with psycopg2.connect(conn_str, cursor_factory=DictCursor) as conn:

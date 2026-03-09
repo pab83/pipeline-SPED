@@ -43,6 +43,7 @@ def pdf_needs_ocr(pdf_path):
     
 # --- CONEXIÓN ---
 def get_db_connection():
+    """Establece una conexión a la base de datos utilizando psycopg2."""
     return psycopg2.connect(
         dbname=os.getenv("PGDATABASE", "auditdb"),
         user=os.getenv("PGUSER", "user"),
@@ -52,6 +53,12 @@ def get_db_connection():
     )
 
 def main():
+    """
+    Marca en la base de datos si cada PDF necesita OCR o no, actualizando el campo 'ocr_needed' en la tabla 'files'.
+    Solo procesa los archivos que aún no tienen este campo definido (NULL) para optimizar recursos.
+    Utiliza múltiples hilos para acelerar el análisis de los PDFs y checkpoints periódicos para guardar los avances.
+    Al finalizar, se loguea un resumen del proceso.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
 
