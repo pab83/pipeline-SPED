@@ -1,194 +1,156 @@
 import os
-import cv2
-import psycopg2
-from psycopg2 import OperationalError
+import unicodedata
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
-import unicodedata
-import numpy as np
+from typing import Any, List, Optional, Tuple, Set
 
+import cv2
+import numpy as np
+import psycopg2
+from psycopg2 import OperationalError
 
 from scripts.config.general import LOG_FILE
 
-# Extensiones de imagen a considerar
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
-
-# Tamaño máximo de imagen para procesar rápido
-MAX_IMAGE_SIZE = 1024
-
-BATCH_SIZE = 500  # Batch de DB para commits
-
-# Base path opcional
-BASE_PATH = os.getenv("BASE_PATH", None)  # /data o similar
-
+# --- Configuración ---
+IMAGE_EXTENSIONS: Set[str] = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
+MAX_IMAGE_SIZE: int = 1024
+BATCH_SIZE: int = 500
+BASE_PATH: Optional[str] = os.getenv("BASE_PATH", None)
 
 def log(msg: str) -> None:
+    """Registra un mensaje en el log central y lo emite por consola."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-
-def get_db_connection(retries=10, delay=3):
-    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """Establece conexión con PostgreSQL con reintentos y backoff."""
     import time
     for attempt in range(1, retries + 1):
         try:
-            conn = psycopg2.connect(
+            return psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", "auditdb"),
                 user=os.getenv("PGUSER", "user"),
                 password=os.getenv("PGPASSWORD", "pass"),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", 5432)),
             )
-            return conn
         except OperationalError as e:
             log(f"Postgres not ready (attempt {attempt}/{retries}): {e}")
             time.sleep(delay)
-    raise RuntimeError("Could not connect to Postgres after multiple attempts.")
+    raise RuntimeError("Could not connect to Postgres.")
 
-
-
-def looks_like_document(img) -> bool:
+def looks_like_document(img: np.ndarray) -> bool:
     """
-    Detecta si la imagen probablemente es un documento.
-    img: imagen en escala de grises (cv2.IMREAD_GRAYSCALE)
-    Devuelve True si parece un documento.
+    Algoritmo heurístico para detectar documentos en imágenes.
+    
+    Aplica los siguientes filtros de visión artificial:
+    1. **Dimensiones**: Filtra miniaturas (< 200px).
+    2. **Aspect Ratio**: Verifica que no sea una imagen excesivamente alargada.
+    3. **Canny Edge Detection**: Identifica gradientes estructurales.
+    4. **Contornos**: Busca formas cuadrangulares que ocupen al menos el 20% del área.
+    5. **Análisis de Textura**: Calcula la desviación estándar para descartar ruido visual (fotos).
     """
-
-    # 1️⃣ Tamaño mínimo
     h, w = img.shape[:2]
-    if h < 200 or w < 200:
-        return False
+    if h < 200 or w < 200: return False
 
-    # 2️⃣ Proporción
     ratio = max(h, w) / min(h, w)
-    if ratio < 0.5 or ratio > 2.0:
-        return False
+    if ratio < 0.5 or ratio > 2.0: return False
 
-    # 3️⃣ Bordes con Canny
+    # Detección de bordes y búsqueda de formas
     edges = cv2.Canny(img, 50, 150)
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # 4️⃣ Buscar contorno grande y rectangular
     doc_like = False
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area < 0.2 * h * w:  # descarta contornos muy pequeños
-            continue
+        if area < 0.2 * h * w: continue
+        
         peri = cv2.arcLength(cnt, True)
         approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
-        if len(approx) == 4:  # tiene 4 vértices → rectángulo
+        if len(approx) == 4: # Rectángulo detectado
             doc_like = True
             break
 
-    if not doc_like:
-        return False
+    if not doc_like: return False
 
-    # 5️⃣ Variación de gris: fondo uniforme → doc
-    stddev = np.std(img)
-    if stddev > 60:  # muchas texturas → probablemente foto
-        return False
+    # Análisis de fondo (documentos suelen tener fondos uniformes)
+    return np.std(img) <= 60
 
-    return True
-
-
-def process_image(row):
-    """Procesa una imagen para determinar si parece un documento escaneado. Recibe una fila con file_id y path_str, verifica la extensión, normaliza la ruta, intenta leer la imagen, la redimensiona si es muy grande y aplica la función looks_like_document para decidir si marcarla para OCR. Devuelve el file_id si parece un documento, o None si no lo es o si ocurre algún error durante el procesamiento."""
+def process_image(row: Tuple[int, str]) -> Optional[int]:
+    """
+    Carga y pre-procesa una imagen para su análisis.
+    
+    Normaliza rutas (NFC), gestiona prefijos de volumen y redimensiona 
+    la imagen a `MAX_IMAGE_SIZE` para optimizar el uso de CPU.
+    """
     file_id, path_str = row
     try:
         ext = os.path.splitext(path_str)[1].lower()
-        if ext not in IMAGE_EXTENSIONS:
-            return None
+        if ext not in IMAGE_EXTENSIONS: return None
 
         path_obj = Path(path_str)
         if not path_obj.is_absolute() and BASE_PATH:
             path_obj = Path(BASE_PATH) / path_obj
 
         path_obj = Path(unicodedata.normalize("NFC", str(path_obj)))
-
-        if not path_obj.exists():
-            log(f"No existe la ruta: {path_obj}")
-            return None
+        if not path_obj.exists(): return None
 
         img = cv2.imread(str(path_obj), cv2.IMREAD_GRAYSCALE)
-        if img is None:
-            log(f"No se pudo leer: {path_obj}")
-            return None
+        if img is None: return None
 
+        # Redimensionado eficiente
         h, w = img.shape[:2]
         if max(h, w) > MAX_IMAGE_SIZE:
             scale = MAX_IMAGE_SIZE / max(h, w)
             img = cv2.resize(img, (int(w * scale), int(h * scale)))
 
-        if looks_like_document(img):
-            return file_id   # si hay que marcar OCR
-
-        return None
+        return file_id if looks_like_document(img) else None
 
     except Exception as e:
-        log(f"Error procesando imagen {path_str}: {e}")
+        log(f"Error en {path_str}: {e}")
         return None
 
-def main():
-    """ Analiza imágenes para detectar cuáles parecen documentos escaneados y marca esos archivos con ocr_needed=True en la base de datos.
-    El script selecciona imágenes únicas (por hash) que aún no están marcadas para OCR, procesa cada imagen para determinar si parece un documento escaneado (basado en tamaño, proporción, bordes y textura) y actualiza la base de datos para marcar aquellas que parecen documentos con ocr_needed=True. El procesamiento se realiza en paralelo usando multiprocessing para mejorar el rendimiento, y se registran los resultados en el log."""
+def main() -> None:
+    """
+    Ejecuta el análisis visual masivo utilizando procesamiento paralelo.
+    
+    Selecciona imágenes únicas basadas en `xxhash64` para evitar procesar 
+    múltiples veces el mismo archivo y actualiza el flag `ocr_needed`.
+    """
     log("=== Running img_looks_like_document.py ===")
-
     conn = get_db_connection()
     cur = conn.cursor()
 
     try:
-        cur.execute(
-            """
-            SELECT DISTINCT ON (xxhash64)
-                   id, full_path
+        cur.execute("""
+            SELECT DISTINCT ON (xxhash64) id, full_path
             FROM files
             WHERE ocr_needed = FALSE
-              AND LOWER(SUBSTRING(full_path FROM '.+\\.([^.]+)$'))
-                  IN ('jpg','jpeg','png','bmp','tif','tiff')
+              AND LOWER(SUBSTRING(full_path FROM '.+\\.([^.]+)$')) IN ('jpg','jpeg','png','bmp','tif','tiff')
             ORDER BY xxhash64, id
-            """
-        )
-
+        """)
         rows = cur.fetchall()
-        log(f"Se encontraron {len(rows)} imágenes únicas para procesar.")
+        log(f"Procesando {len(rows)} imágenes únicas.")
 
-        total_processed = 0
         total_marked = 0
-
         with Pool(cpu_count()) as pool:
             for i in range(0, len(rows), BATCH_SIZE):
                 batch = rows[i:i + BATCH_SIZE]
-
                 results = pool.map(process_image, batch)
-
+                
                 ids_to_update = [fid for fid in results if fid is not None]
-
                 if ids_to_update:
-                    cur.executemany(
-                        "UPDATE files SET ocr_needed = TRUE WHERE id = %s",
-                        [(fid,) for fid in ids_to_update],
-                    )
+                    cur.executemany("UPDATE files SET ocr_needed = TRUE WHERE id = %s", 
+                                   [(fid,) for fid in ids_to_update])
                     conn.commit()
                     total_marked += len(ids_to_update)
-
-                total_processed += len(batch)
-                log(
-                    f"Batch procesado: {total_processed}/{len(rows)} | "
-                    f"Marcados OCR: {total_marked}"
-                )
-
-    except Exception as e:
-        log(f"Error en la ejecución principal: {e}")
+                log(f"Progreso: {min(i + BATCH_SIZE, len(rows))}/{len(rows)} | Marcados: {total_marked}")
 
     finally:
         cur.close()
         conn.close()
-        log("=== img_looks_like_document.py completed ===")
+        log("=== Analysis completed ===")
 
 if __name__ == "__main__":
     main()
-
-
-

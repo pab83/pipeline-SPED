@@ -12,18 +12,32 @@ from scripts.config.phase_0 import BASE_PATH, LOG_FILE, MAX_THREADS, BUFFER_SIZE
 # ================= CONFIG =================
 
 BASE_SEP_COUNT = BASE_PATH.count(os.sep)
+"""Conteo de separadores de ruta en el path base para calcular la profundidad relativa."""
 
 # ================= UTILITIES =================
 
-def log(msg):
-    """Append message to log file and print"""
+def log(msg: str):
+    """
+    Registra un mensaje tanto en el archivo de log físico como en la salida estándar.
+    
+    Args:
+        msg: El mensaje o cadena de texto a registrar.
+    """
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
 
-def list_top_directories(base_path):
-    """List first-level directories"""
+def list_top_directories(base_path: str) -> list:
+    """
+    Escanea el primer nivel de directorios para dividir el trabajo del ThreadPool.
+    
+    Args:
+        base_path: Ruta raíz donde iniciar el escaneo.
+        
+    Returns:
+        Una lista de rutas absolutas de los directorios de primer nivel.
+    """
     with os.scandir(base_path) as it:
         return [
             entry.path
@@ -32,8 +46,18 @@ def list_top_directories(base_path):
         ]
 
 
-def generate_files(base_path):
-    """DFS local in one subtree"""
+def generate_files(base_path: str) -> Iterator[os.DirEntry]:
+    """
+    Generador que realiza una búsqueda en profundidad (DFS) de archivos.
+    
+    Optimizado mediante `os.scandir` para minimizar las llamadas al sistema.
+    
+    Args:
+        base_path: Ruta desde la cual empezar a buscar archivos.
+        
+    Yields:
+        Objetos `os.DirEntry` correspondientes a archivos encontrados.
+    """
     stack = [base_path]
     while stack:
         path = stack.pop()
@@ -50,28 +74,29 @@ def generate_files(base_path):
 
 def normalize_path(path: str, base_path: str = None) -> str:
     """
-    Normaliza una ruta de archivo:
-    - Quita espacios
-    - Convierte separadores
-    - Expande ~ y variables de entorno
-    - Opcionalmente relativiza respecto a base_path
+    Normaliza y sanea rutas de archivo para evitar duplicados por formato.
+    
+    Realiza expansión de variables de entorno, limpieza de espacios y normalización
+    de separadores según el sistema operativo.
     """
     if not path:
         return ""
-
     path = path.strip()
     path = os.path.expanduser(os.path.expandvars(path))
     path = os.path.normpath(path)
-
     if base_path and not os.path.isabs(path):
         path = os.path.join(base_path, path)
         path = os.path.normpath(path)
-
     return path
 
 
-def process_file(entry):
-    """Extract metadata from a file"""
+def process_file(entry: os.DirEntry):
+    """
+    Extrae metadata técnica de un archivo individual.
+    
+    Calcula la extensión, el tamaño, los años de creación/modificación y 
+    determina la profundidad relativa respecto a la base.
+    """
     try:
         stat = entry.stat()
         ext = os.path.splitext(entry.name)[1].lower()
@@ -91,8 +116,8 @@ def process_file(entry):
         return None
 
 
-def chunks(iterable, size):
-    """Yield successive chunks from iterable"""
+def chunks(iterable, size: int):
+    """Divide un iterable en fragmentos (chunks) de tamaño fijo."""
     it = iter(iterable)
     while True:
         batch = list(islice(it, size))
@@ -104,11 +129,20 @@ def chunks(iterable, size):
 # ================= CORE =================
 
 def audit():
-    """Escanea el sistema de archivos desde BASE_PATH, extrae metadata de cada archivo y la guarda en la base de datos.
-    Utiliza múltiples hilos para acelerar el proceso y una estrategia de buffer para optimizar las inserciones en la base de datos.
-    Al finalizar, actualiza el estado del run en la base de datos con el total de archivos procesados y el tiempo de ejecución.
     """
+    Ejecuta el proceso completo de auditoría y escaneo del sistema de archivos.
     
+    Este es el núcleo de la Fase 0. Realiza las siguientes operaciones:
+    
+    
+    1. **Conexión**: Establece el enlace con PostgreSQL mediante variables de entorno.
+    2. **Paralelización**: Divide los directorios raíz entre hilos (`MAX_THREADS`).
+    3. **Buffer de Inserción**: Acumula registros hasta alcanzar `BUFFER_SIZE` para
+       realizar un `execute_batch` eficiente.
+    4. **Sincronización de Estado**: Utiliza `ON CONFLICT` en SQL para actualizar 
+       archivos existentes solo si su tamaño o fecha de modificación han cambiado.
+    5. **Cierre**: Actualiza el progreso global del run y cierra las conexiones.
+    """
     inicio = time.time()
     total = 0
     buffer = []

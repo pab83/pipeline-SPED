@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 import psycopg2
 from psycopg2 import OperationalError
 
@@ -18,9 +18,11 @@ def log(msg: str) -> None:
     print(msg)
 
 
-def get_db_connection(retries: int = 10, delay: int = 3):
-    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """ 
+    Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
+    Esto es útil para manejar situaciones donde la base de datos aún no está lista.
+    """
     for attempt in range(1, retries + 1):
         try:
             conn = psycopg2.connect(
@@ -43,10 +45,8 @@ def extract_text_from_result(result: ResultMessage) -> Optional[str]:
     """
     Extrae el texto del campo 'result' de un ResultMessage de OCR.
     
-    El campo 'result' puede ser:
-    - Un string directamente (el texto extraído)
-    - Un dict con campos como 'text', 'content', etc.
-    - None si hay error
+    El campo 'result' puede ser un string, un diccionario con campos como 'text', 
+    'content', etc., o None en caso de error.
     """
     if result.status != Status.SUCCESS:
         if result.error:
@@ -75,12 +75,12 @@ def extract_text_from_result(result: ResultMessage) -> Optional[str]:
     return str(result.result)
 
 
-def send_ocr_tasks(conn, correlation_to_file_id: Dict[str, int]) -> int:
+def send_ocr_tasks(conn: Any, correlation_to_file_id: Dict[str, int]) -> int:
     """
-    Lee documentos con ocr_needed=true y (text_excerpt IS NULL OR text_excerpt = ''),
-    envía tareas OCR y guarda el mapeo correlation_id -> file_id.
+    Lee documentos con ocr_needed=true y envía tareas OCR a la cola de Redis.
     
-    Devuelve el número de tareas enviadas.
+    Guarda el mapeo correlation_id -> file_id en la tabla ocr_task_map para
+    su posterior reconciliación cuando lleguen los resultados.
     """
     cur = conn.cursor()
     
@@ -116,7 +116,6 @@ def send_ocr_tasks(conn, correlation_to_file_id: Dict[str, int]) -> int:
             )
             conn.commit()
 
-            
             log(f"Enviada tarea OCR para archivo {file_id} ({full_path}) - correlation_id: {correlation_id}")
             sent_count += 1
             
@@ -128,27 +127,23 @@ def send_ocr_tasks(conn, correlation_to_file_id: Dict[str, int]) -> int:
 
 
 def process_ocr_results(
-    conn,
+    conn: Any,
     correlation_to_file_id: Dict[str, int],
     max_results: Optional[int] = None,
 ) -> int:
     """
-    Consume resultados de OCR y actualiza text_excerpt en la BD.
+    Consume resultados de la cola de Redis y actualiza text_excerpt en la BD.
     
-    Args:
-        conn: Conexión a PostgreSQL
-        correlation_to_file_id: Dict para hacer match correlation_id -> file_id
-        max_results: Máximo número de resultados a procesar (None = ilimitado)
-    
-    Devuelve el número de resultados procesados exitosamente.
+    Utiliza el correlation_id del mensaje para identificar el file_id 
+    correspondiente mediante la tabla ocr_task_map.
     """
     mq_client = RedisQueueClient()
     RESULT_QUEUE = "cola_resultados"
     
     processed_count = 0
     
-    def handle_result(result_dict: dict):
-        """ Maneja un resultado recibido de la cola. Valida el mensaje, extrae el file_id usando el correlation_id, extrae el texto del resultado y actualiza la base de datos. Si ocurre algún error durante el procesamiento, lo loguea y continúa con el siguiente resultado. """
+    def handle_result(result_dict: dict) -> None:
+        """ Maneja un resultado recibido de la cola. """
         nonlocal processed_count
         
         try:
@@ -176,7 +171,6 @@ def process_ocr_results(
             file_id = row[0]
             cur.close()
 
-            
             if file_id is None:
                 log(f"Warning: No se encontró file_id para correlation_id {result.correlation_id}")
                 return
@@ -232,16 +226,11 @@ def process_ocr_results(
     return processed_count
 
 
-def main():
+def main() -> None:
     """
-    Proceso principal:
-    1. Lee documentos con ocr_needed=true y text_excerpt IS NULL
-    2. Envía tareas OCR usando producer.send_task
-    3. Consume resultados y actualiza text_excerpt en BD
-    
-    Nota: Este script asume que el servidor OCR devuelve el mismo
-    correlation_id que se envió en el TaskMessage. Si no es así,
-    necesitarás ajustar la lógica de matching.
+    Proceso principal de la tarea OCR:
+    1. Fase de Producción: Envía archivos pendientes a Redis.
+    2. Fase de Consumo: Escucha y persiste los resultados de los Workers.
     """
     log("=" * 60)
     log("Iniciando procesamiento de tareas OCR")
@@ -251,8 +240,6 @@ def main():
     conn = get_db_connection()
     
     # Mapeo temporal: correlation_id -> file_id
-    # Este dict se llena cuando enviamos las tareas y se usa para hacer
-    # match cuando llegan los resultados.
     correlation_to_file_id: Dict[str, int] = {}
     
     # Fase 1: Enviar tareas

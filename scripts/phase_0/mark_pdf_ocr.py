@@ -8,15 +8,31 @@ from scripts.config.phase_0 import LOG_FILE
 
 # --- CONFIGURACIÓN Y LOGS ---
 BATCH_SIZE = 1000 
+"""Tamaño del lote para realizar commits en la base de datos y optimizar la escritura."""
+
 MAX_WORKERS = 4
+"""Número de hilos paralelos para el análisis de cabeceras de PDF."""
 
 def log(msg):
+    """Registra mensajes en el archivo de log de la Fase 0 y en la consola."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-def pdf_needs_ocr(pdf_path):
-    """Analiza si el PDF tiene capas de texto o es solo imagen."""
+def pdf_needs_ocr(pdf_path: str) -> Optional[bool]:
+    """
+    Analiza la estructura interna del PDF para detectar capas de texto.
+
+    Busca diccionarios de fuentes (`/Font`) en los recursos de cada página. 
+    Si encuentra fuentes, asume que el PDF tiene texto digital y no requiere OCR.
+
+    Args:
+        pdf_path: Ruta absoluta al archivo PDF.
+
+    Returns:
+        bool: `True` si es un PDF escaneado (imagen), `False` si tiene texto, 
+              `None` si hubo un error de lectura.
+    """
     try:
         if not os.path.exists(pdf_path):
             log(f"DEBUG: No encuentro el archivo en: {pdf_path}")
@@ -27,23 +43,22 @@ def pdf_needs_ocr(pdf_path):
         for page in reader.pages:
             resources = page.get("/Resources")
 
-            # Resolver IndirectObject si es necesario
+            # Resolver IndirectObject para PDFs con estructuras complejas
             if isinstance(resources, IndirectObject):
                 resources = resources.get_object()
 
             if resources and isinstance(resources, dict):
                 if "/Font" in resources:
-                    return False  # Tiene fuentes → no necesita OCR
+                    return False  # Tiene fuentes → texto digital detectado
 
-        return True  # No encontró fuentes → necesita OCR
+        return True  # No encontró fuentes → es una imagen o escaneo
 
     except Exception as e:
         log(f"Error procesando {pdf_path}: {e}")
         return None
     
-# --- CONEXIÓN ---
 def get_db_connection():
-    """Establece una conexión a la base de datos utilizando psycopg2."""
+    """Establece una conexión a PostgreSQL utilizando variables de entorno."""
     return psycopg2.connect(
         dbname=os.getenv("PGDATABASE", "auditdb"),
         user=os.getenv("PGUSER", "user"),
@@ -54,10 +69,16 @@ def get_db_connection():
 
 def main():
     """
-    Marca en la base de datos si cada PDF necesita OCR o no, actualizando el campo 'ocr_needed' en la tabla 'files'.
-    Solo procesa los archivos que aún no tienen este campo definido (NULL) para optimizar recursos.
-    Utiliza múltiples hilos para acelerar el análisis de los PDFs y checkpoints periódicos para guardar los avances.
-    Al finalizar, se loguea un resumen del proceso.
+    Orquesta el proceso de marcado masivo de PDFs en la base de datos.
+
+    Filtra los registros donde `is_pdf = TRUE` y `ocr_needed` es NULL. 
+    Actualiza la columna `ocr_needed` basándose en el análisis de `pdf_needs_ocr`.
+    
+    Características:
+    
+    1. **Resiliencia**: Solo procesa pendientes (NULL), permitiendo reintentos.
+    2. **Paralelismo**: Usa `ThreadPoolExecutor` para no bloquearse en I/O de disco.
+    3. **Checkpoints**: Realiza commits cada 1000 registros para asegurar el progreso.
     """
     conn = get_db_connection()
     cur = conn.cursor()

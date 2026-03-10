@@ -13,6 +13,10 @@ plugins:
           options:
             show_if_no_docstring: true 
             annotations_path: brief
+            # Muestra el tipo de dato de la columna si está definido
+            show_signature_annotations: true
+            docstring_section_style: table
+            docstring_style: google
           
 
 nav:
@@ -21,8 +25,8 @@ nav:
       - Endpoints (Main): api_main.md
       - Modelos y BBDD: api_db.md
   - Redis: 
-    - Schemas: schemas.md
     - Mensajeria: messaging.md
+    - Schemas: schemas.md
   - Pipeline (Procesamiento):
       - Orquestador: pipeline_core.md
       - Fase 0 (Escaneo): phase_0.md
@@ -30,4 +34,8 @@ nav:
       - Fase 2 (Extracción): phase_2.md
       - Fase 3 (IA/OCR): phase_3.md
   - Configuración: config.md 
-  - Helpers: helpers.md
+  - Helpers: 
+      - Orquestacion: helpers_orchestrate.md
+      - Estados BBDD: helpers_db_status.md
+      - Excepciones:  exceptions.md
+      - Logs: logs.md

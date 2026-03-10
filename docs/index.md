@@ -1,6 +1,6 @@
 # 🚀 Pipeline de Auditoría y Procesamiento (v0)
 
-Bienvenido a la documentación técnica oficial del proyecto **Pipeline RPR**. Este sistema es una solución robusta para el escaneo masivo, hashing de integridad, deduplicación y enriquecimiento de archivos mediante técnicas de OCR e Inteligencia Artificial.
+Bienvenido a la documentación técnica oficial del proyecto **Pipeline RPR**. Este sistema ETL multi-fase es una solución robusta para el escaneo masivo, hashing, deduplicación y enriquecimiento mediante técnicas de OCR e Inteligencia Artificial que permite procesar grandes volumenes de documentos no estructurados.
 
 ---
 
@@ -20,22 +20,21 @@ La arquitectura sigue un patrón de **Productor/Consumidor** desacoplado mediant
 
 ## 🔄 Flujo de Trabajo (Ciclo de Vida)
 
-La pipeline está estructurada en **4 fases secuenciales**. Cada fase depende del éxito de la anterior para garantizar que no se procesen datos corruptos o duplicados.
+La pipeline está estructurada en **4 fases secuenciales**. Cada fase depende del éxito de la anterior para garantizar que no se procesen datos corruptos o duplicados, pero se pueden ejecutar independientemente a eleccion del usuario.
 
 
 
 | Fase | Identificador | Responsabilidad Principal | Script de Entrada |
 | :--- | :--- | :--- | :--- |
-| **Fase 0** | **Discovery** | Escaneo del sistema de archivos e inserción inicial en DB. | `run_phase_0.py` |
-| **Fase 1** | **Integrity** | Cálculo de hashes SHA256 para detectar cambios o colisiones. | `run_phase_1.py` |
-| **Fase 2** | **Refinement** | Deduplicación de registros y extracción de texto base. | `run_phase_2.py` |
+| **Fase 0** | **Scan** | Escaneo del sistema de archivos e inserción inicial en DB. | `run_phase_0.py` |
+| **Fase 1** | **Hash** | Cálculo de hashes xxhash64 y SHA256 para detectar cambios o colisiones. | `run_phase_1.py` |
+| **Fase 2** | **Deduplication** | Deduplicación de registros y extracción de texto base. | `run_phase_2.py` |
 | **Fase 3** | **Enrichment** | Procesamiento avanzado: OCR de imágenes y descripción por IA. | `run_phase_3.py` |
 
 ---
 
-## 🛠️ Guía de Operaciones Rápidas
+## 🛠️ Despliegue
 
-### Despliegue con Docker
 Para levantar toda la infraestructura (Base de Datos, Redis y la API):
 ```bash
 docker-compose up -d --build

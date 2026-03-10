@@ -1,6 +1,4 @@
 import os
-
-# Configuración y Excepciones
 from scripts.config.phase_1 import LOG_FILE
 from scripts.helpers.logs import set_log_file
 from scripts.helpers.orchestrate import (
@@ -12,18 +10,31 @@ from scripts.helpers.orchestrate import (
 # ----------------------------
 # Parámetros de ejecución
 # ----------------------------
-RUN_ID = int(os.getenv("RUN_ID", "0"))  
-PHASE_NUMBER = 1
-SCRIPTS = [
-        "hash_files.py",    # Calcula hashes de los archivos
-        "generate_phase_1_report.py"    
-    ] 
+RUN_ID: int = int(os.getenv("RUN_ID", "0"))
+"""ID de ejecución global para el seguimiento de la integridad en la base de datos."""
 
+PHASE_NUMBER: int = 1
+"""Identificador de la Fase 1: Hashing y Verificación de Integridad."""
 
-def main():
+SCRIPTS: list[str] = [
+    "hash_files.py",             # Calcula hashes de los archivos
+    "generate_phase_1_report.py" # Genera resumen de duplicados y cambios
+]
+"""Lista de scripts encargados de calcular las huellas digitales de los archivos."""
+
+def main() -> None:
     """
-    Orquesta la ejecución de la fase 0 de la pipeline.
-    Configura el archivo de log específico para esta fase.    
+    Orquesta la ejecución de la Fase 1 de la pipeline.
+    
+    Esta función prepara el entorno de logging específico para la fase de hashing
+    y lanza la ejecución secuencial de los scripts definidos en `SCRIPTS` a través
+    de la lógica genérica de orquestación.
+
+    Pasos:
+    
+    
+    1. Define el archivo de salida para logs (`LOG_FILE`).
+    2. Ejecuta `execute_phase_logic` para procesar los hashes de archivos pendientes.
     """
     # Establecer el archivo de log antes de ejecutar la lógica
     set_log_file(LOG_FILE)
@@ -37,4 +48,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-   

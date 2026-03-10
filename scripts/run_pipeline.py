@@ -6,18 +6,44 @@ from scripts.helpers.orchestrate import run_phase
 from scripts.exceptions import PipelineCancelledException
 
 RUN_ID = int(os.environ.get("RUN_ID", 0))  
+"""
+ID único de la ejecución actual, obtenido de las variables de entorno. 
+Se utiliza para vincular todos los logs y estados de base de datos a este proceso específico.
+"""
 PHASES = [
     "scripts.phase_0.run_phase_0",
     "scripts.phase_1.run_phase_1",
     "scripts.phase_2.run_phase_2",
     "scripts.phase_3.run_phase_3",
 ]
+"""
+Lista ordenada de módulos que componen el ciclo de vida de la pipeline.
+El orquestador importa y ejecuta cada una de estas funciones de manera secuencial.
+"""
 
 
     
 
 def main():
-    """ Función principal que ejecuta el pipeline completo. Marca el inicio del run, ejecuta cada fase en orden, y maneja cualquier excepción que pueda ocurrir durante la ejecución. Si el usuario interrumpe el proceso (por ejemplo, con Ctrl+C), se captura la excepción PipelineCancelledException y se marca el run como cancelado. Si ocurre cualquier otro error, se marca el run como terminado con error. Al finalizar correctamente todas las fases, se marca el run como terminado exitosamente."""
+    """
+    Punto de entrada principal que orquesta el ciclo de vida completo de la pipeline.
+
+    Este método coordina la ejecución secuencial de todas las fases definidas en `PHASES`.
+    Gestiona el estado global en la base de datos (inicio, fin, cancelación o error)
+    y asegura que cada fase reciba su identificador correspondiente.
+
+    Flujo de ejecución:
+    1. Marca el inicio del `RUN_ID` en la base de datos.
+    2. Itera sobre `PHASES`, creando o recuperando el `phase_id`.
+    3. Ejecuta cada fase mediante `run_phase`.
+    4. Notifica la finalización exitosa o gestiona errores globales.
+
+    Raises:
+        PipelineCancelledException: Capturada si el usuario interrumpe el proceso (Ctrl+C),
+            marcando el run como 'cancelled' en la DB.
+        SystemExit: Se lanza al finalizar para devolver el código de salida (0 o 1) al sistema operativo.
+        Exception: Cualquier error no controlado marca el run como 'error' antes de salir.
+    """
     try:
         print("=== Starting full pipeline ===")
         mark_run_started(RUN_ID)

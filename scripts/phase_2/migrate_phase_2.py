@@ -1,28 +1,30 @@
 import os
+import time
+from typing import Any
 import psycopg2
 from psycopg2 import OperationalError
-from scripts.config.general import LOG_FILE
-
+from scripts.config.phase_2 import LOG_FILE
 
 def log(msg: str) -> None:
+    """Registra un mensaje en el log de la Fase 2 y lo muestra por consola."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-
-def get_db_connection(retries: int = 10, delay: int = 3):
-    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
-    import time
-
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """
+    Establece conexión con PostgreSQL implementando reintentos con backoff exponencial.
+    
+    Args:
+        retries: Número máximo de intentos de conexión.
+        delay: Tiempo de espera base entre intentos.
+    """
     for attempt in range(1, retries + 1):
         try:
             conn = psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb")),
                 user=os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user")),
-                password=os.getenv(
-                    "PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")
-                ),
+                password=os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", "5432")),
             )
@@ -32,9 +34,20 @@ def get_db_connection(retries: int = 10, delay: int = 3):
             time.sleep(delay)
     raise RuntimeError("Could not connect to Postgres after multiple attempts.")
 
-
-def run_migrations():
-    """Ejecuta las migraciones necesarias para la Fase 2, incluyendo la adición de nuevas columnas a la tabla files y la creación de la tabla file_embeddings para almacenar embeddings usando pgvector. También se asegura de que la extensión pgvector esté activada en la base de datos. Las migraciones se ejecutan dentro de una transacción y se registran en el log."""
+def run_migrations() -> None:
+    """
+    Ejecuta las migraciones de esquema necesarias para soportar la Fase 2.
+    
+    Esta función prepara la base de datos para el almacenamiento de texto y vectores:
+    
+    1.  **Esquema de Archivos**: Añade columnas para extractos de texto y lógica de canonización.
+    2.  **Soporte Vectorial**: Activa la extensión `pgvector` para búsquedas por similitud.
+    3.  **Tabla de Embeddings**: Crea `file_embeddings` con soporte para vectores de 384 dimensiones.
+    4.  **Indexación**: Crea un índice `IVFFlat` para optimizar búsquedas KNN (K-Nearest Neighbors).
+    
+    Note:
+        Requiere que el servidor PostgreSQL tenga instalada la extensión `pgvector`.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -47,23 +60,21 @@ def run_migrations():
 
     log("Running Phase 2 DB migrations...")
 
-    # Nuevas columnas en files para Phase 2 (texto y canonización)
+    # 1. Nuevas columnas en la tabla maestra 'files'
     cur.execute(
         """
         ALTER TABLE files
         ADD COLUMN IF NOT EXISTS text_excerpt TEXT,
         ADD COLUMN IF NOT EXISTS text_chars_extracted INT,
-        ADD COLUMN IF NOT EXISTS is_canonical BOOLEAN,
+        ADD COLUMN IF NOT EXISTS is_canonical BOOLEAN DEFAULT FALSE,
         ADD COLUMN IF NOT EXISTS canonical_id INT REFERENCES files(id);
         """
     )
 
-    # Activar extensión pgvector (si no existe) para almacenar embeddings como vector(n)
-    # IMPORTANTE: requiere Postgres >= 14 y la extensión instalada en el servidor.
+    # 2. Extensión pgvector
     cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 
-    # Tabla para embeddings usando pgvector.
-    # Usamos dimensión 384, que es la que devuelve típicamente all-MiniLM-L6-v2.
+    # 3. Tabla para almacenamiento de vectores (all-MiniLM-L6-v2)
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS file_embeddings (
@@ -73,9 +84,7 @@ def run_migrations():
         """
     )
 
-    # Índice aproximado para búsquedas KNN por similitud (IVFFlat).
-    # Nota: requiere ANALYZE y ciertos parámetros para rendir bien, pero esto deja
-    # la estructura base creada.
+    # 4. Índice para búsquedas de similitud L2 (Distancia Euclidiana)
     cur.execute(
         """
         DO $$
@@ -104,4 +113,3 @@ def run_migrations():
 
 if __name__ == "__main__":
     run_migrations()
-

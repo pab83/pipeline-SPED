@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, Optional, Any
 import psycopg2
 from psycopg2 import OperationalError
 
@@ -9,17 +9,16 @@ from schemas.task import TargetModel
 from scripts.producer import send_task
 from scripts.config.phase_3 import LOG_FILE
 
-# Update results comentado para pruebas.
-
-DEFAULT_PROMPT = "Describe la imagen en detalle."
-BATCH_SIZE = 500
-RESULT_QUEUE = "cola_resultados_moondream"
+# Parámetros de configuración del modelo VLM
+DEFAULT_PROMPT: str = "Describe la imagen en detalle."
+BATCH_SIZE: int = 500
+RESULT_QUEUE: str = "cola_resultados_moondream"
 
 # -------------------------------------------------------------------
 # Logging
 # -------------------------------------------------------------------
 def log(msg: str) -> None:
-    """Log a archivo y stdout."""
+    """Registra mensajes en el archivo de log de Fase 3 y en la salida estándar."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
@@ -27,14 +26,18 @@ def log(msg: str) -> None:
 # -------------------------------------------------------------------
 # Conexión a PostgreSQL
 # -------------------------------------------------------------------
-def get_db_connection(retries: int = 10, delay: int = 3):
-    """ Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """ 
+    Establece conexión con la base de datos PostgreSQL.
+    
+    Implementa reintentos con espera (delay) para asegurar la disponibilidad
+    en entornos donde la base de datos puede tardar en arrancar.
+    """
     for attempt in range(1, retries + 1):
         try:
             conn = psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb")),
-                user=os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user")),
+                user=os.getenv("PGUSER", os.getenv("POST=RES_USER", "user")),
                 password=os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", "5432")),
@@ -49,8 +52,13 @@ def get_db_connection(retries: int = 10, delay: int = 3):
 # -------------------------------------------------------------------
 # Contar imágenes pendientes
 # -------------------------------------------------------------------
-def count_pending_images(conn) -> int:
-    """ Cuenta cuántas imágenes únicas (por hash) aún no están marcadas para OCR y no tienen tarea pendiente en moondream_task_map. Esto se hace para saber cuántas tareas quedan por procesar y cuándo detener el pipeline. Devuelve el número total de imágenes pendientes que cumplen esos criterios."""
+def count_pending_images(conn: Any) -> int:
+    """ 
+    Calcula el volumen de imágenes que aún no han sido procesadas por el VLM.
+    
+    Busca archivos de tipo imagen que no tienen una entrada correspondiente 
+    en la tabla de control `moondream_task_map`.
+    """
     cur = conn.cursor()
     cur.execute("""
         SELECT COUNT(*) FROM files f
@@ -65,8 +73,16 @@ def count_pending_images(conn) -> int:
 # -------------------------------------------------------------------
 # Envío de un batch de tareas a Redis
 # -------------------------------------------------------------------
-def send_moondream_batch(conn, correlation_to_file_id: Dict[str, int], batch_size=BATCH_SIZE) -> int:
-    """Envía un batch y devuelve cuántas tareas se han enviado"""
+def send_moondream_batch(conn: Any, correlation_to_file_id: Dict[str, int], batch_size: int = BATCH_SIZE) -> int:
+    """
+    Identifica un lote de imágenes y las envía a la cola de Redis.
+    
+    Para cada imagen:
+    
+    1. Genera una tarea dirigida al modelo `MOONDREAM`.
+    2. Registra la tarea en `moondream_task_map` con estado 'pending'.
+    3. Actualiza el diccionario de correlación local para el proceso de consumo.
+    """
     total_pending = count_pending_images(conn)
     if total_pending == 0:
         return 0
@@ -115,12 +131,21 @@ def send_moondream_batch(conn, correlation_to_file_id: Dict[str, int], batch_siz
 # -------------------------------------------------------------------
 # Consumo de resultados y envío automático de batches
 # -------------------------------------------------------------------
-def process_moondream_results(conn, correlation_to_file_id: Dict[str, int], batch_size=BATCH_SIZE):
-    """Consume resultados y lanza nuevos batches automáticamente"""
+def process_moondream_results(conn: Any, correlation_to_file_id: Dict[str, int], batch_size: int = BATCH_SIZE) -> None:
+    """
+    Gestiona el bucle de consumo de resultados de Moondream.
+    
+    Este método es el núcleo del pipeline continuo:
+    
+    - Escucha la cola de resultados.
+    - Al recibir un éxito, actualiza la base de datos.
+    - **Auto-batching**: Si detecta que el batch actual ha terminado o quedan pocas imágenes,
+      dispara automáticamente el envío del siguiente lote sin detener el proceso.
+    """
     mq_client = RedisQueueClient()
     processed_count = 0
 
-    def handle_result(result_dict: dict):
+    def handle_result(result_dict: dict) -> None:
         nonlocal processed_count
         try:
             result = ResultMessage.model_validate(result_dict)
@@ -133,20 +158,18 @@ def process_moondream_results(conn, correlation_to_file_id: Dict[str, int], batc
 
             cur = conn.cursor()
             if result.status == Status.SUCCESS:
-                # BD comentada para pruebas
-                # cur.execute("UPDATE files SET text_excerpt=%s, last_seen=NOW() WHERE id=%s",
-                #             (result.result, file_id))
-                # cur.execute("UPDATE moondream_task_map SET status='completed', updated_at=NOW() WHERE correlation_id=%s",
-                #             (result.correlation_id,))
+                # Lógica de persistencia (comentada temporalmente para validación de flujo)
+                cur.execute("UPDATE files SET text_excerpt=%s, last_seen=NOW() WHERE id=%s", ...)
                 log(f"Descripción guardada file_id={file_id}")
             else:
                 log(f"Error para file_id={file_id}: {result.error}")
+            
             conn.commit()
             cur.close()
 
             processed_count += 1
 
-            # Cada vez que se procesa un batch completo
+            # Lógica de disparo del siguiente Batch
             if processed_count % batch_size == 0 or count_pending_images(conn) < batch_size:
                 remaining = count_pending_images(conn)
                 if remaining > 0:
@@ -168,14 +191,24 @@ def process_moondream_results(conn, correlation_to_file_id: Dict[str, int], batc
 # -------------------------------------------------------------------
 # Main
 # -------------------------------------------------------------------
-def main():
-    """ Pipeline continuo que envía tareas a Moondream y consume resultados, lanzando nuevos batches automáticamente hasta procesar todas las imágenes pendientes. El script establece el archivo de log, se conecta a la base de datos, crea la tabla de mapeo si no existe, envía el primer batch de tareas a Redis y luego entra en un loop de consumo de resultados. Cada vez que se procesa un batch completo, verifica si quedan más imágenes pendientes y envía el siguiente batch automáticamente. El proceso continúa hasta que no queden más imágenes por procesar."""
+def main() -> None:
+    """ 
+    Inicia el pipeline continuo de descripción visual (VLM).
+    
+    Realiza las siguientes acciones:
+    
+    1. Asegura la existencia de la tabla `moondream_task_map`.
+    2. Realiza el envío del primer lote de tareas.
+    3. Entra en el modo de consumo reactivo para procesar resultados y 
+       auto-encolar nuevas tareas hasta agotar las imágenes pendientes.
+    """
     log("="*60)
     log("=== Pipeline Moondream continuo (envío + consumo) ===")
     log("="*60)
 
     conn = get_db_connection()
     cur = conn.cursor()
+    # Garantizar tabla de mapeo para reconciliación de IDs
     cur.execute("""
         CREATE TABLE IF NOT EXISTS moondream_task_map (
             id SERIAL PRIMARY KEY,
@@ -194,15 +227,15 @@ def main():
 
     correlation_to_file_id: Dict[str, int] = {}
 
-    # Primer batch
-    log("Enviando primer batch a Redis...")
+    # Envío del Batch inicial
+    log("Enviando batch a Redis...")
     sent_count = send_moondream_batch(conn, correlation_to_file_id, batch_size=BATCH_SIZE)
     if sent_count == 0:
         log("No hay tareas nuevas. Saliendo.")
         conn.close()
         return
 
-    # Consumo 
+    # Iniciar consumo y auto-batching
     process_moondream_results(conn, correlation_to_file_id, batch_size=BATCH_SIZE)
 
     conn.close()

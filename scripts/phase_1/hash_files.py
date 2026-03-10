@@ -1,36 +1,49 @@
 import os
 import time
-import hashlib
 import xxhash
 import psycopg2
 from psycopg2.extras import execute_values
 import multiprocessing
 from multiprocessing import Queue, Process
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
+from typing import List, Tuple, Optional, Any
 from scripts.config.phase_1 import LOG_FILE
 
 # ------------------------
 # CONFIG
 # ------------------------
-BATCH_SIZE = 5000
-MAX_WORKERS = 8           # Procesos
-THREADS_PER_WORKER = 8    # Hilos por proceso
-FILE_QUEUE_SIZE = 100000
-RESULT_QUEUE_SIZE = 100000
-CHUNK_SIZE = 4 * 1024 * 1024
+BATCH_SIZE: int = 5000
+"""Cantidad de registros por lote para inserciones masivas en BD."""
+
+MAX_WORKERS: int = 8          
+"""Número de procesos paralelos (CPU-bound)."""
+
+THREADS_PER_WORKER: int = 8   
+"""Hilos por proceso para gestionar I/O de lectura de archivos."""
+
+FILE_QUEUE_SIZE: int = 100000
+RESULT_QUEUE_SIZE: int = 100000
+CHUNK_SIZE: int = 4 * 1024 * 1024
+"""Tamaño del bloque de lectura para el cálculo de hash (4MB)."""
 
 # ------------------------
 # UTILS
 # ------------------------
-def log(msg):
+def log(msg: str) -> None:
+    """Registra eventos en el log de la Fase 1 y en consola."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-def get_db_connection(retries=10, delay=3):
-    """Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """
+    Establece conexión con PostgreSQL implementando reintentos con backoff.
+    
+    Args:
+        retries: Número máximo de intentos.
+        delay: Tiempo de espera entre fallos.
+    """
     for attempt in range(1, retries + 1):
         try:
             return psycopg2.connect(
@@ -45,10 +58,15 @@ def get_db_connection(retries=10, delay=3):
             time.sleep(delay)
     raise RuntimeError("Could not connect to Postgres.")
 
-def update_with_retries(conn, results, max_retries=5, initial_delay=2):
-    """Intenta actualizar la base de datos con los resultados, implementando retries con backoff exponencial en caso de errores."""
+def update_with_retries(conn: Any, results: List[Tuple[int, int]], max_retries: int = 5) -> bool:
+    """
+    Ejecuta el UPDATE masivo de hashes con gestión de errores y rollback.
+    
+    Args:
+        conn: Objeto de conexión psycopg2.
+        results: Lista de tuplas (hash_value, file_id).
+    """
     retries = 0
-    delay = initial_delay
     while retries < max_retries:
         try:
             with conn.cursor() as cur:
@@ -66,29 +84,23 @@ def update_with_retries(conn, results, max_retries=5, initial_delay=2):
                 return True
         except Exception as e:
             retries += 1
-            log(f"⚠️ DB error (attempt {retries}/{max_retries}): {e}")
-            try:
-                conn.rollback()
-            except:
-                pass
-            if retries == max_retries:
-                log("❌ Max retries reached. Aborting batch.")
-                return False
-            log(f"⏱️ Waiting {delay}s before retry...")
-            time.sleep(delay)
-            delay *= 2
-            if conn.closed != 0:
-                try:
-                    conn = get_db_connection()
-                except:
-                    log("🚫 Could not recover DB connection.")
+            log(f"⚠️ DB error (attempt {retries}): {e}")
+            conn.rollback()
+            time.sleep(2)
     return False
 
 # ------------------------
 # HASH FUNCTIONS
 # ------------------------
-def compute_xxhash64(file_path):
-    """Calcula el hash xxhash64 de un archivo dado su path. Devuelve None si hay un error al leer el archivo."""
+def compute_xxhash64(file_path: str) -> Optional[int]:
+    """
+    Calcula el hash xxhash64 de un archivo de forma eficiente.
+    
+    Args:
+        file_path: Ruta física del archivo.
+    Returns:
+        Digest entero del hash o None si el archivo es ilegible.
+    """
     try:
         with open(file_path, "rb") as f:
             return xxhash.xxh64(f.read()).intdigest()
@@ -98,20 +110,19 @@ def compute_xxhash64(file_path):
 # ------------------------
 # WORKERS
 # ------------------------
-def thread_worker(file_path):
-    """Worker de hashing que se ejecuta en un hilo. Lee el archivo y calcula su hash xxhash64."""
-    h = compute_xxhash64(file_path)
-    return h
+def thread_worker(file_path: str) -> Optional[int]:
+    """Encapsula el cálculo de hash para su uso en pools de hilos."""
+    return compute_xxhash64(file_path)
 
-def process_worker(file_queue, result_queue):
-    """Worker de proceso que consume del file_queue, lanza un pool de hilos para calcular hashes y pone los resultados en result_queue."""
+def process_worker(file_queue: Queue, result_queue: Queue) -> None:
+    """
+    Worker a nivel de proceso que consume rutas y distribuye el trabajo en hilos.
+    """
     while True:
         item = file_queue.get()
-        if item is None:
-            break
+        if item is None: break
         file_id, file_path = item
 
-        # Thread pool por proceso
         with ThreadPoolExecutor(max_workers=THREADS_PER_WORKER) as executor:
             future = executor.submit(thread_worker, file_path)
             h = future.result()
@@ -119,45 +130,34 @@ def process_worker(file_queue, result_queue):
                 result_queue.put((h, file_id))
 
 # ------------------------
-# DB READER / WRITER
+# CORE: READER / WRITER
 # ------------------------
-def db_reader(file_queue):
-    """Lee los archivos pendientes de hash desde la base de datos y los pone en el file_queue para que los workers los procesen."""
+def db_reader(file_queue: Queue) -> None:
+    """Lee registros pendientes de la BD y los inyecta en la cola de procesamiento."""
     conn = get_db_connection()
     cur = conn.cursor()
     last_id = 0
     while True:
         cur.execute(
-            """
-            SELECT id, full_path
-            FROM files
-            WHERE xxhash64 IS NULL
-            AND id > %s
-            ORDER BY id
-            LIMIT %s
-            """,
+            "SELECT id, full_path FROM files WHERE xxhash64 IS NULL AND id > %s ORDER BY id LIMIT %s",
             (last_id, BATCH_SIZE)
         )
         rows = cur.fetchall()
-        if not rows:
-            break
+        if not rows: break
         last_id = rows[-1][0]
         for r in rows:
             file_queue.put(r)
     conn.close()
 
-def db_writer(result_queue, total_files):
-    """Consume del result_queue y actualiza la base de datos con los hashes calculados. Implementa un sistema de batching y retries para manejar errores de conexión o bloqueos en la base de datos."""
+def db_writer(result_queue: Queue, total_files: int) -> None:
+    """Consolidación de resultados en BD con barra de progreso en tiempo real."""
     conn = get_db_connection()
-    buffer = []
-    processed = 0
-    pbar = tqdm(total=total_files, desc="Hashing xxhash64", unit="file", mininterval=5)
+    buffer: List[Tuple[int, int]] = []
+    pbar = tqdm(total=total_files, desc="Hashing xxhash64", unit="file")
     while True:
         item = result_queue.get()
-        if item is None:
-            break
+        if item is None: break
         buffer.append(item)
-        processed += 1
         pbar.update(1)
         if len(buffer) >= BATCH_SIZE:
             update_with_retries(conn, buffer)
@@ -167,13 +167,13 @@ def db_writer(result_queue, total_files):
     conn.close()
     pbar.close()
 
-# ------------------------
-# MAIN
-# ------------------------
-def main():
+def main() -> None:
     """
-    Orquesta la ejecución del hashing de los archivos.
-    Configura el entorno y llama a las funciones principales.
+    Punto de entrada: Implementa una arquitectura Multi-process Multi-thread.
+    
+    1. **Reader**: Un proceso lee de la base de datos.
+    2. **Workers**: N procesos (CPU) que lanzan hilos (I/O) para calcular hashes.
+    3. **Writer**: Un proceso que agrupa resultados y actualiza la base de datos.
     """
     multiprocessing.set_start_method("spawn", force=True)
     conn = get_db_connection()
@@ -182,33 +182,22 @@ def main():
     total_files = cur.fetchone()[0]
     log(f"Total archivos pendientes: {total_files}")
 
-    file_queue = Queue(FILE_QUEUE_SIZE)
-    result_queue = Queue(RESULT_QUEUE_SIZE)
+    file_queue: Queue = Queue(FILE_QUEUE_SIZE)
+    result_queue: Queue = Queue(RESULT_QUEUE_SIZE)
 
-    # Writer
     writer = Process(target=db_writer, args=(result_queue, total_files))
     writer.start()
 
-    # Workers
-    workers = []
-    for _ in range(MAX_WORKERS):
-        p = Process(target=process_worker, args=(file_queue, result_queue))
-        p.start()
-        workers.append(p)
+    workers = [Process(target=process_worker, args=(file_queue, result_queue)) for _ in range(MAX_WORKERS)]
+    for p in workers: p.start()
 
-    # Reader
     db_reader(file_queue)
 
-    # Stop workers
-    for _ in workers:
-        file_queue.put(None)
-    for w in workers:
-        w.join()
+    for _ in workers: file_queue.put(None)
+    for w in workers: w.join()
 
-    # Stop writer
     result_queue.put(None)
     writer.join()
-    cur.close()
     conn.close()
     log("XXHASH64 hashing completed")
 

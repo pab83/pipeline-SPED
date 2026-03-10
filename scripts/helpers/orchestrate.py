@@ -1,8 +1,9 @@
 import os
 import sys
+import time
 import psutil
 import subprocess
-from typing import List
+from typing import List, Optional, Any
 from scripts.config.general import MAX_RETRIES, RETRY_DELAY
 
 from scripts.exceptions import PipelineCancelledException
@@ -24,14 +25,16 @@ from scripts.helpers.db_status import (
 )
 from scripts.helpers.logs import log
 
-RUN_ID = int(os.getenv("RUN_ID", "0"))
+RUN_ID: int = int(os.getenv("RUN_ID", "0"))
 
-#----------- Logica genérica de orquestación -----------  
-def execute_phase_logic(run_id, phase_number, scripts_list):
+def execute_phase_logic(run_id: int, phase_number: int, scripts_list: List[str]) -> None:
     """
-    Lógica común para todas las fases del pipeline.
+    Orquesta la ejecución secuencial de scripts dentro de una fase específica.
+    
+    Se encarga de inicializar la fase en la base de datos, iterar sobre la lista 
+    de scripts proporcionada y gestionar la finalización o cancelación global de la fase.
     """
-    phase_id = None
+    phase_id: Optional[int] = None
     try:
         log(f"=== Phase {phase_number} ===")
         
@@ -52,26 +55,33 @@ def execute_phase_logic(run_id, phase_number, scripts_list):
             mark_phase_cancelled(phase_id)
         log(f"Phase {phase_number} stopped due to cancellation.")
         sys.exit(64)
-        raise
     
     except Exception as e:
         log(f"FATAL ERROR in Phase {phase_number}: {e}")
-        mark_phase_finished(phase_id) 
+        if phase_id:
+            mark_phase_finished(phase_id) 
         sys.exit(1)
 
-#----------- Función para ejecutar scripts -----------        
-def run_script(phase_id, script_name, phase_module):
-    """ Ejecuta un script específico dentro de una fase, manejando logs, cancelación, errores y actualizando la DB automáticamente. Implementa una lógica de reintentos en caso de que el script falle, con un número máximo de intentos definido por MAX_RETRIES y un retraso entre intentos definido por RETRY_DELAY. Durante la ejecución del script, se capturan las salidas estándar y de error para actualizar los logs en tiempo real, y se verifica periódicamente si el usuario ha solicitado cancelar la ejecución del pipeline para detener el script de manera ordenada si es necesario."""
-    logs_buffer = []
-    attempt = 0
+def run_script(phase_id: int, script_name: str, phase_module: str) -> None:
+    """
+    Ejecuta un script individual como un subproceso con lógica de reintentos y monitoreo.
+    
+    Este método gestiona:
+    
+    1. **Ciclo de Vida**: Marcado de inicio, éxito o error en la base de datos.
+    2. **Streaming de Logs**: Captura la salida del subproceso en tiempo real.
+    3. **Cancelación Activa**: Monitoriza la señal de cancelación en la DB para matar el proceso si es necesario.
+    4. **Reintentos**: Basado en las constantes `MAX_RETRIES` y `RETRY_DELAY`.
+    """
+    logs_buffer: List[str] = []
+    attempt: int = 0
     while attempt < MAX_RETRIES:
         attempt += 1
-        success = False
-        log(f"=== Running {script_name} == Attempt {attempt}/{MAX_RETRIES}:  ===", logs_buffer)
+        log(f"=== Running {script_name} == Attempt {attempt}/{MAX_RETRIES}: ===", logs_buffer)
 
         module = f"{phase_module}.{script_name.replace('.py','')}"
         
-        db = get_db()
+        get_db() # Asegurar conexión
         try:
             mark_script_running(phase_id, script_name, logs=logs_buffer)
             process = subprocess.Popen(
@@ -102,8 +112,8 @@ def run_script(phase_id, script_name, phase_module):
 
             if process.returncode == 0:
                 mark_script_finished(phase_id, script_name, logs=logs_buffer)
+                break # Éxito, salir del bucle de reintentos
             else:
-                # FALLO DEL SCRIPT (Exit code != 0)
                 error_msg = f"Exit code {process.returncode}"
                 log(f"⚠️ {script_name} failed (Attempt {attempt}) with {error_msg}", logs_buffer)
                 
@@ -112,7 +122,6 @@ def run_script(phase_id, script_name, phase_module):
                     update_script_status(phase_id, script_name, logs=logs_buffer)
                     time.sleep(RETRY_DELAY)
                 else:
-                    # Agotamos intentos
                     mark_script_error(phase_id, script_name, error_msg=error_msg, logs=logs_buffer)
                     raise RuntimeError(f"{script_name} failed after {MAX_RETRIES} attempts.")
             
@@ -120,11 +129,9 @@ def run_script(phase_id, script_name, phase_module):
             log("KeyboardInterrupt detected. Cancelling run...", logs_buffer)
             try:
                 p = psutil.Process(process.pid)
-                for child in p.children(recursive=True):
-                    child.kill()
+                for child in p.children(recursive=True): child.kill()
                 p.kill()
-            except Exception:
-                pass
+            except Exception: pass
             
             mark_script_cancelled(phase_id, script_name, logs=logs_buffer)
             raise PipelineCancelledException("Pipeline interrupted by user (Ctrl+C)")
@@ -133,23 +140,20 @@ def run_script(phase_id, script_name, phase_module):
             log(f"EXCEPTION: {e}", logs_buffer)
             mark_script_error(phase_id, script_name, error_msg=str(e), logs=logs_buffer)
             raise
-
-        finally:
-            pass
-        
-    close_db()  
     
+    close_db()
 
-#----------- Función para ejecutar fases completas -----------  
-def run_phase(module, phase_id):
+def run_phase(module: str, phase_id: int) -> None:
     """
-    Ejecuta una fase como proceso hijo.
-    Maneja logs, cancelación, errores y actualiza la DB automáticamente.
+    Ejecuta una fase completa como un subproceso independiente.
+    
+    Utilizado habitualmente por orquestadores de alto nivel para encapsular 
+    la ejecución de un módulo de fase completo, manteniendo el aislamiento de procesos.
     """
-    logs_buffer = []
+    logs_buffer: List[str] = []
     log(f"=== Running phase {module} ===", logs_buffer)
 
-    db = get_db()
+    get_db()
     try:
         process = subprocess.Popen(
             [sys.executable, "-m", module],
@@ -167,8 +171,7 @@ def run_phase(module, phase_id):
             if check_cancelled(RUN_ID):
                 log(f"CANCEL SIGNAL DETECTED. Killing phase {module}...", logs_buffer)
                 p = psutil.Process(process.pid)
-                for child in p.children(recursive=True):
-                    child.kill()
+                for child in p.children(recursive=True): child.kill()
                 p.kill()
 
                 mark_phase_cancelled(phase_id)
@@ -188,15 +191,11 @@ def run_phase(module, phase_id):
 
     except KeyboardInterrupt:
         log(f"Phase {module} interrupted by user", logs_buffer)
-
         try:
             p = psutil.Process(process.pid)
-            for child in p.children(recursive=True):
-                child.kill()
+            for child in p.children(recursive=True): child.kill()
             p.kill()
-        except Exception:
-            pass
-
+        except Exception: pass
         mark_phase_cancelled(phase_id)
         raise PipelineCancelledException()
 
@@ -204,6 +203,5 @@ def run_phase(module, phase_id):
         log(f"EXCEPTION in phase {module}: {e}", logs_buffer)
         mark_phase_error(phase_id, str(e))
         raise
-
     finally:
-        close_db()  
+        close_db()

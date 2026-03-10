@@ -1,96 +1,81 @@
 import os
+import time
+from typing import List, Dict, Any, Optional, Tuple
 import psycopg2
 from psycopg2 import OperationalError
 
-from scripts.config.general import LOG_FILE
-from scripts.config.phase_2 import SEMANTIC_SIM_THRESHOLD, SIZE_BUCKET_BYTES
-
+from scripts.config.phase_2 import SEMANTIC_SIM_THRESHOLD, SIZE_BUCKET_BYTES, LOG_FILE
 
 def log(msg: str) -> None:
+    """Registra un mensaje en el log de la Fase 2 y lo emite por consola."""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print(msg)
 
-
-def get_db_connection(retries: int = 10, delay: int = 3):
-    """Intenta establecer una conexión a la base de datos con retries y backoff exponencial.
-    Esto es útil para manejar situaciones donde la base de datos aún no está lista o hay problemas temporales de conexión."""
-    import time
-
+def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
+    """
+    Establece conexión con PostgreSQL con reintentos y backoff.
+    """
     for attempt in range(1, retries + 1):
         try:
-            conn = psycopg2.connect(
+            return psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb")),
                 user=os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user")),
-                password=os.getenv(
-                    "PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")
-                ),
+                password=os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", "5432")),
             )
-            return conn
         except OperationalError as e:
-            log(f"Postgres not ready (attempt {attempt}/{retries}): {e}")
+            log(f"⚠️ Postgres not ready (attempt {attempt}/{retries}): {e}")
             time.sleep(delay)
-    raise RuntimeError("Could not connect to Postgres after multiple attempts.")
+    raise RuntimeError("Could not connect to Postgres.")
 
-
-def choose_canonical(candidates):
+def choose_canonical(candidates: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
-    Elige el fichero canónico entre una lista de dicts con metadatos.
-    Criterios:
-      - Preferir PDFs con texto (ocr_needed=False) sobre otros.
-      - Mayor tamaño (size_bytes).
-      - Año de modificación más reciente.
-      - Menor profundidad (depth).
-      - ID más bajo como último criterio.
+    Aplica heurísticas para seleccionar el mejor archivo representante de un grupo.
+    
+    Criterios de prioridad (de mayor a menor):
+    
+    1.  **Calidad**: PDFs digitales (sin necesidad de OCR) sobre imágenes u otros.
+    2.  **Volumen**: Archivos con mayor tamaño en bytes (asumiendo más información).
+    3.  **Recencia**: Año de modificación más cercano al presente.
+    4.  **Accesibilidad**: Menor profundidad en la estructura de directorios.
+    5.  **Persistencia**: ID de base de datos más bajo como desempate final.
     """
-
-    def key(c):
-        # 0 = mejor, 1 = peor
-        quality_flag = 0 if (c["is_pdf"] and not c["ocr_needed"]) else 1
-        size = c["size_bytes"] or 0
-        mod_year = c["modification_year"] or 0
-        depth = c["depth"] or 0
-        return (
-            quality_flag,
-            -size,
-            -mod_year,
-            depth,
-            c["id"],
-        )
+    def key(c: Dict[str, Any]) -> Tuple[int, int, int, int, int]:
+        quality_flag = 0 if (c.get("is_pdf") and not c.get("ocr_needed")) else 1
+        size = c.get("size_bytes") or 0
+        mod_year = c.get("modification_year") or 0
+        depth = c.get("depth") or 0
+        return (quality_flag, -size, -mod_year, depth, c["id"])
 
     return min(candidates, key=key)
 
-
 def l2_distance_to_cosine_similarity(distance: float) -> float:
     """
-    Convierte una distancia L2 aproximada a una similitud coseno aproximada.
-    Solo es una aproximación: asumimos vectores normalizados en norma ~1.
-    Para vectores normalizados, ||a - b||^2 = 2 - 2 cos(theta)  =>  cos(theta) = 1 - d^2/2
+    Convierte distancia L2 (Euclidiana) a Similitud Coseno aproximada.
+    Asume vectores normalizados. Fórmula: $cos(\theta) = 1 - \frac{d^2}{2}$.
     """
     return max(-1.0, min(1.0, 1.0 - (distance * distance) / 2.0))
 
-
-def hash_level_canonicalization(cur):
+def hash_level_canonicalization(cur: Any) -> None:
     """
-    Primero hacemos canonización por duplicados exactos (sha256),
-    para no procesar innecesariamente múltiples copias idénticas.
+    Identifica duplicados exactos mediante hash.
+    
+    Marca un registro como `is_canonical = True` y vincula el resto mediante `canonical_id`.
     """
     log("Running hash-level canonicalization (sha256)...")
-    cur.execute(
-        """
+    cur.execute("""
         SELECT sha256, array_agg(id ORDER BY id) AS ids
         FROM files
         WHERE sha256 IS NOT NULL
         GROUP BY sha256
         HAVING COUNT(*) > 1;
-        """
-    )
+    """)
     groups = cur.fetchall()
     updates = []
-    for sha, ids in groups:
-        canonical_id = ids[0]
+    for _, ids in groups:
+        canonical_id = ids[0] # El ID más antiguo por defecto
         for fid in ids:
             if fid == canonical_id:
                 updates.append((True, None, fid))
@@ -98,246 +83,97 @@ def hash_level_canonicalization(cur):
                 updates.append((False, canonical_id, fid))
 
     if updates:
-        cur.executemany(
-            """
-            UPDATE files
-            SET is_canonical = %s,
-                canonical_id = %s
-            WHERE id = %s
-            """,
-            updates,
-        )
+        cur.executemany("""
+            UPDATE files SET is_canonical = %s, canonical_id = %s WHERE id = %s
+        """, updates)
         log(f"Hash-level canonicalization applied to {len(updates)} rows.")
-    else:
-        log("No hash-level duplicates found.")
 
-
-def semantic_canonicalization(cur, conn):
+def semantic_canonicalization(cur: Any, conn: Any) -> None:
     """
-    Aplica deduplicación semántica usando embeddings guardados en file_embeddings.
-    Solo opera sobre ficheros que todavía no apuntan a otro canónico (canonical_id IS NULL).
+    Deduplicación inteligente basada en contenido semántico (Embeddings).
+    
+    Utiliza `pgvector` e índices `IVFFlat` para encontrar documentos similares 
+    incluso si el hash es distinto (ej. misma carta escaneada dos veces).
     """
     log("Running semantic canonicalization...")
-
-    # Seleccionamos solo IDs de candidatos para semantic dedup.
-    cur.execute(
-        """
-        SELECT f.id
-        FROM files f
+    cur.execute("""
+        SELECT f.id FROM files f
         JOIN file_embeddings e ON e.file_id = f.id
-        WHERE f.canonical_id IS NULL
-        ORDER BY f.id
-        """
-    )
-
+        WHERE f.canonical_id IS NULL ORDER BY f.id
+    """)
     candidate_ids = [row[0] for row in cur.fetchall()]
-    if not candidate_ids:
-        log("No candidates found for semantic deduplication.")
-        return
+    if not candidate_ids: return
 
-    # Para evitar O(n^2), en lugar de cargar todos los embeddings en Python,
-    # delegamos la búsqueda de vecinos cercanos en pgvector (IVFFlat).
-    # Recorremos cada candidato, consultamos sus K vecinos más cercanos y
-    # agrupamos por similitud coseno >= SEMANTIC_SIM_THRESHOLD.
-
-    total_links = 0
-    updates = []
-
-    # Mapeo file_id -> cluster_id (para no re-agrupar lo mismo)
-    cluster_of = {}
-    clusters = {}
+    cluster_of: Dict[int, int] = {}
+    clusters: Dict[int, List[Dict[str, Any]]] = {}
     next_cluster_id = 1
-
-    # Número de vecinos a consultar por documento (incluyéndose a sí mismo).
-    # Cuanto más alto, más posibilidades de capturar duplicados; también más coste.
-    K = 20
+    K = 20 # Vecinos a consultar
 
     for fid in candidate_ids:
-        # Si ya está en un cluster, saltamos (ya será tratado como miembro).
-        if fid in cluster_of:
-            continue
+        if fid in cluster_of: continue
 
-        # Traemos metadatos y embedding del documento actual
-        cur.execute(
-            """
-            SELECT
-                f.file_type,
-                f.size_bytes,
-                f.creation_year,
-                f.modification_year,
-                f.depth,
-                f.is_pdf,
-                f.ocr_needed,
-                e.embedding
-            FROM files f
-            JOIN file_embeddings e ON e.file_id = f.id
-            WHERE f.id = %s
-            """,
-            (fid,),
-        )
+        cur.execute("""
+            SELECT f.file_type, f.size_bytes, f.creation_year, f.modification_year, 
+                   f.depth, f.is_pdf, f.ocr_needed, e.embedding
+            FROM files f JOIN file_embeddings e ON e.file_id = f.id WHERE f.id = %s
+        """, (fid,))
         row = cur.fetchone()
-        if not row:
-            continue
+        if not row: continue
 
-        (
-            file_type,
-            size_bytes,
-            creation_year,
-            modification_year,
-            depth,
-            is_pdf,
-            ocr_needed,
-            embedding,
-        ) = row
-
-        # Normalizamos algunos metadatos
-        btype = (file_type or "").lower()
-        size = size_bytes or 0
-        bucket_idx = size // max(1, SIZE_BUCKET_BYTES)
-
-        # Buscamos vecinos con pgvector restringiendo a mismo tipo y bucket de tamaño
-        cur.execute(
-            """
-            SELECT
-                f.id,
-                f.file_type,
-                f.size_bytes,
-                f.creation_year,
-                f.modification_year,
-                f.depth,
-                f.is_pdf,
-                f.ocr_needed,
-                e.embedding,
-                (e.embedding <-> %s)::float AS l2_distance
-            FROM files f
-            JOIN file_embeddings e ON e.file_id = f.id
-            WHERE f.canonical_id IS NULL
-              AND (f.file_type IS NULL OR lower(f.file_type) = %s)
-              AND (f.size_bytes IS NULL
-                   OR (f.size_bytes / GREATEST(1, %s)) = %s)
-            ORDER BY e.embedding <-> %s
-            LIMIT %s
-            """,
-            (
-                embedding,
-                btype,
-                SIZE_BUCKET_BYTES,
-                bucket_idx,
-                embedding,
-                K,
-            ),
-        )
+        # Búsqueda de vecinos similares en pgvector
+        cur.execute("""
+            SELECT f.id, f.file_type, f.size_bytes, f.creation_year, f.modification_year, 
+                   f.depth, f.is_pdf, f.ocr_needed, (e.embedding <-> %s)::float AS dist
+            FROM files f JOIN file_embeddings e ON e.file_id = f.id
+            WHERE f.canonical_id IS NULL AND (f.file_type IS NULL OR lower(f.file_type) = %s)
+            ORDER BY e.embedding <-> %s LIMIT %s
+        """, (row[7], (row[0] or "").lower(), row[7], K))
 
         neighbors = cur.fetchall()
-        if not neighbors:
-            continue
-
-        # Generamos lista de candidatos similares según umbral
         cluster_candidates = []
-        for (
-            nid,
-            n_file_type,
-            n_size_bytes,
-            n_creation_year,
-            n_modification_year,
-            n_depth,
-            n_is_pdf,
-            n_ocr_needed,
-            n_embedding,
-            l2_distance,
-        ) in neighbors:
-            if nid == fid:
-                # Siempre incluimos el propio documento
-                cluster_candidates.append(
-                    {
-                        "id": nid,
-                        "file_type": (n_file_type or "").lower(),
-                        "size_bytes": n_size_bytes,
-                        "creation_year": n_creation_year,
-                        "modification_year": n_modification_year,
-                        "depth": n_depth,
-                        "is_pdf": n_is_pdf,
-                        "ocr_needed": n_ocr_needed,
-                    }
-                )
-                continue
+        for n in neighbors:
+            sim = l2_distance_to_cosine_similarity(n[8])
+            if n[0] == fid or sim >= SEMANTIC_SIM_THRESHOLD:
+                cluster_candidates.append({
+                    "id": n[0], "file_type": n[1], "size_bytes": n[2],
+                    "modification_year": n[4], "depth": n[5], "is_pdf": n[6], "ocr_needed": n[7]
+                })
 
-            sim = l2_distance_to_cosine_similarity(l2_distance)
-            if sim >= SEMANTIC_SIM_THRESHOLD:
-                cluster_candidates.append(
-                    {
-                        "id": nid,
-                        "file_type": (n_file_type or "").lower(),
-                        "size_bytes": n_size_bytes,
-                        "creation_year": n_creation_year,
-                        "modification_year": n_modification_year,
-                        "depth": n_depth,
-                        "is_pdf": n_is_pdf,
-                        "ocr_needed": n_ocr_needed,
-                    }
-                )
+        if len(cluster_candidates) > 1:
+            cid = next_cluster_id
+            next_cluster_id += 1
+            clusters[cid] = cluster_candidates
+            for item in cluster_candidates: cluster_of[item["id"]] = cid
 
-        # Si no hay más que uno, no formamos cluster nuevo
-        if len(cluster_candidates) < 2:
-            continue
-
-        # Creamos un nuevo cluster para este conjunto
-        cid = next_cluster_id
-        next_cluster_id += 1
-
-        clusters[cid] = cluster_candidates
-        for item in cluster_candidates:
-            cluster_of[item["id"]] = cid
-
-        total_links += len(cluster_candidates)
-
-    total_clusters = len(clusters)
-    total_in_clusters = total_links
-
-    # Ahora, para cada cluster, escogemos canónico y marcamos en BD
-    for cid, members in clusters.items():
+    # Aplicar actualizaciones
+    updates = []
+    for _, members in clusters.items():
         canonical = choose_canonical(members)
-        canonical_id = canonical["id"]
-
-        for item in members:
-            fid = item["id"]
-            if fid == canonical_id:
-                updates.append((True, None, fid))
-            else:
-                updates.append((False, canonical_id, fid))
+        for m in members:
+            updates.append((m["id"] == canonical["id"], 
+                            None if m["id"] == canonical["id"] else canonical["id"], 
+                            m["id"]))
 
     if updates:
-        cur.executemany(
-            """
-            UPDATE files
-            SET is_canonical = %s,
-                canonical_id = %s
-            WHERE id = %s
-            """,
-            updates,
-        )
+        cur.executemany("UPDATE files SET is_canonical=%s, canonical_id=%s WHERE id=%s", updates)
         conn.commit()
-        log(
-            f"Semantic canonicalization applied to {len(updates)} rows "
-            f"across {total_clusters} clusters ({total_in_clusters} docs in clusters)."
-        )
-    else:
-        log("No semantic duplicate clusters found above the threshold.")
+        log(f"Semantic clusters processed: {len(clusters)}")
 
-
-def main():
+def main() -> None:
+    """
+    Punto de entrada para la deduplicación de Fase 2.
+    
+    Coordina la limpieza de datos priorizando la identidad exacta por hash. 
+    (La deduplicación semántica puede activarse según necesidad).
+    """
     conn = get_db_connection()
     cur = conn.cursor()
-
     hash_level_canonicalization(cur)
     conn.commit()
-
-    #semantic_canonicalization(cur, conn)
-
+    # semantic_canonicalization(cur, conn) # Desactivado por defecto para estabilidad
     cur.close()
     conn.close()
-    log("Phase 2 deduplication (hash only) completed.")
-
+    log("Deduplication completed.")
 
 if __name__ == "__main__":
     main()

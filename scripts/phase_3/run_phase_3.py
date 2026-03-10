@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 # Configuración y Excepciones
 from scripts.config.phase_3 import LOG_FILE
@@ -12,17 +13,32 @@ from scripts.helpers.orchestrate import (
 # ----------------------------
 # Parámetros de ejecución
 # ----------------------------
-RUN_ID = int(os.getenv("RUN_ID", "0"))  
-PHASE_NUMBER = 3  
-SCRIPTS = [
-        #"describe_img.py",
-        #"process_ocr_tasks.py",
-        #"process_files.py",
+RUN_ID: int = int(os.getenv("RUN_ID", "0"))
+"""ID único de ejecución para el seguimiento de la Fase 3."""
 
-    ] 
+PHASE_NUMBER: int = 3
+"""Identificador de Fase: Inferencia de Modelos (OCR, VLM y Clasificación)."""
 
-def main():
-    """ Función principal que se ejecuta al iniciar el script. Establece el archivo de log y luego delega la orquestación de la fase a la función genérica execute_phase_logic, pasando el run_id, phase_number y la lista de scripts a ejecutar. Cada script en la lista SCRIPTS se ejecutará en orden dentro de execute_phase_logic, que se encargará de manejar la ejecución, logging y cualquier error que pueda ocurrir durante la ejecución de los scripts individuales."""
+SCRIPTS: List[str] = [
+    # "describe_img_producer.py",   # Envía imágenes a la cola para descripción visual
+    # "process_ocr_consumer.py",    # Consume y persiste resultados de OCR
+    # "process_files_producer.py",  # Encola archivos para análisis de NLP
+]
+"""
+Lista secuencial de scripts para la Fase 3. 
+Nota: En esta fase, los scripts actúan como 'Producers' para Redis o 
+'Consumers' para la persistencia de resultados de modelos IA.
+"""
+
+def main() -> None:
+    """
+    Punto de entrada para la orquestación de la Fase 3.
+    
+    Esta fase gestiona la interacción con modelos de Machine Learning (IA) 
+    utilizando una arquitectura de colas basada en Redis.
+    La función establece el entorno de logging y ejecuta la lógica de 
+    control centralizada para la fase.
+    """
     # Establecer el archivo de log antes de ejecutar la lógica
     set_log_file(LOG_FILE)
     

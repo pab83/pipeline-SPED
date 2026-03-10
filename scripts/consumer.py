@@ -3,10 +3,30 @@ from messaging.redis_client import RedisQueueClient
 from schemas.result import ResultMessage
 
 mq_client = RedisQueueClient()
-RESULT_QUEUE = "cola_resultados"
+"""Instancia del cliente Redis utilizada para escuchar y procesar los resultados de los workers."""
 
-def handle_result(result_dict):
-    """ Maneja un resultado recibido de la cola. Valida el mensaje, extrae el file_id usando el correlation_id, extrae el texto del resultado y actualiza la base de datos. Si ocurre algún error durante el procesamiento, lo loguea y continúa con el siguiente resultado. """
+RESULT_QUEUE = "cola_resultados"
+"""Nombre de la cola de Redis donde los workers publican los resultados (`ResultMessage`)."""
+
+def handle_result(result_dict: dict):
+    """
+    Procesa un resultado individual recibido desde la cola de mensajería.
+
+    Esta función realiza la validación del esquema mediante Pydantic, registra la recepción
+    del mensaje y persiste el resultado en el sistema de archivos local para su posterior
+    auditoría o integración con la base de datos.
+
+    Args:
+        result_dict: Diccionario crudo recibido de Redis que representa un `ResultMessage`.
+
+    Raises:
+        ValidationError: Si el contenido del mensaje no cumple con el esquema `ResultMessage`.
+        OSError: Si hay problemas al crear el directorio o escribir el archivo JSON.
+        
+    Note:
+        Los archivos se guardan por defecto en `./resources/results` a menos que se
+        especifique lo contrario mediante la variable de entorno `RESULT_PATH`.
+    """
     result = ResultMessage.model_validate(result_dict)
     print(f"Resultado recibido: {result.message_id} - Modelo: {result.model}")
 

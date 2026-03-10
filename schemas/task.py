@@ -7,22 +7,48 @@ from enum import Enum
 # ENUMS
 # ---------------------------
 class TargetModel(str, Enum):
-    """ Enum que define los posibles modelos o fases a los que una tarea puede estar dirigida dentro del pipeline. Cada valor del enum representa un módulo o fase específica del pipeline, como OCR, Moondream o Embeddings. Este enum se utiliza en el TaskMessage para indicar claramente qué modelo o fase debe ejecutar la tarea, lo que ayuda a organizar y dirigir las tareas de manera eficiente dentro del sistema."""
+    """
+    Define los modelos o fases de destino para una tarea en la pipeline.
+    """
     OCR = "ocr"
+    """Fase de reconocimiento óptico de caracteres."""
+    
     MOONDREAM = "moondream"
+    """Modelo de IA para descripción visual y análisis de imágenes."""
+    
     EMBEDDINGS = "embeddings"
+    """Generación de vectores numéricos para búsqueda semántica."""
 
 # ---------------------------
 # TASK MESSAGE
 # ---------------------------
 class TaskMessage(BaseModel):
-    """ Estructura del mensaje que representa una tarea a ejecutar en el pipeline. Este modelo define los campos necesarios para describir una tarea, incluyendo identificadores únicos, información de tiempo, el modelo objetivo para la tarea, y un payload con los datos específicos que la tarea necesita para su ejecución. El campo retry_count se utiliza para llevar un seguimiento de cuántas veces se ha intentado ejecutar la tarea, mientras que max_retries define el número máximo de intentos permitidos antes de considerar la tarea como fallida."""
+    """
+    Estructura del mensaje que define una tarea a ejecutar por los workers.
+    """
     message_id: str
+    """Identificador único universal (UUID) de este mensaje específico."""
+    
     correlation_id: str
+    """ID de seguimiento que vincula esta tarea con un proceso de auditoría global."""
+    
     schema_version: str = "1.0"
+    """Versión del esquema para asegurar compatibilidad entre productor y consumidor."""
+    
     timestamp: datetime
+    """Fecha y hora exacta en la que se generó la tarea."""
+    
     source: str
+    """Módulo o fase de origen que emitió la tarea (ej. 'phase_2')."""
+    
     target_model: TargetModel
+    """El worker o modelo específico encargado de procesar esta tarea."""
+    
     retry_count: int = 0
+    """Contador actual de reintentos realizados tras fallos transitorios."""
+    
     max_retries: int = 3
+    """Límite máximo de intentos permitidos antes de descartar la tarea."""
+    
     payload: Dict[str, Any]
+    """Diccionario con los datos específicos necesarios (ej. path del archivo, metadatos)."""

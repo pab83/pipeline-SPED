@@ -1,45 +1,76 @@
-from typing import Any, List, Optional
+from typing import Optional, List, Any
 from enum import Enum
-
 from pydantic import BaseModel
-
 
 # ---------------------------
 # ENUMS
 # ---------------------------
 class Status(str, Enum):
-    """ Enum que define los posibles estados de una tarea o resultado dentro del pipeline. El estado SUCCESS indica que la tarea se completó correctamente, mientras que ERROR indica que hubo un problema durante la ejecución de la tarea. Este enum se utiliza en el ResultMessage para indicar claramente el resultado de la ejecución de una tarea, lo que facilita el manejo de resultados y errores dentro del sistema."""
+    """
+    Define los posibles estados de una tarea o resultado dentro del pipeline.
+    """
     SUCCESS = "success"
+    """La tarea se completó correctamente sin interrupciones."""
+    
     ERROR = "error"
+    """Se produjo un fallo crítico durante la ejecución de la tarea."""
 
 
 # ---------------------------
 # ERROR STRUCTURE
 # ---------------------------
 class ErrorInfo(BaseModel):
-    """ Estructura que define la información de error en caso de que una tarea falle durante su ejecución. Incluye un campo type para categorizar el tipo de error, un mensaje descriptivo del error, y un campo retryable que indica si el error es transitorio y si la tarea puede ser reintentada automáticamente por el sistema. Esta estructura se utiliza en el ResultMessage para proporcionar detalles claros sobre cualquier error que ocurra durante la ejecución de una tarea, lo que ayuda en la depuración y manejo de errores dentro del pipeline."""
+    """
+    Estructura detallada de error en caso de fallo en la ejecución.
+    """
     type: str
+    """Categoría técnica del error (ej. 'ConnectionError', 'Timeout')."""
+    
     message: str
+    """Descripción legible para humanos sobre lo que salió mal."""
+    
     retryable: bool = True
+    """Indica si el sistema debe intentar re-encolar la tarea automáticamente."""
 
 
 # ---------------------------
 # RESULT MESSAGE
 # ---------------------------
 class ResultMessage(BaseModel):
-    """ Estructura del mensaje que representa el resultado de la ejecución de una tarea dentro del pipeline. Este modelo define los campos necesarios para describir el resultado, incluyendo identificadores únicos, información de tiempo, el modelo que ejecutó la tarea, el estado del resultado (éxito o error), y campos opcionales para resultados exitosos como el resultado específico, embedding generado, dimensión del embedding, y hash del contenido. En caso de error, incluye un campo error con la información detallada del error utilizando la estructura ErrorInfo."""
+    """
+    Estructura del mensaje que representa el resultado final de una tarea.
+    """
     message_id: str
+    """Identificador único universal (UUID) del mensaje de resultado."""
+    
     correlation_id: str
+    """ID de seguimiento para vincular el resultado con la tarea original."""
+    
     schema_version: str = "1.0"
+    """Versión del esquema de datos para asegurar compatibilidad entre workers."""
+    
     model: str
+    """Nombre o versión del modelo/proceso que generó este resultado."""
+    
     status: Status
+    """Estado final del procesamiento (success o error)."""
+    
     processing_time_ms: Optional[int] = None
+    """Tiempo total invertido en el procesamiento medido en milisegundos."""
 
     # Success fields
     result: Optional[Any] = None
+    """Datos de salida generados (texto extraído, metadatos, etc.)."""
+    
     embedding: Optional[List[float]] = None
+    """Representación vectorial numérica del contenido si aplica."""
+    
     embedding_dim: Optional[int] = None
+    """Dimensión del vector de embedding generado."""
+    
     content_hash: Optional[str] = None
+    """Firma digital del contenido procesado para verificar integridad."""
 
     # Error field
     error: Optional[ErrorInfo] = None
+    """Objeto con detalles técnicos en caso de que el status sea 'error'."""
