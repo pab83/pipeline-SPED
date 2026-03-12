@@ -63,7 +63,8 @@ def clasificar_documento(file: Dict[str, Any]) -> Dict[str, str]:
 Eres un clasificador documental. Categorias: Factura, Presupuesto, Boletines, Informe, Fotografia, Otro. 
 
 Para cada archivo:
-- Usa el full_path para inferir el proyecto (códigos de 6 letras como CSBORA). 
+- Usa el full_path y text_excerpt para inferir el proyecto (códigos de 6 letras, por ejemplo CSBORA).
+- Usa file_type, full_path y text_excerpt para decidir a que categoria de clasificación corresponde.
 - Usa el creation_year SOLO si no hay un año explícito en el texto.
 - Responde SOLO con un objeto JSON con keys "categoria", "anio" y "proyecto".
 

@@ -1,9 +1,13 @@
 import os
 import sys
 import subprocess
+from dotenv import load_dotenv
+load_dotenv()
 from scripts.helpers.db_status import *
 from scripts.helpers.orchestrate import run_phase
 from scripts.exceptions import PipelineCancelledException
+
+
 
 RUN_ID = int(os.environ.get("RUN_ID", 0))  
 """

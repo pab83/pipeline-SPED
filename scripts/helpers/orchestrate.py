@@ -3,6 +3,8 @@ import sys
 import time
 import psutil
 import subprocess
+from dotenv import load_dotenv
+load_dotenv()
 from typing import List, Optional, Any
 from scripts.config.general import MAX_RETRIES, RETRY_DELAY
 

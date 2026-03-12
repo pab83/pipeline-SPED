@@ -31,9 +31,9 @@ def create_db():
     )
     
     cur = conn.cursor()
-    cur.execute(
+    cur.execute(        ## Ahora crea todas las columnas de la tabla files desde el principio para poder utilizar data_publisher desde phase_0. Sigue habiendo check de columnas en lso scripts que necesitan.
         """
-        CREATE TABLE IF NOT EXISTS files (
+        CREATE TABLE IF NOT EXISTS files (  
             id SERIAL PRIMARY KEY,
             full_path TEXT UNIQUE NOT NULL,
             file_name TEXT,
@@ -48,7 +48,13 @@ def create_db():
             xxhash64 TEXT,
             sha256 TEXT,
             first_seen TIMESTAMP DEFAULT NOW(),
-            last_seen TIMESTAMP DEFAULT NOW()
+            last_seen TIMESTAMP DEFAULT NOW(),
+            text_excerpt TEXT,
+            text_chars_extracted INT,
+            is_canonical BOOLEAN DEFAULT FALSE,
+            canonical_id INT REFERENCES files(id);
+            categoria TEXT;
+            last_classified TIMESTAMP;
         );
         """
     )

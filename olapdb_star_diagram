@@ -1,0 +1,70 @@
+                            _____________________________________________
+                           |      dim_directory                          |
+                           | id SERIAL PRIMARY KEY,                      |
+                           | directory_name TEXT,                        |
+                           | full_path TEXT UNIQUE,                      |
+                           | parent_id INT REFERENCES dim_directory(id), |
+                           | depth INT,                                  |
+                           | level1 TEXT,                                |
+                           | level2 TEXT,                                |
+                           | level3 TEXT,                                |
+                           | level4 TEXT,                                |
+                           | level5 TEXT                                 |
+                           |_____________________________________________|
+                                                   |
+                                                   |
+ __________________________           _____________|____________          __________________________
+|      dim_filetype        |         |       fact_files         |        |    dim_classification    |
+| id SERIAL PRIMARY KEY,   |-------- | id BIGSERIAL PRIMARY KEY,|------- | id SERIAL PRIMARY KEY,   |
+| file_type TEXT UNIQUE    |         | file_id INT,             |        | categoria TEXT UNIQUE    |
+|__________________________|         | directory_id INT,        |        |__________________________|
+                                     | filetype_id INT,         |        
+                                     | classification_id INT,   |        
+                                     | size_bytes BIGINT,       |        
+                                     | year_created INT,        |        
+                                     | year_modified INT,       |        
+                                     | depth INT,               |        
+                                     | is_pdf BOOLEAN,          |        
+                                     | ocr_needed BOOLEAN,      |        
+                                     | text_chars_extracted INT,|        
+                                     | first_seen TIMESTAMP,    |        
+                                     | last_seen TIMESTAMP      |        
+                                     |__________________________|
+
+
+
+
+💡 Resumen rápido de posibles dashboards:
+
+Dashboard	Métrica principal	Dimensiones / Filtros
+Directorios	count, sum(size_bytes)	level1..level5
+Tipos de archivo	count, sum(size_bytes)	file_type
+Clasificación	count, sum(size_bytes)	categoria, last_classified
+Duplicados	count, % duplicados	canonical_group_id, is_canonical
+Integridad / Hash	list, duplicates	xxhash64, sha256
+Temporal	count, trend	first_seen, last_seen, last_classified
+Previews	text_excerpt	file_name, directory, type
+Tamaño vs Tipo	size_bytes	file_type, categoria, directory
+
+
+
+
+
+
+
+
+
+                                 
+                               
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
