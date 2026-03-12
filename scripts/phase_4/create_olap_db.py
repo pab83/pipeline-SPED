@@ -26,7 +26,33 @@ def create_db():
 
     cur.close()
     conn.close()
+    
+def delete_db():
+    """ Elimina las tablas existentes si las hubiera """
+    conn = psycopg2.connect(
+        host=OLAP_DB_HOST,
+        user=OLAP_DB_USER,
+        password=OLAP_DB_PASS,
+        dbname=OLAP_DB_NAME
+    )
 
+    conn.autocommit = True
+    cur = conn.cursor()
+
+    cur.execute("""
+                    DROP TABLE IF EXISTS fact_file_excerpts CASCADE;
+                    DROP TABLE IF EXISTS fact_files CASCADE;
+                    DROP TABLE IF EXISTS dim_canonical_group;
+                    DROP TABLE IF EXISTS dim_classification;
+                    DROP TABLE IF EXISTS dim_filetype;
+                    DROP TABLE IF EXISTS dim_directory;
+                    """)
+    
+    conn.commit()
+    print("Tablas eliminadas correctamente.")
+    cur.close()
+    conn.close()
+    
 
 def create_tables():
     """Crea las tablas de la base de datos si no existen."""
@@ -44,7 +70,7 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         directory_name TEXT NOT NULL,       
         full_path TEXT UNIQUE NOT NULL,     
-        parent_id INT REFERENCES dim_directory(id),
+        parent_id INT REFERENCES dim_directory(id) ON DELETE CASCADE,
         depth INT,                           
         level1 TEXT,                         
         level2 TEXT,                        
@@ -75,7 +101,8 @@ def create_tables():
     -- 5. Tabla de Hechos de Archivos (completa)
     CREATE TABLE IF NOT EXISTS fact_files (
         id BIGSERIAL PRIMARY KEY,
-        file_id INT UNIQUE, -- ID original de la OLTP
+        file_id INT NOT NULL, -- ID original de la OLTP
+        name TEXT,
         directory_id INT REFERENCES dim_directory(id),
         filetype_id INT REFERENCES dim_filetype(id),
         classification_id INT REFERENCES dim_classification(id),
@@ -97,13 +124,15 @@ def create_tables():
         first_seen TIMESTAMP,
         last_seen TIMESTAMP,
         last_classified TIMESTAMP,         -- nuevo
-        last_sync_fase4 TIMESTAMP DEFAULT NOW()
+        last_sync_fase4 TIMESTAMP DEFAULT NOW(),
+        CONSTRAINT uq_file_id UNIQUE (file_id) 
     );
     
     -- 6. Tabla de Hechos de Texto
     CREATE TABLE IF NOT EXISTS fact_file_excerpts (
-        file_id INT REFERENCES fact_files(id),
-        text_excerpt TEXT
+        file_id INT PRIMARY KEY REFERENCES fact_files(file_id),
+        text_excerpt TEXT,
+        CONSTRAINT uq_fact_files_file_id UNIQUE (file_id)
     );
 
     -- Índices para que los Dashboards de Superset vuelen
@@ -123,6 +152,9 @@ def create_tables():
 
 if __name__ == "__main__":
 
+   ### print("Deleting OLAP database...")
+   ### delete_db()
+    
     print("Creating OLAP database...")
     create_db()
 
@@ -130,3 +162,14 @@ if __name__ == "__main__":
     create_tables()
 
     print("Done.")
+    
+ 
+###     -- FORZAR RESTRICCIONES DE UNICIDAD (Crucial para ON CONFLICT)
+###     ALTER TABLE fact_files DROP CONSTRAINT IF EXISTS uq_fact_files_file_id;
+###     ALTER TABLE fact_files ADD CONSTRAINT uq_fact_files_file_id UNIQUE (file_id);
+
+###     ALTER TABLE dim_filetype DROP CONSTRAINT IF EXISTS dim_filetype_file_type_key;
+###     ALTER TABLE dim_filetype ADD CONSTRAINT dim_filetype_file_type_key UNIQUE (file_type);
+
+###     ALTER TABLE dim_classification DROP CONSTRAINT IF EXISTS dim_classification_categoria_key;
+###     ALTER TABLE dim_classification ADD CONSTRAINT dim_classification_categoria_key UNIQUE (categoria);  

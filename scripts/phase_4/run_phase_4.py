@@ -16,7 +16,7 @@ from scripts.helpers.orchestrate import (
 RUN_ID: int = int(os.getenv("RUN_ID", "0"))
 """ID único de ejecución para el seguimiento de la Fase 4."""
 
-PHASE_NUMBER: int = 3
+PHASE_NUMBER: int = 4
 """Identificador de Fase: Publicar datos."""
 
 SCRIPTS: List[str] = [

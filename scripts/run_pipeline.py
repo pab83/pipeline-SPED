@@ -15,10 +15,12 @@ ID único de la ejecución actual, obtenido de las variables de entorno.
 Se utiliza para vincular todos los logs y estados de base de datos a este proceso específico.
 """
 PHASES = [
-    "scripts.phase_0.run_phase_0",
-    "scripts.phase_1.run_phase_1",
-    "scripts.phase_2.run_phase_2",
-    "scripts.phase_3.run_phase_3",
+    #"scripts.phase_0.run_phase_0",
+    #"scripts.phase_1.run_phase_1",
+    #"scripts.phase_2.run_phase_2",
+    #"scripts.phase_3.run_phase_3",
+    "scripts.phase_4.run_phase_4"
+
 ]
 """
 Lista ordenada de módulos que componen el ciclo de vida de la pipeline.
