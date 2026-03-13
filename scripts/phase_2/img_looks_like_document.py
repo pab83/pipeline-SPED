@@ -9,7 +9,7 @@ import numpy as np
 import psycopg2
 from psycopg2 import OperationalError
 
-from scripts.config.general import LOG_FILE
+from scripts.config.phase_2 import LOG_FILE
 
 # --- Configuración ---
 IMAGE_EXTENSIONS: Set[str] = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
@@ -29,11 +29,11 @@ def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
     for attempt in range(1, retries + 1):
         try:
             return psycopg2.connect(
-                dbname=os.getenv("PGDATABASE", "auditdb"),
-                user=os.getenv("PGUSER", "user"),
-                password=os.getenv("PGPASSWORD", "pass"),
-                host=os.getenv("PGHOST", "localhost"),
-                port=int(os.getenv("PGPORT", 5432)),
+                dbname=os.getenv("PGDATABASE"),
+                user=os.getenv("PGUSER"),
+                password=os.getenv("PGPASSWORD"),
+                host=os.getenv("PGHOST"),
+                port=int(os.getenv("PGPORT")),
             )
         except OperationalError as e:
             log(f"Postgres not ready (attempt {attempt}/{retries}): {e}")
@@ -127,7 +127,7 @@ def main() -> None:
             SELECT DISTINCT ON (xxhash64) id, full_path
             FROM files
             WHERE ocr_needed = FALSE
-              AND LOWER(SUBSTRING(full_path FROM '.+\\.([^.]+)$')) IN ('jpg','jpeg','png','bmp','tif','tiff')
+              AND LOWER(SUBSTRING(full_path FROM '.+\\.([^.]+)$')) IN ('jpg','jpeg','png','bmp','tif','tiff') OR file_type IN ('.jpg','.jpeg','.png','.bmp','.tif','.tiff')
             ORDER BY xxhash64, id
         """)
         rows = cur.fetchall()

@@ -17,10 +17,10 @@ PHASE_NUMBER = 0
 """Identificador numérico de esta fase (0: Escaneo e Indexación)."""
 
 SCRIPTS = [
-    # "create_db.py",
-    # "scan_files.py",
-    # "mark_pdf_ocr.py",
-    # "generate_phase_0_report.py"
+     "create_db.py",
+     "scan_files.py",
+     "mark_pdf_ocr.py",
+     "generate_phase_0_report.py"
 ]
 """Lista secuencial de scripts que componen la lógica interna de la Fase 0."""
 

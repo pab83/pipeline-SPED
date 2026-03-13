@@ -8,7 +8,7 @@ from messaging.redis_client import RedisQueueClient
 from schemas.result import ResultMessage, Status
 from schemas.task import TargetModel
 from scripts.producer import send_task
-from scripts.config.general import LOG_FILE
+from scripts.config.phase_3 import LOG_FILE
 
 
 def log(msg: str) -> None:

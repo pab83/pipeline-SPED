@@ -52,9 +52,9 @@ def create_db():
             text_excerpt TEXT,
             text_chars_extracted INT,
             is_canonical BOOLEAN DEFAULT FALSE,
-            canonical_id INT REFERENCES files(id);
-            categoria TEXT;
-            last_classified TIMESTAMP;
+            canonical_id INT REFERENCES files(id),
+            categoria TEXT,
+            last_classified TIMESTAMP
         );
         """
     )

@@ -67,7 +67,9 @@ services:
       # Share de TrueNAS montada como /data dentro del contenedor
       - /mnt/share:/data:ro
       # código editable
-      - ./scripts:/app/scripts       
+      - ./scripts:/app/scripts
+      # demo directory 
+      - ./demo:/demo            
     networks:
       - rpr-net
 

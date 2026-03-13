@@ -171,7 +171,7 @@ def main(batch_size: int = 500) -> None:
 
     cur.close()
     conn.close()
-    log("Text extraction completed ✅")
+    log("=== Text extraction completed ===")
 
 if __name__ == "__main__":
     main()

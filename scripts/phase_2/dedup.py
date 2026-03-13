@@ -60,33 +60,46 @@ def l2_distance_to_cosine_similarity(distance: float) -> float:
 
 def hash_level_canonicalization(cur: Any) -> None:
     """
-    Identifica duplicados exactos mediante hash.
+    Identifica duplicados exactos mediante SHA256 y marca correctamente todos los registros.
     
-    Marca un registro como `is_canonical = True` y vincula el resto mediante `canonical_id`.
+    - `is_canonical = True` → archivo único o canonizado
+    - `is_canonical = False` → duplicado de otro archivo
+    - `canonical_id` apunta al registro canonizado
     """
     log("Running hash-level canonicalization (sha256)...")
+
+    # 1️⃣ Recupera todos los registros con hash
     cur.execute("""
         SELECT sha256, array_agg(id ORDER BY id) AS ids
         FROM files
         WHERE sha256 IS NOT NULL
         GROUP BY sha256
-        HAVING COUNT(*) > 1;
     """)
     groups = cur.fetchall()
     updates = []
-    for _, ids in groups:
-        canonical_id = ids[0] # El ID más antiguo por defecto
-        for fid in ids:
-            if fid == canonical_id:
-                updates.append((True, None, fid))
-            else:
-                updates.append((False, canonical_id, fid))
+
+    for sha, ids in groups:
+        if len(ids) == 1:
+            # Archivo único → canonizado
+            updates.append((True, None, ids[0]))
+        else:
+            # Múltiples duplicados → el primero es canonizado
+            canonical_id = ids[0]
+            for fid in ids:
+                if fid == canonical_id:
+                    updates.append((True, None, fid))
+                else:
+                    updates.append((False, canonical_id, fid))
 
     if updates:
         cur.executemany("""
-            UPDATE files SET is_canonical = %s, canonical_id = %s WHERE id = %s
+            UPDATE files
+            SET is_canonical = %s, canonical_id = %s
+            WHERE id = %s
         """, updates)
         log(f"Hash-level canonicalization applied to {len(updates)} rows.")
+    else:
+        log("No hay registros con SHA256 para procesar.")
 
 def semantic_canonicalization(cur: Any, conn: Any) -> None:
     """

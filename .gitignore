@@ -17,6 +17,9 @@ resources/tmp/
 resources/csv/
 resources/reports/
 
+# Archivos demo
+demo/
+
 # Ficheros de entorno / secretos
 .env
 

@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from PyPDF2 import PdfReader
 from PyPDF2.generic import IndirectObject
 from tqdm import tqdm
+from typing import Optional
 from scripts.config.phase_0 import LOG_FILE
 
 # --- CONFIGURACIÓN Y LOGS ---

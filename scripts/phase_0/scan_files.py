@@ -1,5 +1,6 @@
 import os
 import time
+from typing import Iterator
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from itertools import islice
@@ -148,11 +149,11 @@ def audit():
     buffer = []
 
     # DB connection
-    DB_NAME = os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb"))
-    DB_USER = os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user"))
-    DB_PASSWORD = os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass"))
-    DB_HOST = os.getenv("PGHOST", "localhost")
-    DB_PORT = int(os.getenv("PGPORT", "5432"))
+    DB_NAME =  os.getenv("POSTGRES_DB")
+    DB_USER =  os.getenv("POSTGRES_USER")
+    DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    DB_HOST = os.getenv("PGHOST")
+    DB_PORT = int(os.getenv("POSTGRES_PORT"))
 
     conn = psycopg2.connect(
         dbname=DB_NAME,

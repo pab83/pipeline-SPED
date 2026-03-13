@@ -1,8 +1,8 @@
 import os
 import psycopg2
 import csv
-from scripts.config.general import LOG_FILE, LARGE_FILE_THRESHOLD
-from scripts.config.phase_0 import AUDIT_SUMMARY_FILE
+from scripts.config.general import LARGE_FILE_THRESHOLD
+from scripts.config.phase_0 import LOG_FILE,AUDIT_SUMMARY_FILE
 
 REPORT_FILE: str = AUDIT_SUMMARY_FILE
 """Ruta del archivo CSV donde se volcará el resumen del escaneo."""
