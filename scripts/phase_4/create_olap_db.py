@@ -152,8 +152,8 @@ def create_tables():
 
 if __name__ == "__main__":
 
-   ### print("Deleting OLAP database...")
-   ### delete_db()
+    print("Deleting OLAP database...")
+    delete_db()
     
     print("Creating OLAP database...")
     create_db()

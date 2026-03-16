@@ -71,9 +71,18 @@ def safe_bool(val, default=False):
 def safe_timestamp(val):
     return val if val is not None else None
 
-def build_directory_levels(full_path):
+def build_directory_levels(full_path, skip_levels=3, max_levels=5):
+    """
+    Construye los niveles de directorio ignorando los primeros skip_levels.
+    
+    Ejemplo con skip_levels=3:
+        /data/2012/4-revisiones/subcarpeta/otro
+        parts = ['/', 'data', '2012', '4-revisiones', 'subcarpeta', 'otro']
+        skip 3 → ['4-revisiones', 'subcarpeta', 'otro', None, None]
+    """
     parts = Path(full_path).parts
-    return [parts[i] if i < len(parts) else None for i in range(5)]
+    relevant_parts = parts[skip_levels:]  # Ignorar los primeros N niveles
+    return [relevant_parts[i] if i < len(relevant_parts) else None for i in range(max_levels)]
 
 
 # ---------------------

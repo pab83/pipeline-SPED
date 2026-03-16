@@ -20,9 +20,9 @@ PHASE_NUMBER: int = 3
 """Identificador de Fase: Inferencia de Modelos (OCR, VLM y Clasificación)."""
 
 SCRIPTS: List[str] = [
-    # "describe_img_producer.py",   # Envía imágenes a la cola para descripción visual
-    # "process_ocr_consumer.py",    # Consume y persiste resultados de OCR
-    # "process_files_producer.py",  # Encola archivos para análisis de NLP
+     "describe_img.py",   # Envía imágenes a la cola para descripción visual
+     "process_ocr_tasks.py",    # Consume y persiste resultados de OCR
+     "process_files.py",  # Encola archivos para análisis de NLP
 ]
 """
 Lista secuencial de scripts para la Fase 3. 

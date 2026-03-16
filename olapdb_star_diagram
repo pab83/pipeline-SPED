@@ -18,6 +18,7 @@
 | id SERIAL PRIMARY KEY,   |-------- | id BIGSERIAL PRIMARY KEY,|------- | id SERIAL PRIMARY KEY,   |
 | file_type TEXT UNIQUE    |         | file_id INT,             |        | categoria TEXT UNIQUE    |
 |__________________________|         | directory_id INT,        |        |__________________________|
+                                     | name TEXT,               |
                                      | filetype_id INT,         |        
                                      | classification_id INT,   |        
                                      | size_bytes BIGINT,       |        
@@ -34,17 +35,18 @@
 
 
 
-💡 Resumen rápido de posibles dashboards:
 
-Dashboard	Métrica principal	Dimensiones / Filtros
-Directorios	count, sum(size_bytes)	level1..level5
-Tipos de archivo	count, sum(size_bytes)	file_type
-Clasificación	count, sum(size_bytes)	categoria, last_classified
-Duplicados	count, % duplicados	canonical_group_id, is_canonical
-Integridad / Hash	list, duplicates	xxhash64, sha256
-Temporal	count, trend	first_seen, last_seen, last_classified
-Previews	text_excerpt	file_name, directory, type
-Tamaño vs Tipo	size_bytes	file_type, categoria, directory
+
+Dashboards              Métrica principal	                    Dimensiones / Filtros
+
+Directorios	            count, sum(size_bytes)	                level1..level5
+Tipos de archivo	    count, sum(size_bytes)	                file_type
+Clasificación	        count, sum(size_bytes)	                categoria, last_classified
+Duplicados	            count, % duplicados	                    canonical_group_id, is_canonical
+Integridad / Hash	    list, duplicates	                    xxhash64, sha256
+Temporal	            count, trend	                        first_seen, last_seen, last_classified
+Previews	            text_excerpt	                        file_name, directory, type
+Tamaño vs Tipo	        size_bytes	                            file_type, categoria, directory
 
 
 

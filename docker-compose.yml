@@ -68,6 +68,7 @@ services:
       - /mnt/share:/data:ro
       # código editable
       - ./scripts:/app/scripts
+      - ./api:/app/api
       # demo directory 
       - ./demo:/demo            
     networks:

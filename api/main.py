@@ -105,7 +105,7 @@ def run_phase_api(phase_number: int, db: Session = Depends(get_db)):
     ubicado en la carpeta de la fase.
     """
     
-    if phase_number not in [0, 1, 2, 3]:
+    if phase_number not in [0, 1, 2, 3, 4]:
         raise HTTPException(status_code=400, detail="Phase number out of range")
 
     # Crear run independiente

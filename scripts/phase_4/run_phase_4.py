@@ -20,8 +20,8 @@ PHASE_NUMBER: int = 4
 """Identificador de Fase: Publicar datos."""
 
 SCRIPTS: List[str] = [
-    #"create_olap_db",
-    #"data_publisher.py"
+    "create_olap_db",
+    "data_publisher.py"
 ]
 """
 Lista secuencial de scripts para la Fase 4. 

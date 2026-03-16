@@ -18,9 +18,9 @@
 │ ├─ xxhash64                   │
 │ ├─ first_seen                 │
 │ ├─ last_seen                  │
-│ ├─ text_excerpt               │  ← Phase 2: texto resumido
+│ ├─ text_excerpt               │ 
 │ ├─ text_chars_extracted       │
-│ ├─ is_canonical               │  ← dedup hash + semántico
+│ ├─ is_canonical               │  
 │ └─ canonical_id (FK → files)  │
 └───────────────────────────────┘
             │
