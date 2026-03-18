@@ -3,7 +3,7 @@ import time
 from typing import Any, List, Tuple, Optional
 import psycopg2
 from psycopg2 import OperationalError
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from docx import Document
 
 from scripts.config.phase_2 import TEXT_CHAR_LIMIT, LOG_FILE

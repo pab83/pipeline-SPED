@@ -68,22 +68,22 @@ class ScriptStatus(BaseModel):
     """
     script_name: str = Field(
         ..., 
-        example="process_data.py", 
+        json_schema_extra={"example":"process_data.py"}, 
         description="Nombre del archivo script que se está ejecutando"
     )
     status: str = Field(
         ..., 
-        example="finished", 
+        json_schema_extra={"example":"finished"}, 
         description="Estado del script: pending, running, finished, error o cancelled"
     )
     error_message: Optional[str] = Field(
         None, 
-        example="File not found", 
+        json_schema_extra={"example":"File not found"}, 
         description="Detalle del error si el script falló"
     )
     logs: Optional[List[str]] = Field(
         [], 
-        example=["Iniciando...", "Cargando CSV...", "Proceso completado"], 
+        json_schema_extra={"example":["Iniciando...", "Cargando CSV...", "Proceso completado"]}, 
         description="Lista de líneas de log capturadas durante la ejecución del script"
     )
 
@@ -94,12 +94,12 @@ class PhaseStatus(BaseModel):
     """
     phase_number: int = Field(
         ..., 
-        example=1, 
+        json_schema_extra={"example":1}, 
         description="Número de la fase dentro del ciclo de la pipeline (0-3)"
     )
     status: str = Field(
         ..., 
-        example="running", 
+        json_schema_extra={"example":"running"}, 
         description="Estado actual de la fase completa"
     )
     scripts: List[ScriptStatus] = Field(
@@ -116,8 +116,8 @@ class RunStatus(BaseModel):
     Representa el estado global de una ejecución de la pipeline.
     Contiene numero de run, estado, desglose jerárquico de fases y scripts y detalles de error si lo hubiera.
     """
-    run_id: int = Field(..., example=101, description="ID único de la ejecución")
-    status: str = Field(..., example="running", description="Estado global del proceso")
+    run_id: int = Field(..., json_schema_extra={"example":101}, description="ID único de la ejecución")
+    status: str = Field(..., json_schema_extra={"example":"running"}, description="Estado global del proceso")
     current_phase: int = Field(..., description="Fase que se está ejecutando actualmente")
     processed_files: Optional[int] = Field(0, description="Contador de archivos procesados hasta el momento")
     phases: List[PhaseStatus] = Field([], description="Detalle de cada una de las fases del run")

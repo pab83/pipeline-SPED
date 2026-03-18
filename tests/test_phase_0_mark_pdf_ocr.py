@@ -45,7 +45,7 @@ class TestPdfNeedsOcr:
     @patch("scripts.phase_0.mark_pdf_ocr.PdfReader")
     @patch("scripts.phase_0.mark_pdf_ocr.os.path.exists", return_value=True)
     def test_pdf_needs_ocr_indirect_object(self, mock_exists, mock_reader_cls):
-        from PyPDF2.generic import IndirectObject
+        from pypdf.generic import IndirectObject
 
         indirect = MagicMock(spec=IndirectObject)
         indirect.get_object.return_value = {"/Font": {"/F1": {}}}

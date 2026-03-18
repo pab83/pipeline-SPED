@@ -1,6 +1,6 @@
 import os
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime,UTC
 from typing import Union, Tuple
 
 from messaging.redis_client import RedisQueueClient
@@ -75,7 +75,7 @@ def send_task(
     task = TaskMessage(
         message_id=str(uuid4()),
         correlation_id=str(uuid4()),
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(UTC),
         source=source,
         target_model=model_enum,
         payload={"file_path": file_path, "prompt": prompt},

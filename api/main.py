@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from api.db import SessionLocal
 from api.models import *
 from scripts.helpers.db_status import *
+from datetime import datetime, UTC
 from typing import List
 import subprocess
 import os
@@ -206,7 +207,7 @@ def stop_pipeline(run_id: Optional[int] = None, db: Session = Depends(get_db)):
     # Marcamos todos como cancelados
     for run in active_runs:
         run.status = "cancelled"
-        run.finished_at = datetime.utcnow()
+        run.finished_at = datetime.now(UTC)
     
     db.commit()
 

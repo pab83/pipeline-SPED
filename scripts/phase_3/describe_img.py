@@ -37,7 +37,7 @@ def get_db_connection(retries: int = 10, delay: int = 3) -> Any:
         try:
             conn = psycopg2.connect(
                 dbname=os.getenv("PGDATABASE", os.getenv("POSTGRES_DB", "auditdb")),
-                user=os.getenv("PGUSER", os.getenv("POST=RES_USER", "user")),
+                user=os.getenv("PGUSER", os.getenv("POSTGRES_USER", "user")),
                 password=os.getenv("PGPASSWORD", os.getenv("POSTGRES_PASSWORD", "pass")),
                 host=os.getenv("PGHOST", "localhost"),
                 port=int(os.getenv("PGPORT", "5432")),
