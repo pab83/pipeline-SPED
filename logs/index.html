@@ -1,0 +1,1302 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../exceptions/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Logs - Pipeline v0 - Doc Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sistema-de-trazabilidad-y-logging" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-header__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pipeline v0 - Doc Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Logs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-nav__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pipeline v0 - Doc Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API & Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API & Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints (Main)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelos y BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mensajeria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline (Procesamiento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline (Procesamiento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestador
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 0 (Escaneo)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 3 (IA/OCR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helpers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Helpers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_orchestrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestacion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_db_status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excepciones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-archivos-por-fase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de Archivos por Fase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura de Archivos por Fase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segmentacion-de-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segmentación de Registros
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modulo-de-registro-scriptshelperslogs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Registro: scripts.helpers.logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.logs.set_log_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_log_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.logs.log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mecanismo-de-funcionamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mecanismo de Funcionamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-de-directorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de Directorios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-en-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad en la Base de Datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-archivos-por-fase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de Archivos por Fase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura de Archivos por Fase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segmentacion-de-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segmentación de Registros
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modulo-de-registro-scriptshelperslogs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Registro: scripts.helpers.logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.logs.set_log_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_log_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.logs.log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mecanismo-de-funcionamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mecanismo de Funcionamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-de-directorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de Directorios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trazabilidad-en-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trazabilidad en la Base de Datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sistema-de-trazabilidad-y-logging">Sistema de Trazabilidad y Logging</h1>
+<p>El sistema de logging está diseñado para proporcionar una trazabilidad segregada y persistente. Cada fase del pipeline opera sobre su propio flujo de eventos, lo que facilita la depuración y el monitoreo de procesos específicos sin saturar un único archivo de registro.</p>
+<h2 id="arquitectura-de-archivos-por-fase">Arquitectura de Archivos por Fase</h2>
+<p>La ruta de los archivos de log se define dinámicamente en los módulos de configuración de cada etapa. El sistema utiliza el <code>RUN_ID</code> (identificador único de ejecución) para nombrar los archivos, asegurando que los logs de diferentes ejecuciones no se sobrescriban.</p>
+<h3 id="segmentacion-de-registros">Segmentación de Registros</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Fase</th>
+<th style="text-align: left;">Archivo de Configuración</th>
+<th style="text-align: left;">Definición del Log</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Fase 0</strong></td>
+<td style="text-align: left;"><code>scripts.config.phase_0</code></td>
+<td style="text-align: left;"><code>run_{RUN_ID}_phase_0.log</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fase 1</strong></td>
+<td style="text-align: left;"><code>scripts.config.phase_1</code></td>
+<td style="text-align: left;"><code>run_{RUN_ID}_phase_1.log</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fase 2</strong></td>
+<td style="text-align: left;"><code>scripts.config.phase_2</code></td>
+<td style="text-align: left;"><code>run_{RUN_ID}_phase_2.log</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fase 3</strong></td>
+<td style="text-align: left;"><code>scripts.config.phase_3</code></td>
+<td style="text-align: left;"><code>run_{RUN_ID}_phase_3.log</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="modulo-de-registro-scriptshelperslogs">Módulo de Registro: <code>scripts.helpers.logs</code></h2>
+<p>Este helper centraliza la lógica de escritura y permite el cambio dinámico del destino del log mediante una variable privada de módulo.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="scripts.helpers.logs.set_log_file" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">set_log_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Configura el archivo de log actual. Esta función establece la variable global _current_log_file al path proporcionado, lo que hará que todas las llamadas posteriores a log() escriban en ese archivo. Es útil para configurar un archivo de log específico para cada fase o script del pipeline, permitiendo así mantener los logs organizados y separados por fase o script.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/logs.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_log_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Configura el archivo de log actual. Esta función establece la variable global _current_log_file al path proporcionado, lo que hará que todas las llamadas posteriores a log() escriban en ese archivo. Es útil para configurar un archivo de log específico para cada fase o script del pipeline, permitiendo así mantener los logs organizados y separados por fase o script.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_current_log_file</span>
+    <span class="n">_current_log_file</span> <span class="o">=</span> <span class="n">path</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="scripts.helpers.logs.log" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logs_buffer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Escribe en el archivo de logs configurado actualmente</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/logs.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logs_buffer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Escribe en el archivo de logs configurado actualmente&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_current_log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">logs_buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logs_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="mecanismo-de-funcionamiento">Mecanismo de Funcionamiento</h3>
+<ol>
+<li><strong>Configuración Dinámica</strong>: Mediante <code>set_log_file(path)</code>, el orquestador o el script de fase redirigen todas las trazas al archivo físico correspondiente antes de iniciar la lógica.</li>
+<li><strong>Doble Salida (Tee)</strong>: La función <code>log(msg)</code> realiza una escritura atómica en el archivo de texto y, simultáneamente, emite el mensaje por <code>stdout</code> para el monitoreo en consola.</li>
+<li><strong>Integración con Buffer</strong>: Si se proporciona un <code>logs_buffer</code>, el mensaje se adjunta a una lista en memoria. Este buffer es utilizado por el orquestador para sincronizar los logs con la base de datos de forma masiva, optimizando las operaciones de I/O de red.</li>
+<li><strong>Codificación Robusta</strong>: Se utiliza <code>utf-8</code> de forma explícita para prevenir fallos al registrar rutas con caracteres especiales o extracciones de texto complejas.</li>
+</ol>
+<hr />
+<h2 id="estructura-de-directorios">Estructura de Directorios</h2>
+<p>El sistema garantiza la existencia de las rutas antes de iniciar cualquier operación de escritura, basándose en la configuración de <code>RESOURCES_DIR</code>.</p>
+<ul>
+<li><strong>Directorio Base</strong>: <code>resources/logs/</code> (definido en <code>config.general</code>).</li>
+<li><strong>Auto-generación</strong>: Se ejecuta <code>os.makedirs(LOG_DIR, exist_ok=True)</code> al inicio de la configuración de cada fase para evitar errores de "Directorio no encontrado".</li>
+</ul>
+<hr />
+<h2 id="trazabilidad-en-la-base-de-datos">Trazabilidad en la Base de Datos</h2>
+<p>Aunque los archivos físicos residen en el servidor, el sistema de orquestación utiliza el <code>logs_buffer</code> para poblar la tabla <code>PipelineScript</code>. Esto permite que el estado "vivo" del proceso sea consultable vía API sin necesidad de acceder al sistema de archivos del servidor, proporcionando tres niveles de acceso:</p>
+<ol>
+<li><strong>Archivo Físico</strong>: Persistencia a largo plazo y depuración profunda.</li>
+<li><strong>Base de Datos</strong>: Visualización rápida desde el dashboard de monitoreo.</li>
+<li><strong>Consola (Stdout)</strong>: Monitoreo en tiempo real durante la ejecución manual.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

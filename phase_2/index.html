@@ -1,0 +1,2994 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../phase_1/">
+      
+      
+        <link rel="next" href="../phase_3/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Fase 2 (Extracción) - Pipeline v0 - Doc Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fase-2-procesamiento-y-extraccion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-header__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pipeline v0 - Doc Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fase 2 (Extracción)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-nav__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pipeline v0 - Doc Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API & Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API & Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints (Main)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelos y BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mensajeria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline (Procesamiento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline (Procesamiento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestador
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 0 (Escaneo)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#orquestador-de-fase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Orquestador de Fase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Orquestador de Fase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.run_phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_phase_2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="run_phase_2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.run_phase_2.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion-de-datos-migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗄️ Preparación de Datos (Migrations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗄️ Preparación de Datos (Migrations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.migrate_phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        migrate_phase_2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="migrate_phase_2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.migrate_phase_2.run_migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_migrations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deduplicacion-y-canonizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧹 Deduplicación y Canonización
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧹 Deduplicación y Canonización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dedup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dedup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.choose_canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        choose_canonical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.hash_level_canonicalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_level_canonicalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.semantic_canonicalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        semantic_canonicalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extraccion-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Extracción de Texto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Extracción de Texto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.extract_text_from_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text_from_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.extract_text_from_docx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text_from_docx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.safe_read_text_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        safe_read_text_file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clasificacion-visual-computer-vision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👁️ Clasificación Visual (Computer Vision)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="👁️ Clasificación Visual (Computer Vision)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        img_looks_like_document
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="img_looks_like_document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document.looks_like_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        looks_like_document
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document.process_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-clasificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de Clasificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 3 (IA/OCR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helpers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Helpers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_orchestrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestacion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_db_status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excepciones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#orquestador-de-fase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Orquestador de Fase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Orquestador de Fase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.run_phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_phase_2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="run_phase_2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.run_phase_2.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion-de-datos-migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗄️ Preparación de Datos (Migrations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗄️ Preparación de Datos (Migrations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.migrate_phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        migrate_phase_2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="migrate_phase_2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.migrate_phase_2.run_migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_migrations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deduplicacion-y-canonizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧹 Deduplicación y Canonización
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧹 Deduplicación y Canonización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dedup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dedup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.choose_canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        choose_canonical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.hash_level_canonicalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_level_canonicalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.dedup.semantic_canonicalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        semantic_canonicalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extraccion-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Extracción de Texto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Extracción de Texto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.extract_text_from_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text_from_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.extract_text_from_docx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_text_from_docx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.extract_text.safe_read_text_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        safe_read_text_file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clasificacion-visual-computer-vision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👁️ Clasificación Visual (Computer Vision)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="👁️ Clasificación Visual (Computer Vision)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        img_looks_like_document
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="img_looks_like_document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document.looks_like_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        looks_like_document
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_2.img_looks_like_document.process_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-clasificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de Clasificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fase-2-procesamiento-y-extraccion">⚙️ Fase 2: Procesamiento y Extracción</h1>
+<p>La <strong>Fase 2</strong> constituye el núcleo de inteligencia del pipeline. En esta etapa, los metadatos crudos recolectados en la Fase 1 se transforman en información accionable mediante la limpieza de duplicados, la clasificación visual de archivos y la extracción masiva de contenido textual y vectorial.</p>
+<hr />
+<h2 id="orquestador-de-fase">🚀 Orquestador de Fase</h2>
+<p>El script <code>run_phase_2.py</code> coordina la ejecución secuencial de todas las tareas de procesamiento, asegurando que las dependencias entre scripts (como tener la base de datos migrada antes de extraer texto) se respeten.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_2.run_phase_2" class="doc doc-heading">
+            <code>scripts.phase_2.run_phase_2</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.run_phase_2.main" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Orquesta la ejecución integral de la Fase 2 del pipeline.</p>
+<p>Esta fase transforma los metadatos crudos en información accionable mediante:</p>
+<ol>
+<li><strong>Migración</strong>: Actualización del esquema de base de datos para almacenar contenido.</li>
+<li><strong>Deduplicación</strong>: Filtrado de archivos redundantes basados en firmas digitales.</li>
+<li><strong>Análisis Visual</strong>: Clasificación de imágenes para optimizar el uso de motores OCR.</li>
+<li><strong>Extracción</strong>: Procesamiento de texto mediante lectura de capas digitales.</li>
+</ol>
+<p>La función configura el entorno de logs y delega la ejecución a la lógica 
+genérica de orquestación.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/run_phase_2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orquesta la ejecución integral de la Fase 2 del pipeline.</span>
+
+<span class="sd">    Esta fase transforma los metadatos crudos en información accionable mediante:</span>
+
+<span class="sd">    1.  **Migración**: Actualización del esquema de base de datos para almacenar contenido.</span>
+<span class="sd">    2.  **Deduplicación**: Filtrado de archivos redundantes basados en firmas digitales.</span>
+<span class="sd">    3.  **Análisis Visual**: Clasificación de imágenes para optimizar el uso de motores OCR.</span>
+<span class="sd">    4.  **Extracción**: Procesamiento de texto mediante lectura de capas digitales.</span>
+
+<span class="sd">    La función configura el entorno de logs y delega la ejecución a la lógica </span>
+<span class="sd">    genérica de orquestación.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Establecer el archivo de log específico para la Fase 2</span>
+    <span class="n">set_log_file</span><span class="p">(</span><span class="n">LOG_FILE</span><span class="p">)</span>
+
+    <span class="c1"># Delegar la orquestación a la función genérica</span>
+    <span class="n">execute_phase_logic</span><span class="p">(</span>
+        <span class="n">run_id</span><span class="o">=</span><span class="n">RUN_ID</span><span class="p">,</span>
+        <span class="n">phase_number</span><span class="o">=</span><span class="n">PHASE_NUMBER</span><span class="p">,</span>
+        <span class="n">scripts_list</span><span class="o">=</span><span class="n">SCRIPTS</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="preparacion-de-datos-migrations">🗄️ Preparación de Datos (Migrations)</h2>
+<p>Antes del procesamiento, se actualiza el esquema de la base de datos para soportar el almacenamiento de texto extraído y la integración de <strong>pgvector</strong> para búsquedas semánticas.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_2.migrate_phase_2" class="doc doc-heading">
+            <code>scripts.phase_2.migrate_phase_2</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.migrate_phase_2.run_migrations" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_migrations</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ejecuta las migraciones de esquema necesarias para soportar la Fase 2.</p>
+<p>Esta función prepara la base de datos para el almacenamiento de texto y vectores:</p>
+<ol>
+<li><strong>Esquema de Archivos</strong>: Añade columnas para extractos de texto y lógica de canonización.</li>
+<li><strong>Soporte Vectorial</strong>: Activa la extensión <code>pgvector</code> para búsquedas por similitud.</li>
+<li><strong>Tabla de Embeddings</strong>: Crea <code>file_embeddings</code> con soporte para vectores de 384 dimensiones.</li>
+<li><strong>Indexación</strong>: Crea un índice <code>IVFFlat</code> para optimizar búsquedas KNN (K-Nearest Neighbors).</li>
+</ol>
+
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>Requiere que el servidor PostgreSQL tenga instalada la extensión <code>pgvector</code>.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/migrate_phase_2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_migrations</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ejecuta las migraciones de esquema necesarias para soportar la Fase 2.</span>
+
+<span class="sd">    Esta función prepara la base de datos para el almacenamiento de texto y vectores:</span>
+
+<span class="sd">    1.  **Esquema de Archivos**: Añade columnas para extractos de texto y lógica de canonización.</span>
+<span class="sd">    2.  **Soporte Vectorial**: Activa la extensión `pgvector` para búsquedas por similitud.</span>
+<span class="sd">    3.  **Tabla de Embeddings**: Crea `file_embeddings` con soporte para vectores de 384 dimensiones.</span>
+<span class="sd">    4.  **Indexación**: Crea un índice `IVFFlat` para optimizar búsquedas KNN (K-Nearest Neighbors).</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Requiere que el servidor PostgreSQL tenga instalada la extensión `pgvector`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT inet_server_addr(), inet_server_port()&quot;</span><span class="p">)</span>
+        <span class="n">addr</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to DB at </span><span class="si">{</span><span class="n">addr</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not determine DB server address: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Running Phase 2 DB migrations...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 1. Nuevas columnas en la tabla maestra &#39;files&#39;</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ALTER TABLE files</span>
+<span class="sd">        ADD COLUMN IF NOT EXISTS text_excerpt TEXT,</span>
+<span class="sd">        ADD COLUMN IF NOT EXISTS text_chars_extracted INT,</span>
+<span class="sd">        ADD COLUMN IF NOT EXISTS is_canonical BOOLEAN DEFAULT FALSE,</span>
+<span class="sd">        ADD COLUMN IF NOT EXISTS canonical_id INT REFERENCES files(id);</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 2. Extensión pgvector</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE EXTENSION IF NOT EXISTS vector;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 3. Tabla para almacenamiento de vectores (all-MiniLM-L6-v2)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CREATE TABLE IF NOT EXISTS file_embeddings (</span>
+<span class="sd">            file_id INT PRIMARY KEY REFERENCES files(id) ON DELETE CASCADE,</span>
+<span class="sd">            embedding vector(384) NOT NULL</span>
+<span class="sd">        );</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 4. Índice para búsquedas de similitud L2 (Distancia Euclidiana)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DO $$</span>
+<span class="sd">        BEGIN</span>
+<span class="sd">            IF NOT EXISTS (</span>
+<span class="sd">                SELECT 1</span>
+<span class="sd">                FROM   pg_class c</span>
+<span class="sd">                JOIN   pg_namespace n ON n.oid = c.relnamespace</span>
+<span class="sd">                WHERE  c.relname = &#39;file_embeddings_embedding_ivfflat_idx&#39;</span>
+<span class="sd">                AND    n.nspname = &#39;public&#39;</span>
+<span class="sd">            ) THEN</span>
+<span class="sd">                CREATE INDEX file_embeddings_embedding_ivfflat_idx</span>
+<span class="sd">                ON file_embeddings</span>
+<span class="sd">                USING ivfflat (embedding vector_l2_ops)</span>
+<span class="sd">                WITH (lists = 100);</span>
+<span class="sd">            END IF;</span>
+<span class="sd">        END$$;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Phase 2 DB migrations completed.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="deduplicacion-y-canonizacion">🧹 Deduplicación y Canonización</h2>
+<p>Este módulo identifica archivos redundantes utilizando dos metodologías complementarias:</p>
+<ol>
+<li><strong>Hash-Level</strong>: Deduplicación exacta mediante hash.</li>
+<li><strong>Semantic-Level</strong>: Agrupación por similitud de contenido (Embeddings).</li>
+</ol>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_2.dedup" class="doc doc-heading">
+            <code>scripts.phase_2.dedup</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.dedup.choose_canonical" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">choose_canonical</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Aplica heurísticas para seleccionar el mejor archivo representante de un grupo.</p>
+<p>Criterios de prioridad (de mayor a menor):</p>
+<ol>
+<li><strong>Calidad</strong>: PDFs digitales (sin necesidad de OCR) sobre imágenes u otros.</li>
+<li><strong>Volumen</strong>: Archivos con mayor tamaño en bytes (asumiendo más información).</li>
+<li><strong>Recencia</strong>: Año de modificación más cercano al presente.</li>
+<li><strong>Accesibilidad</strong>: Menor profundidad en la estructura de directorios.</li>
+<li><strong>Persistencia</strong>: ID de base de datos más bajo como desempate final.</li>
+</ol>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/dedup.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_canonical</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aplica heurísticas para seleccionar el mejor archivo representante de un grupo.</span>
+
+<span class="sd">    Criterios de prioridad (de mayor a menor):</span>
+
+<span class="sd">    1.  **Calidad**: PDFs digitales (sin necesidad de OCR) sobre imágenes u otros.</span>
+<span class="sd">    2.  **Volumen**: Archivos con mayor tamaño en bytes (asumiendo más información).</span>
+<span class="sd">    3.  **Recencia**: Año de modificación más cercano al presente.</span>
+<span class="sd">    4.  **Accesibilidad**: Menor profundidad en la estructura de directorios.</span>
+<span class="sd">    5.  **Persistencia**: ID de base de datos más bajo como desempate final.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">key</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">quality_flag</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_pdf&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ocr_needed&quot;</span><span class="p">))</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;size_bytes&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="n">mod_year</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;modification_year&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;depth&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">quality_flag</span><span class="p">,</span> <span class="o">-</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="n">mod_year</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.dedup.hash_level_canonicalization" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hash_level_canonicalization</span><span class="p">(</span><span class="n">cur</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Identifica duplicados exactos mediante SHA256 y marca correctamente todos los registros.</p>
+<ul>
+<li><code>is_canonical = True</code> → archivo único o canonizado</li>
+<li><code>is_canonical = False</code> → duplicado de otro archivo</li>
+<li><code>canonical_id</code> apunta al registro canonizado</li>
+</ul>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/dedup.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hash_level_canonicalization</span><span class="p">(</span><span class="n">cur</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifica duplicados exactos mediante SHA256 y marca correctamente todos los registros.</span>
+
+<span class="sd">    - `is_canonical = True` → archivo único o canonizado</span>
+<span class="sd">    - `is_canonical = False` → duplicado de otro archivo</span>
+<span class="sd">    - `canonical_id` apunta al registro canonizado</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Running hash-level canonicalization (sha256)...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 1️⃣ Recupera todos los registros con hash</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT sha256, array_agg(id ORDER BY id) AS ids</span>
+<span class="s2">        FROM files</span>
+<span class="s2">        WHERE sha256 IS NOT NULL</span>
+<span class="s2">        GROUP BY sha256</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="n">updates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">sha</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Archivo único → canonizado</span>
+            <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Múltiples duplicados → el primero es canonizado</span>
+            <span class="n">canonical_id</span> <span class="o">=</span> <span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fid</span> <span class="o">==</span> <span class="n">canonical_id</span><span class="p">:</span>
+                    <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fid</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">False</span><span class="p">,</span> <span class="n">canonical_id</span><span class="p">,</span> <span class="n">fid</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">updates</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            UPDATE files</span>
+<span class="s2">            SET is_canonical = </span><span class="si">%s</span><span class="s2">, canonical_id = </span><span class="si">%s</span>
+<span class="s2">            WHERE id = </span><span class="si">%s</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hash-level canonicalization applied to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;No hay registros con SHA256 para procesar.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.dedup.semantic_canonicalization" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">semantic_canonicalization</span><span class="p">(</span><span class="n">cur</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Deduplicación inteligente basada en contenido semántico (Embeddings).</p>
+<p>Utiliza <code>pgvector</code> e índices <code>IVFFlat</code> para encontrar documentos similares 
+incluso si el hash es distinto (ej. misma carta escaneada dos veces).</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/dedup.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">semantic_canonicalization</span><span class="p">(</span><span class="n">cur</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deduplicación inteligente basada en contenido semántico (Embeddings).</span>
+
+<span class="sd">    Utiliza `pgvector` e índices `IVFFlat` para encontrar documentos similares </span>
+<span class="sd">    incluso si el hash es distinto (ej. misma carta escaneada dos veces).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Running semantic canonicalization...&quot;</span><span class="p">)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT f.id FROM files f</span>
+<span class="s2">        JOIN file_embeddings e ON e.file_id = f.id</span>
+<span class="s2">        WHERE f.canonical_id IS NULL ORDER BY f.id</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">candidate_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">candidate_ids</span><span class="p">:</span> <span class="k">return</span>
+
+    <span class="n">cluster_of</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">clusters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">next_cluster_id</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># Vecinos a consultar</span>
+
+    <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="n">candidate_ids</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fid</span> <span class="ow">in</span> <span class="n">cluster_of</span><span class="p">:</span> <span class="k">continue</span>
+
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT f.file_type, f.size_bytes, f.creation_year, f.modification_year, </span>
+<span class="s2">                   f.depth, f.is_pdf, f.ocr_needed, e.embedding</span>
+<span class="s2">            FROM files f JOIN file_embeddings e ON e.file_id = f.id WHERE f.id = </span><span class="si">%s</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">fid</span><span class="p">,))</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">:</span> <span class="k">continue</span>
+
+        <span class="c1"># Búsqueda de vecinos similares en pgvector</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT f.id, f.file_type, f.size_bytes, f.creation_year, f.modification_year, </span>
+<span class="s2">                   f.depth, f.is_pdf, f.ocr_needed, (e.embedding &lt;-&gt; </span><span class="si">%s</span><span class="s2">)::float AS dist</span>
+<span class="s2">            FROM files f JOIN file_embeddings e ON e.file_id = f.id</span>
+<span class="s2">            WHERE f.canonical_id IS NULL AND (f.file_type IS NULL OR lower(f.file_type) = </span><span class="si">%s</span><span class="s2">)</span>
+<span class="s2">            ORDER BY e.embedding &lt;-&gt; </span><span class="si">%s</span><span class="s2"> LIMIT </span><span class="si">%s</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">row</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">K</span><span class="p">))</span>
+
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">cluster_candidates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="n">l2_distance_to_cosine_similarity</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fid</span> <span class="ow">or</span> <span class="n">sim</span> <span class="o">&gt;=</span> <span class="n">SEMANTIC_SIM_THRESHOLD</span><span class="p">:</span>
+                <span class="n">cluster_candidates</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;file_type&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;size_bytes&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="s2">&quot;modification_year&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;is_pdf&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="s2">&quot;ocr_needed&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="p">})</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">cid</span> <span class="o">=</span> <span class="n">next_cluster_id</span>
+            <span class="n">next_cluster_id</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">clusters</span><span class="p">[</span><span class="n">cid</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_candidates</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cluster_candidates</span><span class="p">:</span> <span class="n">cluster_of</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cid</span>
+
+    <span class="c1"># Aplicar actualizaciones</span>
+    <span class="n">updates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">members</span> <span class="ow">in</span> <span class="n">clusters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">canonical</span> <span class="o">=</span> <span class="n">choose_canonical</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+            <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">canonical</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> 
+                            <span class="kc">None</span> <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">canonical</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="n">canonical</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> 
+                            <span class="n">m</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">updates</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s2">&quot;UPDATE files SET is_canonical=</span><span class="si">%s</span><span class="s2">, canonical_id=</span><span class="si">%s</span><span class="s2"> WHERE id=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Semantic clusters processed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><blockquote>
+<p><strong>Nota:</strong> La función <code>choose_canonical</code> utiliza una lógica de puntuación para decidir qué archivo conservar, priorizando PDFs digitales y archivos con fechas de modificación más recientes.</p>
+</blockquote>
+<hr />
+<h2 id="extraccion-de-texto">📝 Extracción de Texto</h2>
+<p>Motor de lectura multiformato que procesa documentos PDF, Word y texto plano. Gestiona automáticamente las codificaciones de caracteres y limita la carga para optimizar el rendimiento.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_2.extract_text" class="doc doc-heading">
+            <code>scripts.phase_2.extract_text</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.extract_text.main" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">main</span><span class="p">(</span><span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Orquesta la extracción masiva de texto en lotes (batch processing).</p>
+<p>El flujo identifica archivos sin <code>text_excerpt</code>, determina su tipo 
+y utiliza el extractor correspondiente. Los resultados se guardan 
+en la base de datos para habilitar la búsqueda semántica.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/extract_text.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orquesta la extracción masiva de texto en lotes (batch processing).</span>
+
+<span class="sd">    El flujo identifica archivos sin `text_excerpt`, determina su tipo </span>
+<span class="sd">    y utiliza el extractor correspondiente. Los resultados se guardan </span>
+<span class="sd">    en la base de datos para habilitar la búsqueda semántica.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting text extraction for Phase 2...&quot;</span><span class="p">)</span>
+    <span class="n">total_processed</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT id FROM files WHERE text_excerpt IS NULL ORDER BY id LIMIT </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">batch_size</span><span class="p">,)</span>
+        <span class="p">)</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ids</span><span class="p">:</span> <span class="k">break</span>
+
+        <span class="n">updates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">file_id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT full_path, file_type, is_pdf, ocr_needed FROM files WHERE id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">file_id</span><span class="p">,)</span>
+            <span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">file_id</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+            <span class="n">full_path</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">is_pdf</span><span class="p">,</span> <span class="n">ocr_needed</span> <span class="o">=</span> <span class="n">row</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_pdf</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">extract_text_from_pdf</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">TEXT_CHAR_LIMIT</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">ocr_needed</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ext</span> <span class="o">=</span> <span class="p">(</span><span class="n">file_type</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;.log&quot;</span><span class="p">,</span> <span class="s2">&quot;.md&quot;</span><span class="p">):</span>
+                        <span class="n">text</span> <span class="o">=</span> <span class="n">safe_read_text_file</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">TEXT_CHAR_LIMIT</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.docx&quot;</span><span class="p">:</span>
+                        <span class="n">text</span> <span class="o">=</span> <span class="n">extract_text_from_docx</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">TEXT_CHAR_LIMIT</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in id=</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">text</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">file_id</span><span class="p">))</span>
+            <span class="n">total_processed</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">updates</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span>
+                <span class="s2">&quot;UPDATE files SET text_excerpt = </span><span class="si">%s</span><span class="s2">, text_chars_extracted = </span><span class="si">%s</span><span class="s2"> WHERE id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">updates</span>
+            <span class="p">)</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processed </span><span class="si">{</span><span class="n">total_processed</span><span class="si">}</span><span class="s2"> files...&quot;</span><span class="p">)</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;=== Text extraction completed ===&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.extract_text.extract_text_from_pdf" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">extract_text_from_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ocr_needed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extrae la capa de texto digital de un PDF.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ruta al archivo.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_chars</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Límite de caracteres a extraer.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ocr_needed</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Si es True, el script ignora el archivo para procesarlo 
+        en una fase posterior con modelos OCR.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/extract_text.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_text_from_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ocr_needed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extrae la capa de texto digital de un PDF.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Ruta al archivo.</span>
+<span class="sd">        max_chars: Límite de caracteres a extraer.</span>
+<span class="sd">        ocr_needed: Si es True, el script ignora el archivo para procesarlo </span>
+<span class="sd">                    en una fase posterior con modelos OCR.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ocr_needed</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">PdfReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total_len</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">extract_text</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+                <span class="n">total_len</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">total_len</span> <span class="o">&gt;=</span> <span class="n">max_chars</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)[:</span><span class="n">max_chars</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading PDF </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.extract_text.extract_text_from_docx" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">extract_text_from_docx</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extrae texto de archivos Word (.docx) procesando párrafos y tablas.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/extract_text.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_text_from_docx</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extrae texto de archivos Word (.docx) procesando párrafos y tablas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total_len</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="n">total_len</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">total_len</span> <span class="o">&gt;=</span> <span class="n">max_chars</span><span class="p">:</span> <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">total_len</span> <span class="o">&lt;</span> <span class="n">max_chars</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">tables</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                            <span class="n">total_len</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">total_len</span> <span class="o">&gt;=</span> <span class="n">max_chars</span><span class="p">:</span> <span class="k">break</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)[:</span><span class="n">max_chars</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading DOCX </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.extract_text.safe_read_text_file" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">safe_read_text_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Lee archivos de texto plano probando múltiples codificaciones.</p>
+<p>Intenta decodificar en orden: UTF-8, Latin-1 y CP1252 para maximizar 
+la compatibilidad con archivos antiguos o de diferentes sistemas operativos.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/extract_text.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">safe_read_text_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_chars</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lee archivos de texto plano probando múltiples codificaciones.</span>
+
+<span class="sd">    Intenta decodificar en orden: UTF-8, Latin-1 y CP1252 para maximizar </span>
+<span class="sd">    la compatibilidad con archivos antiguos o de diferentes sistemas operativos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">enc</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="s2">&quot;latin-1&quot;</span><span class="p">,</span> <span class="s2">&quot;cp1252&quot;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">enc</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">max_chars</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">content</span><span class="p">[:</span><span class="n">max_chars</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="clasificacion-visual-computer-vision">👁️ Clasificación Visual (Computer Vision)</h2>
+<p>Para optimizar el uso de motores OCR, este script utiliza <strong>OpenCV</strong> para determinar si una imagen (JPG, PNG, etc.) tiene la estructura de un documento escaneado.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_2.img_looks_like_document" class="doc doc-heading">
+            <code>scripts.phase_2.img_looks_like_document</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.img_looks_like_document.looks_like_document" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">looks_like_document</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Algoritmo heurístico para detectar documentos en imágenes.</p>
+<p>Aplica los siguientes filtros de visión artificial:
+1. <strong>Dimensiones</strong>: Filtra miniaturas (&lt; 200px).
+2. <strong>Aspect Ratio</strong>: Verifica que no sea una imagen excesivamente alargada.
+3. <strong>Canny Edge Detection</strong>: Identifica gradientes estructurales.
+4. <strong>Contornos</strong>: Busca formas cuadrangulares que ocupen al menos el 20% del área.
+5. <strong>Análisis de Textura</strong>: Calcula la desviación estándar para descartar ruido visual (fotos).</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/img_looks_like_document.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">looks_like_document</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Algoritmo heurístico para detectar documentos en imágenes.</span>
+
+<span class="sd">    Aplica los siguientes filtros de visión artificial:</span>
+<span class="sd">    1. **Dimensiones**: Filtra miniaturas (&lt; 200px).</span>
+<span class="sd">    2. **Aspect Ratio**: Verifica que no sea una imagen excesivamente alargada.</span>
+<span class="sd">    3. **Canny Edge Detection**: Identifica gradientes estructurales.</span>
+<span class="sd">    4. **Contornos**: Busca formas cuadrangulares que ocupen al menos el 20% del área.</span>
+<span class="sd">    5. **Análisis de Textura**: Calcula la desviación estándar para descartar ruido visual (fotos).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="mi">200</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">ratio</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ratio</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="n">ratio</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Detección de bordes y búsqueda de formas</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Canny</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">contours</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_SIMPLE</span><span class="p">)</span>
+
+    <span class="n">doc_like</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">contours</span><span class="p">:</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">area</span> <span class="o">&lt;</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">w</span><span class="p">:</span> <span class="k">continue</span>
+
+        <span class="n">peri</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">approx</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">approxPolyDP</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="n">peri</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">approx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c1"># Rectángulo detectado</span>
+            <span class="n">doc_like</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">doc_like</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Análisis de fondo (documentos suelen tener fondos uniformes)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">60</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_2.img_looks_like_document.process_image" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">process_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Carga y pre-procesa una imagen para su análisis.</p>
+<p>Normaliza rutas (NFC), gestiona prefijos de volumen y redimensiona 
+la imagen a <code>MAX_IMAGE_SIZE</code> para optimizar el uso de CPU.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_2/img_looks_like_document.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Carga y pre-procesa una imagen para su análisis.</span>
+
+<span class="sd">    Normaliza rutas (NFC), gestiona prefijos de volumen y redimensiona </span>
+<span class="sd">    la imagen a `MAX_IMAGE_SIZE` para optimizar el uso de CPU.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_id</span><span class="p">,</span> <span class="n">path_str</span> <span class="o">=</span> <span class="n">row</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path_str</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">IMAGE_EXTENSIONS</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path_obj</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">BASE_PATH</span><span class="p">:</span>
+            <span class="n">path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">BASE_PATH</span><span class="p">)</span> <span class="o">/</span> <span class="n">path_obj</span>
+
+        <span class="n">path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;NFC&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path_obj</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path_obj</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span> <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path_obj</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_GRAYSCALE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Redimensionado eficiente</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_IMAGE_SIZE</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">MAX_IMAGE_SIZE</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">scale</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">file_id</span> <span class="k">if</span> <span class="n">looks_like_document</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error en </span><span class="si">{</span><span class="n">path_str</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="criterios-de-clasificacion">Criterios de Clasificación</h3>
+<ul>
+<li><strong>Detección de Bordes</strong>: Uso de Canny para encontrar estructuras rectangulares.</li>
+<li><strong>Análisis de Textura</strong>: Filtro de varianza para descartar fotografías naturales y conservar escaneos uniformes.</li>
+<li><strong>Procesamiento Paralelo</strong>: Implementado mediante <code>multiprocessing</code> para gestionar grandes volúmenes de imágenes.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

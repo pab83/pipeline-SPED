@@ -1,0 +1,310 @@
+openapi: 3.1.0
+info:
+  title: Pipeline API
+  version: 0.1.0
+paths:
+  /start:
+    post:
+      summary: Start Pipeline
+      description: >-
+        Inicia la ejecución de la pipeline completa.
+
+
+        Este endpoint realiza un chequeo previo de 'zombies' (ejecuciones
+        colgadas). 
+
+        Si detecta una ejecución activa, la cancela antes de permitir una nueva.
+
+        Lanza el script 'run_pipeline.py' en un proceso independiente.
+      operationId: start_pipeline_start_post
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /run_phase/{phase_number}:
+    post:
+      summary: Run Phase Api
+      description: >-
+        Ejecuta una fase específica de la pipeline (0, 1, 2 o 3).
+
+
+        Permite correr una etapa de forma independiente sin disparar todo el
+        flujo.
+
+        Valida que el número de fase sea correcto y lanza el script
+        correspondiente 
+
+        ubicado en la carpeta de la fase.
+      operationId: run_phase_api_run_phase__phase_number__post
+      parameters:
+        - name: phase_number
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Phase Number
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /status/{run_id}:
+    get:
+      summary: Get Run Status
+      description: >-
+        Obtiene el reporte detallado de un run específico por su ID.
+
+
+        Devuelve el estado general, la fase actual y un desglose de cada script
+        ejecutado, 
+
+        incluyendo mensajes de error y logs de salida si están disponibles.
+      operationId: get_run_status_status__run_id__get
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Run Id
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunStatus"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /stop:
+    post:
+      summary: Stop Pipeline
+      description: >-
+        Detiene ejecuciones en curso y las marca como canceladas.
+
+
+        - Si se proporciona **run_id**: Cancela solo esa ejecución específica.
+
+        - Si NO se proporciona: Cancela **TODAS** las ejecuciones que tengan
+        estado 'running'.
+
+        Ideal para paradas de emergencia o limpieza de procesos.
+      operationId: stop_pipeline_stop_post
+      parameters:
+        - name: run_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: integer
+              - type: "null"
+            title: Run Id
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /change_focus/{folder_path}:
+    post:
+      summary: Change Focus
+      description: >-
+        Actualiza el directorio de trabajo base (BASE_PATH) mediante la URL.
+
+
+        Permite redirigir dinámicamente dónde operarán los scripts de la
+        pipeline.
+
+        El path proporcionado se concatenará con el prefijo '/data'.
+      operationId: change_focus_change_focus__folder_path__post
+      parameters:
+        - name: folder_path
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Folder Path
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PhaseStatus:
+      properties:
+        phase_number:
+          type: integer
+          title: Phase Number
+          description: Número de la fase dentro del ciclo de la pipeline (0-3)
+          example: 1
+        status:
+          type: string
+          title: Status
+          description: Estado actual de la fase completa
+          example: running
+        scripts:
+          items:
+            $ref: "#/components/schemas/ScriptStatus"
+          type: array
+          title: Scripts
+          description: Lista detallada de todos los scripts ejecutados en esta fase
+          default: []
+        error_message:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Error Message
+          description: Error general a nivel de fase si lo hubiera
+      type: object
+      required:
+        - phase_number
+        - status
+      title: PhaseStatus
+      description: >-
+        Representa el estado de una ejecución de una fase.
+
+        Contiene numero de fase, estado, desglose jerárquico de scripts y
+        detalles de error si lo hubiera.
+    RunStatus:
+      properties:
+        run_id:
+          type: integer
+          title: Run Id
+          description: ID único de la ejecución
+          example: 101
+        status:
+          type: string
+          title: Status
+          description: Estado global del proceso
+          example: running
+        current_phase:
+          type: integer
+          title: Current Phase
+          description: Fase que se está ejecutando actualmente
+        processed_files:
+          anyOf:
+            - type: integer
+            - type: "null"
+          title: Processed Files
+          description: Contador de archivos procesados hasta el momento
+          default: 0
+        phases:
+          items:
+            $ref: "#/components/schemas/PhaseStatus"
+          type: array
+          title: Phases
+          description: Detalle de cada una de las fases del run
+          default: []
+      type: object
+      required:
+        - run_id
+        - status
+        - current_phase
+      title: RunStatus
+      description: >-
+        Representa el estado global de una ejecución de la pipeline.
+
+        Contiene numero de run, estado, desglose jerárquico de fases y scripts y
+        detalles de error si lo hubiera.
+    ScriptStatus:
+      properties:
+        script_name:
+          type: string
+          title: Script Name
+          description: Nombre del archivo script que se está ejecutando
+          example: process_data.py
+        status:
+          type: string
+          title: Status
+          description: "Estado del script: pending, running, finished, error o cancelled"
+          example: finished
+        error_message:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Error Message
+          description: Detalle del error si el script falló
+          example: File not found
+        logs:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Logs
+          description: Lista de líneas de log capturadas durante la ejecución del script
+          default: []
+          example:
+            - Iniciando...
+            - Cargando CSV...
+            - Proceso completado
+      type: object
+      required:
+        - script_name
+        - status
+      title: ScriptStatus
+      description: |-
+        Representa el estado de una ejecución de un script.
+        Contiene el nombre, estado, logs y detalles de error si lo hubiera.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
