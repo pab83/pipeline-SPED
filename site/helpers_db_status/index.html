@@ -1,0 +1,2680 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../helpers_orchestrate/">
+      
+      
+        <link rel="next" href="../exceptions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Estados BBDD - Pipeline v0 - Doc Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helper-database-status-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-header__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pipeline v0 - Doc Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Estados BBDD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-nav__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pipeline v0 - Doc Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API & Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API & Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints (Main)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelos y BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mensajeria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline (Procesamiento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline (Procesamiento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestador
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 0 (Escaneo)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 3 (IA/OCR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helpers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Helpers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_orchestrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestacion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-de-sesiones-sqlalchemy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Gestión de Sesiones (SQLAlchemy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.get_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_db
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.close_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        close_db
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jerarquia-de-actualizacion-cascada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Jerarquía de Actualización (Cascada)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Jerarquía de Actualización (Cascada)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nivel-1-pipeline-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Nivel 1: Pipeline Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_started
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_run_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_run_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.check_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-2-pipeline-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Nivel 2: Pipeline Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.get_or_create_phase_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_or_create_phase_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_started
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_phase_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_phase_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-3-pipeline-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📜 Nivel 3: Pipeline Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_script_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_script_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistencia-de-logs-y-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Persistencia de Logs y Trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mecanismo-de-cancelacion-interruptor-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Mecanismo de Cancelación (Interruptor de Seguridad)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Mecanismo de Cancelación (Interruptor de Seguridad)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-aporta-este-modulo-al-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Qué aporta este módulo al Pipeline?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excepciones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-de-sesiones-sqlalchemy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Gestión de Sesiones (SQLAlchemy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.get_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_db
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.close_db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        close_db
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jerarquia-de-actualizacion-cascada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Jerarquía de Actualización (Cascada)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Jerarquía de Actualización (Cascada)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nivel-1-pipeline-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Nivel 1: Pipeline Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_started
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_run_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_run_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_run_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_run_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.check_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-2-pipeline-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Nivel 2: Pipeline Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.get_or_create_phase_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_or_create_phase_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_started
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_phase_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_phase_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_phase_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_phase_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-3-pipeline-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📜 Nivel 3: Pipeline Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="db_status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.update_script_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_script_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_finished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.helpers.db_status.mark_script_cancelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_script_cancelled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistencia-de-logs-y-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Persistencia de Logs y Trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mecanismo-de-cancelacion-interruptor-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Mecanismo de Cancelación (Interruptor de Seguridad)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Mecanismo de Cancelación (Interruptor de Seguridad)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-aporta-este-modulo-al-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Qué aporta este módulo al Pipeline?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="helper-database-status-management">📊 Helper: Database Status Management</h1>
+<p>El módulo <code>db_status.py</code> es el encargado de gestionar la persistencia del estado de ejecución en la base de datos de auditoría. Implementa una arquitectura de <strong>actualización en cascada</strong>, donde los cambios en el estado de un script se propagan automáticamente hacia la fase y el "Run" global.</p>
+<hr />
+<h2 id="gestion-de-sesiones-sqlalchemy">🏗️ Gestión de Sesiones (SQLAlchemy)</h2>
+<p>Para optimizar el rendimiento y evitar fugas de conexiones en subprocesos, el módulo gestiona una sesión global única por proceso mediante un patrón de <strong>Lazy Initialization</strong>.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="scripts.helpers.db_status.get_db" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_db</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Devuelve la sesión de base de datos actual, creando una nueva si no existe. Esto permite que todos los scripts compartan la misma sesión durante su ejecución, lo que es útil para mantener el estado y evitar múltiples conexiones innecesarias. La función también maneja la creación de la sesión de manera perezosa, es decir, solo se crea cuando se necesita por primera vez.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Devuelve la sesión de base de datos actual, creando una nueva si no existe. Esto permite que todos los scripts compartan la misma sesión durante su ejecución, lo que es útil para mantener el estado y evitar múltiples conexiones innecesarias. La función también maneja la creación de la sesión de manera perezosa, es decir, solo se crea cuando se necesita por primera vez.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CURRENT_DB_SESSION</span>
+    <span class="k">if</span> <span class="n">CURRENT_DB_SESSION</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">CURRENT_DB_SESSION</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">CURRENT_DB_SESSION</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="scripts.helpers.db_status.close_db" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">close_db</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Cierra la sesión de base de datos actual si existe. Esto es importante para liberar recursos y evitar conexiones abiertas innecesarias después de que el script ha terminado su ejecución. Se recomienda llamar a esta función al final de cada script para asegurarse de que la conexión a la base de datos se cierre correctamente.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">close_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Cierra la sesión de base de datos actual si existe. Esto es importante para liberar recursos y evitar conexiones abiertas innecesarias después de que el script ha terminado su ejecución. Se recomienda llamar a esta función al final de cada script para asegurarse de que la conexión a la base de datos se cierre correctamente.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CURRENT_DB_SESSION</span>
+    <span class="k">if</span> <span class="n">CURRENT_DB_SESSION</span><span class="p">:</span>
+        <span class="n">CURRENT_DB_SESSION</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">CURRENT_DB_SESSION</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="jerarquia-de-actualizacion-cascada">🔄 Jerarquía de Actualización (Cascada)</h2>
+<p>El sistema utiliza una lógica de <strong>prioridad de estados</strong>. Cuando un componente hijo (Script) cambia, el componente padre (Phase) recalcula su propio estado basándose en la siguiente jerarquía de severidad:</p>
+<ol>
+<li><strong>Running</strong>: Si al menos un hijo está en progreso.</li>
+<li><strong>Error</strong>: Si algún hijo falló (y no hay otros en ejecución).</li>
+<li><strong>Cancelled</strong>: Si se recibió señal de parada por parte del usuario.</li>
+<li><strong>Finished</strong>: Solo si todos los hijos han terminado con éxito.</li>
+</ol>
+<h3 id="nivel-1-pipeline-run">🚀 Nivel 1: Pipeline Run</h3>
+<p>Representa la ejecución global del proceso. Controla el tiempo total y la fase actual activa.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.helpers.db_status" class="doc doc-heading">
+            <code>scripts.helpers.db_status</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_run_started" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_run_started</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el inicio de un run en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado del run a "running". Esto es útil para llevar un registro de cuándo comenzó la ejecución del pipeline y para indicar que el run está actualmente en progreso. Se recomienda llamar a esta función al inicio de la ejecución del pipeline para asegurarse de que el estado del run se actualice correctamente desde el principio.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_run_started</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el inicio de un run en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado del run a &quot;running&quot;. Esto es útil para llevar un registro de cuándo comenzó la ejecución del pipeline y para indicar que el run está actualmente en progreso. Se recomienda llamar a esta función al inicio de la ejecución del pipeline para asegurarse de que el estado del run se actualice correctamente desde el principio.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.update_run_status" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_run_status</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">processed_files</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Actualiza el estado del run en la base de datos basado en el estado de sus fases. Si se proporciona processed_files, también actualiza ese campo en la tabla PipelineRun. La función consulta todas las fases asociadas al run_id dado, determina el nuevo estado del run basado en los estados de las fases (por ejemplo, si alguna fase está corriendo, el run está corriendo; si todas las fases están terminadas, el run está terminado; etc.), y luego actualiza el registro del run en la base de datos con el nuevo estado y la cantidad de archivos procesados si se proporcionó.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_run_status</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">processed_files</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Actualiza el estado del run en la base de datos basado en el estado de sus fases. Si se proporciona processed_files, también actualiza ese campo en la tabla PipelineRun. La función consulta todas las fases asociadas al run_id dado, determina el nuevo estado del run basado en los estados de las fases (por ejemplo, si alguna fase está corriendo, el run está corriendo; si todas las fases están terminadas, el run está terminado; etc.), y luego actualiza el registro del run en la base de datos con el nuevo estado y la cantidad de archivos procesados si se proporcionó.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+
+    <span class="c1"># Obtener todas las fases del run</span>
+    <span class="n">phases</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">phases</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">statuses</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">status</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">phases</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;running&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;cancelled&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;finished&quot;</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">):</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;failed&quot;</span>
+
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">new_status</span>
+        <span class="k">if</span> <span class="n">processed_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run</span><span class="o">.</span><span class="n">processed_files</span> <span class="o">=</span> <span class="n">processed_files</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_run_finished" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_run_finished</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el final de un run en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del run a "finished" si no está en estado "error". Esto es útil para llevar un registro de cuándo terminó la ejecución del pipeline y para indicar que el run ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución del pipeline para asegurarse de que el estado del run se actualice correctamente al finalizar.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_run_finished</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el final de un run en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del run a &quot;finished&quot; si no está en estado &quot;error&quot;. Esto es útil para llevar un registro de cuándo terminó la ejecución del pipeline y para indicar que el run ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución del pipeline para asegurarse de que el estado del run se actualice correctamente al finalizar.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+            <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_run_cancelled" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_run_cancelled</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca un run como cancelado en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del run a "cancelled". Esto es útil para llevar un registro de cuándo se canceló la ejecución del pipeline y para indicar que el run no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución del pipeline (por ejemplo, con Ctrl+C) para asegurarse de que el estado del run se actualice correctamente a "cancelled".</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_run_cancelled</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca un run como cancelado en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del run a &quot;cancelled&quot;. Esto es útil para llevar un registro de cuándo se canceló la ejecución del pipeline y para indicar que el run no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución del pipeline (por ejemplo, con Ctrl+C) para asegurarse de que el estado del run se actualice correctamente a &quot;cancelled&quot;.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.check_cancelled" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">check_cancelled</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Verifica si un run ha sido marcado como cancelado en la base de datos. Consulta el estado del run con el run_id dado y devuelve True si el estado es "cancelled", o False en caso contrario. Esto es útil para que los scripts puedan verificar periódicamente si el usuario ha solicitado cancelar la ejecución del pipeline, y así poder detener su ejecución de manera ordenada si es necesario.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_cancelled</span><span class="p">(</span><span class="n">run_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Verifica si un run ha sido marcado como cancelado en la base de datos. Consulta el estado del run con el run_id dado y devuelve True si el estado es &quot;cancelled&quot;, o False en caso contrario. Esto es útil para que los scripts puedan verificar periódicamente si el usuario ha solicitado cancelar la ejecución del pipeline, y así poder detener su ejecución de manera ordenada si es necesario.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">PipelineRun</span><span class="o">.</span><span class="n">run_id</span> <span class="o">==</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">run</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;cancelled&quot;</span> <span class="k">if</span> <span class="n">run</span> <span class="k">else</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="nivel-2-pipeline-phase">📂 Nivel 2: Pipeline Phase</h3>
+<p>Gestiona el progreso de los bloques lógicos del sistema (Ingesta, OCR, VLM, Clasificación).</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.helpers.db_status" class="doc doc-heading">
+            <code>scripts.helpers.db_status</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.get_or_create_phase_id" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_or_create_phase_id</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">phase_number</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Obtiene el phase_id para un run_id y phase_number dados. Si no existe una fase con ese run_id y phase_number, crea una nueva fase con estado "running" y devuelve su phase_id. Esto es útil para asegurarse de que cada fase tenga un registro en la base de datos antes de comenzar su ejecución, y para obtener el phase_id necesario para actualizar el estado de la fase durante la ejecución.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_or_create_phase_id</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">phase_number</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Obtiene el phase_id para un run_id y phase_number dados. Si no existe una fase con ese run_id y phase_number, crea una nueva fase con estado &quot;running&quot; y devuelve su phase_id. Esto es útil para asegurarse de que cada fase tenga un registro en la base de datos antes de comenzar su ejecución, y para obtener el phase_id necesario para actualizar el estado de la fase durante la ejecución.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">phase_number</span><span class="o">=</span><span class="n">phase_number</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">PipelinePhase</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">phase_number</span><span class="o">=</span><span class="n">phase_number</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">phase</span><span class="o">.</span><span class="n">phase_id</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_phase_started" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_phase_started</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el inicio de una fase en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado de la fase a "running". Además, actualiza el campo current_phase del run asociado para reflejar que esta fase es la que se está ejecutando actualmente. Esto es útil para llevar un registro de cuándo comenzó la ejecución de cada fase y para indicar cuál fase está actualmente en progreso dentro del run. Se recomienda llamar a esta función al inicio de la ejecución de cada fase para asegurarse de que el estado de la fase y del run se actualice correctamente desde el principio.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_phase_started</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el inicio de una fase en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado de la fase a &quot;running&quot;. Además, actualiza el campo current_phase del run asociado para reflejar que esta fase es la que se está ejecutando actualmente. Esto es útil para llevar un registro de cuándo comenzó la ejecución de cada fase y para indicar cuál fase está actualmente en progreso dentro del run. Se recomienda llamar a esta función al inicio de la ejecución de cada fase para asegurarse de que el estado de la fase y del run se actualice correctamente desde el principio.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+
+    <span class="n">run</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineRun</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">phase</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">current_phase</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">phase_number</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.update_phase_status" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Actualiza el estado de una fase en la base de datos basado en el estado de sus scripts. La función consulta todos los scripts asociados al phase_id dado, determina el nuevo estado de la fase basado en los estados de los scripts (por ejemplo, si algún script está corriendo, la fase está corriendo; si todas las fases están terminadas, la fase está terminada; etc.), y luego actualiza el registro de la fase en la base de datos con el nuevo estado. Después de actualizar el estado de la fase, también llama a update_run_status para asegurarse de que el estado del run asociado se actualice correctamente basado en el nuevo estado de la fase.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Actualiza el estado de una fase en la base de datos basado en el estado de sus scripts. La función consulta todos los scripts asociados al phase_id dado, determina el nuevo estado de la fase basado en los estados de los scripts (por ejemplo, si algún script está corriendo, la fase está corriendo; si todas las fases están terminadas, la fase está terminada; etc.), y luego actualiza el registro de la fase en la base de datos con el nuevo estado. Después de actualizar el estado de la fase, también llama a update_run_status para asegurarse de que el estado del run asociado se actualice correctamente basado en el nuevo estado de la fase.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">scripts</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scripts</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">statuses</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">status</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;running&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;cancelled&quot;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;finished&quot;</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">):</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="s2">&quot;failed&quot;</span>
+
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">new_status</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">update_run_status</span><span class="p">(</span><span class="n">phase</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_phase_finished" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_phase_finished</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el final de una fase en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado de la fase a "finished" si no está en estado "error". Esto es útil para llevar un registro de cuándo terminó la ejecución de cada fase y para indicar que la fase ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución de cada fase para asegurarse de que el estado de la fase se actualice correctamente al finalizar.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_phase_finished</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el final de una fase en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado de la fase a &quot;finished&quot; si no está en estado &quot;error&quot;. Esto es útil para llevar un registro de cuándo terminó la ejecución de cada fase y para indicar que la fase ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución de cada fase para asegurarse de que el estado de la fase se actualice correctamente al finalizar.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+            <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_phase_error" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_phase_error</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca una fase como con error en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, establece el estado de la fase a "error", y almacena el mensaje de error proporcionado. Esto es útil para llevar un registro de cuándo ocurrió un error durante la ejecución de una fase y para almacenar información sobre el error que ocurrió. Se recomienda llamar a esta función cuando se capture una excepción durante la ejecución de una fase para asegurarse de que el estado de la fase se actualice correctamente a "error" y para registrar el mensaje de error.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_phase_error</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca una fase como con error en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, establece el estado de la fase a &quot;error&quot;, y almacena el mensaje de error proporcionado. Esto es útil para llevar un registro de cuándo ocurrió un error durante la ejecución de una fase y para almacenar información sobre el error que ocurrió. Se recomienda llamar a esta función cuando se capture una excepción durante la ejecución de una fase para asegurarse de que el estado de la fase se actualice correctamente a &quot;error&quot; y para registrar el mensaje de error.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_msg</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_phase_cancelled" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_phase_cancelled</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca una fase como cancelada en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado de la fase a "cancelled". Esto es útil para llevar un registro de cuándo se canceló la ejecución de cada fase y para indicar que la fase no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución de una fase (por ejemplo, con Ctrl+C) para asegurarse de que el estado de la fase se actualice correctamente a "cancelled".</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_phase_cancelled</span><span class="p">(</span><span class="n">phase_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca una fase como cancelada en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado de la fase a &quot;cancelled&quot;. Esto es útil para llevar un registro de cuándo se canceló la ejecución de cada fase y para indicar que la fase no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución de una fase (por ejemplo, con Ctrl+C) para asegurarse de que el estado de la fase se actualice correctamente a &quot;cancelled&quot;.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="nivel-3-pipeline-script">📜 Nivel 3: Pipeline Script</h3>
+<p>Gestiona la ejecución de los archivos <code>.py</code> individuales y el almacenamiento de sus logs capturados.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.helpers.db_status" class="doc doc-heading">
+            <code>scripts.helpers.db_status</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_script_running" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_script_running</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el inicio de un script en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado del script a "running". Esto es útil para llevar un registro de cuándo comenzó la ejecución de cada script dentro de una fase y para indicar cuál script está actualmente en progreso. Se recomienda llamar a esta función al inicio de la ejecución de cada script para asegurarse de que el estado del script se actualice correctamente desde el principio.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_script_running</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el inicio de un script en la base de datos. Actualiza el campo started_at con la fecha y hora actual, y establece el estado del script a &quot;running&quot;. Esto es útil para llevar un registro de cuándo comenzó la ejecución de cada script dentro de una fase y para indicar cuál script está actualmente en progreso. Se recomienda llamar a esta función al inicio de la ejecución de cada script para asegurarse de que el estado del script se actualice correctamente desde el principio.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="p">:</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">PipelineScript</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+
+    <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">script</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="n">script</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.update_script_status" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_script_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Actualiza el estado de un script en la base de datos basado en el estado de su fase. La función consulta el script específico asociado al phase_id y script_name dados, actualiza sus logs si se proporcionan, y luego determina el nuevo estado del script basado en el estado de la fase (por ejemplo, si la fase está cancelada, el script también se marca como cancelado; si la fase tiene error, el script se marca como error; etc.). Después de actualizar el estado del script, también llama a update_phase_status para asegurarse de que el estado de la fase asociada se actualice correctamente basado en el nuevo estado del script.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_script_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Actualiza el estado de un script en la base de datos basado en el estado de su fase. La función consulta el script específico asociado al phase_id y script_name dados, actualiza sus logs si se proporcionan, y luego determina el nuevo estado del script basado en el estado de la fase (por ejemplo, si la fase está cancelada, el script también se marca como cancelado; si la fase tiene error, el script se marca como error; etc.). Después de actualizar el estado del script, también llama a update_phase_status para asegurarse de que el estado de la fase asociada se actualice correctamente basado en el nuevo estado del script.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="p">:</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">PipelineScript</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;pending&quot;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="n">script</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelinePhase</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+        <span class="k">elif</span> <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span> <span class="ow">and</span> <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;running&quot;</span><span class="p">:</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+        <span class="k">elif</span> <span class="n">phase</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;finished&quot;</span> <span class="ow">and</span> <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_script_finished" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_script_finished</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca el final de un script en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del script a "finished" si no está en estado "error". Esto es útil para llevar un registro de cuándo terminó la ejecución de cada script dentro de una fase y para indicar que el script ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución de cada script para asegurarse de que el estado del script se actualice correctamente al finalizar.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_script_finished</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca el final de un script en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del script a &quot;finished&quot; si no está en estado &quot;error&quot;. Esto es útil para llevar un registro de cuándo terminó la ejecución de cada script dentro de una fase y para indicar que el script ha finalizado correctamente. Se recomienda llamar a esta función al final de la ejecución de cada script para asegurarse de que el estado del script se actualice correctamente al finalizar.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="p">:</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">PipelineScript</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+
+    <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+    <span class="n">script</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="n">script</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_script_error" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_script_error</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca un script como con error en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, establece el estado del script a "error", y almacena el mensaje de error proporcionado. Esto es útil para llevar un registro de cuándo ocurrió un error durante la ejecución de cada script dentro de una fase y para almacenar información sobre el error que ocurrió. Se recomienda llamar a esta función cuando se capture una excepción durante la ejecución de un script para asegurarse de que el estado del script se actualice correctamente a "error" y para registrar el mensaje de error.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_script_error</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca un script como con error en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, establece el estado del script a &quot;error&quot;, y almacena el mensaje de error proporcionado. Esto es útil para llevar un registro de cuándo ocurrió un error durante la ejecución de cada script dentro de una fase y para almacenar información sobre el error que ocurrió. Se recomienda llamar a esta función cuando se capture una excepción durante la ejecución de un script para asegurarse de que el estado del script se actualice correctamente a &quot;error&quot; y para registrar el mensaje de error.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="p">:</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">PipelineScript</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+
+    <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+    <span class="n">script</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_msg</span>
+    <span class="n">script</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="n">script</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.helpers.db_status.mark_script_cancelled" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mark_script_cancelled</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Marca un script como cancelado en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del script a "cancelled". Esto es útil para llevar un registro de cuándo se canceló la ejecución de cada script dentro de una fase y para indicar que el script no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución de un script (por ejemplo, con Ctrl+C) para asegurarse de que el estado del script se actualice correctamente a "cancelled".</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/helpers/db_status.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mark_script_cancelled</span><span class="p">(</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Marca un script como cancelado en la base de datos. Actualiza el campo finished_at con la fecha y hora actual, y establece el estado del script a &quot;cancelled&quot;. Esto es útil para llevar un registro de cuándo se canceló la ejecución de cada script dentro de una fase y para indicar que el script no se completó debido a una cancelación. Se recomienda llamar a esta función cuando el usuario interrumpe la ejecución de un script (por ejemplo, con Ctrl+C) para asegurarse de que el estado del script se actualice correctamente a &quot;cancelled&quot;.&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">PipelineScript</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="p">:</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">PipelineScript</span><span class="p">(</span><span class="n">phase_id</span><span class="o">=</span><span class="n">phase_id</span><span class="p">,</span> <span class="n">script_name</span><span class="o">=</span><span class="n">script_name</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+
+    <span class="n">script</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+    <span class="n">script</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="n">script</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">update_phase_status</span><span class="p">(</span><span class="n">phase_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="persistencia-de-logs-y-trazabilidad">📝 Persistencia de Logs y Trazabilidad</h2>
+<p>Las funciones de nivel de script aceptan un buffer de logs que se sincroniza con la base de datos:</p>
+<ul>
+<li><strong>Streaming</strong>: El orquestador envía fragmentos del buffer mientras el script corre.</li>
+<li><strong>Agregación</strong>: Se utiliza <code>"\n".join(logs)</code> para reconstruir la salida de consola en la columna <code>logs</code>.</li>
+<li><strong>Visibilidad</strong>: Esto permite que el estado del sistema sea observable desde la API REST o el Dashboard sin acceder a los archivos de log locales.</li>
+</ul>
+<hr />
+<h2 id="mecanismo-de-cancelacion-interruptor-de-seguridad">⚠️ Mecanismo de Cancelación (Interruptor de Seguridad)</h2>
+<p>La función <code>check_cancelled(run_id)</code> es el "Kill Switch" del sistema. </p>
+<ol>
+<li>El orquestador la consulta periódicamente durante la ejecución de los subprocesos.</li>
+<li>Si un usuario marca el Run como <code>cancelled</code> desde la interfaz, esta función devuelve <code>True</code>.</li>
+<li>El orquestador captura esta señal y procede a terminar (kill) todos los procesos hijos de manera ordenada pero inmediata.</li>
+</ol>
+<hr />
+<h3 id="que-aporta-este-modulo-al-pipeline">¿Qué aporta este módulo al Pipeline?</h3>
+<ol>
+<li><strong>Trazabilidad histórica</strong>: Permite auditar ejecuciones pasadas, tiempos de procesamiento y errores específicos.</li>
+<li><strong>Consistencia</strong>: El uso de <code>db.commit()</code> asegura que los cambios de estado sean atómicos.</li>
+<li><strong>Aislamiento</strong>: Los scripts de proceso no necesitan conocer la lógica de base de datos; el orquestador se encarga de todo mediante este helper.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

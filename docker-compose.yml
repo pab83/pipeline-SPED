@@ -75,13 +75,6 @@ services:
       - rpr-net
 
 volumes:
-  #datos_truenas:
-  #  driver: local
-  #  driver_opts:
-  #    type: cifs
-  #    # Apunta a la IP del TrueNAS
-  #    device: //192.168.1.142/rpr
-  #    o: "username=${TRUENAS_USER},password=${TRUENAS_PASS},domain=${DOMAIN},uid=1000,gid=1000,ro,noserverino,vers=3.0"
   pgdata:
   
 

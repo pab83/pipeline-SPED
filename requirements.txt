@@ -1,4 +1,4 @@
-PyPDF2
+pypdf
 tqdm
 psycopg2-binary
 xxhash

@@ -1,0 +1,2858 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../phase_0/">
+      
+      
+        <link rel="next" href="../phase_2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Fase 1 (Hashing) - Pipeline v0 - Doc Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fase-1-hashing-e-integridad" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-header__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pipeline v0 - Doc Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fase 1 (Hashing)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-nav__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pipeline v0 - Doc Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API & Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API & Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints (Main)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelos y BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mensajeria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline (Procesamiento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline (Procesamiento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestador
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 0 (Escaneo)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#orquestador-de-fase-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Orquestador de Fase (Run)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Orquestador de Fase (Run)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_phase_1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="run_phase_1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.RUN_ID" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RUN_ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.PHASE_NUMBER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHASE_NUMBER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.SCRIPTS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCRIPTS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculo-de-hashes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔑 Cálculo de Hashes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔑 Cálculo de Hashes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="hash_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.MAX_WORKERS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_WORKERS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.THREADS_PER_WORKER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        THREADS_PER_WORKER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.db_reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_reader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.db_writer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_writer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clasificacion-de-imagenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Clasificación de Imágenes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Clasificación de Imágenes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_img_ocr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mark_img_ocr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.IMAGE_EXTENSIONS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IMAGE_EXTENSIONS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.MAX_IMAGE_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_IMAGE_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.process_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporte-de-integridad-y-duplicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Reporte de Integridad y Duplicados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Reporte de Integridad y Duplicados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.generate_phase_1_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phase_1_report
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="generate_phase_1_report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.generate_phase_1_report.generate_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 Archivos Generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 3 (IA/OCR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helpers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Helpers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_orchestrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestacion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_db_status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excepciones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#orquestador-de-fase-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Orquestador de Fase (Run)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Orquestador de Fase (Run)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_phase_1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="run_phase_1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.RUN_ID" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RUN_ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.PHASE_NUMBER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHASE_NUMBER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.SCRIPTS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCRIPTS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.run_phase_1.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculo-de-hashes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔑 Cálculo de Hashes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔑 Cálculo de Hashes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="hash_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.MAX_WORKERS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_WORKERS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.THREADS_PER_WORKER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        THREADS_PER_WORKER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.db_reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_reader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.hash_files.db_writer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        db_writer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clasificacion-de-imagenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Clasificación de Imágenes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Clasificación de Imágenes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mark_img_ocr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mark_img_ocr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.IMAGE_EXTENSIONS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IMAGE_EXTENSIONS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.MAX_IMAGE_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_IMAGE_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.mark_img_ocr.process_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporte-de-integridad-y-duplicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Reporte de Integridad y Duplicados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Reporte de Integridad y Duplicados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.generate_phase_1_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phase_1_report
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="generate_phase_1_report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripts.phase_1.generate_phase_1_report.generate_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivos-generados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 Archivos Generados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fase-1-hashing-e-integridad">🛡️ Fase 1: Hashing e Integridad</h1>
+<p>Esta fase se encarga de la generación de huellas digitales únicas para cada archivo detectado en la Fase 0. El objetivo es garantizar la integridad de los datos y permitir la detección precisa de duplicados mediante algoritmos de hashing de alto rendimiento.</p>
+<hr />
+<h2 id="orquestador-de-fase-run">🚀 Orquestador de Fase (Run)</h2>
+<p>Gestiona la ejecución secuencial de los procesos de cálculo de firmas y generación de informes.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_1.run_phase_1" class="doc doc-heading">
+            <code>scripts.phase_1.run_phase_1</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.run_phase_1.RUN_ID" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RUN_ID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>ID de ejecución global para el seguimiento de la integridad en la base de datos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.run_phase_1.PHASE_NUMBER" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PHASE_NUMBER</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Identificador de la Fase 1: Hashing y Verificación de Integridad.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.run_phase_1.SCRIPTS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">SCRIPTS</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hash_files.py&#39;</span><span class="p">,</span> <span class="s1">&#39;generate_phase_1_report.py&#39;</span><span class="p">]</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Lista de scripts encargados de calcular las huellas digitales de los archivos.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.run_phase_1.main" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Orquesta la ejecución de la Fase 1 de la pipeline.</p>
+<p>Esta función prepara el entorno de logging específico para la fase de hashing
+y lanza la ejecución secuencial de los scripts definidos en <code>SCRIPTS</code> a través
+de la lógica genérica de orquestación.</p>
+<p>Pasos:</p>
+<ol>
+<li>Define el archivo de salida para logs (<code>LOG_FILE</code>).</li>
+<li>Ejecuta <code>execute_phase_logic</code> para procesar los hashes de archivos pendientes.</li>
+</ol>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/run_phase_1.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orquesta la ejecución de la Fase 1 de la pipeline.</span>
+
+<span class="sd">    Esta función prepara el entorno de logging específico para la fase de hashing</span>
+<span class="sd">    y lanza la ejecución secuencial de los scripts definidos en `SCRIPTS` a través</span>
+<span class="sd">    de la lógica genérica de orquestación.</span>
+
+<span class="sd">    Pasos:</span>
+
+
+<span class="sd">    1. Define el archivo de salida para logs (`LOG_FILE`).</span>
+<span class="sd">    2. Ejecuta `execute_phase_logic` para procesar los hashes de archivos pendientes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Establecer el archivo de log antes de ejecutar la lógica</span>
+    <span class="n">set_log_file</span><span class="p">(</span><span class="n">LOG_FILE</span><span class="p">)</span>
+
+    <span class="c1"># Delegar la orquestación a la función genérica</span>
+    <span class="n">execute_phase_logic</span><span class="p">(</span>
+        <span class="n">run_id</span><span class="o">=</span><span class="n">RUN_ID</span><span class="p">,</span>
+        <span class="n">phase_number</span><span class="o">=</span><span class="n">PHASE_NUMBER</span><span class="p">,</span>
+        <span class="n">scripts_list</span><span class="o">=</span><span class="n">SCRIPTS</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="calculo-de-hashes">🔑 Cálculo de Hashes</h2>
+<p>Implementación de alto rendimiento para la generación de firmas digitales <code>xxhash64</code>. Utiliza una arquitectura concurrente (<strong>Multi-process + Multi-thread</strong>) para maximizar el uso de CPU y minimizar los tiempos de espera de lectura en disco.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_1.hash_files" class="doc doc-heading">
+            <code>scripts.phase_1.hash_files</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.hash_files.MAX_WORKERS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_WORKERS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número de procesos paralelos (CPU-bound).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.hash_files.THREADS_PER_WORKER" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">THREADS_PER_WORKER</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Hilos por proceso para gestionar I/O de lectura de archivos.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.hash_files.main" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Punto de entrada principal. Implementa una arquitectura Multi-process
+/ Multi-thread con tres etapas en pipeline:</p>
+<ol>
+<li><strong>Reader</strong>  : Un proceso lee de la BD los archivos pendientes y
+                 los encola en <code>file_queue</code>.</li>
+<li><strong>Workers</strong> : N procesos (CPU-bound) que lanzan hilos (I/O-bound)
+                 para calcular xxhash64 + SHA-256 en una sola pasada
+                 de lectura por archivo.</li>
+<li><strong>Writer</strong>  : Un proceso que agrupa resultados en lotes y actualiza
+                 ambas columnas de hash en la BD atómicamente.</li>
+</ol>
+<p>El modo "spawn" se fuerza para compatibilidad multiplataforma
+(especialmente macOS/Windows donde "fork" puede causar deadlocks).</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/hash_files.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Punto de entrada principal. Implementa una arquitectura Multi-process</span>
+<span class="sd">    / Multi-thread con tres etapas en pipeline:</span>
+
+<span class="sd">    1. **Reader**  : Un proceso lee de la BD los archivos pendientes y</span>
+<span class="sd">                     los encola en `file_queue`.</span>
+<span class="sd">    2. **Workers** : N procesos (CPU-bound) que lanzan hilos (I/O-bound)</span>
+<span class="sd">                     para calcular xxhash64 + SHA-256 en una sola pasada</span>
+<span class="sd">                     de lectura por archivo.</span>
+<span class="sd">    3. **Writer**  : Un proceso que agrupa resultados en lotes y actualiza</span>
+<span class="sd">                     ambas columnas de hash en la BD atómicamente.</span>
+
+<span class="sd">    El modo &quot;spawn&quot; se fuerza para compatibilidad multiplataforma</span>
+<span class="sd">    (especialmente macOS/Windows donde &quot;fork&quot; puede causar deadlocks).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">multiprocessing</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Consultamos el total de archivos pendientes para la barra de progreso.</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">cur</span>  <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+        <span class="s2">&quot;SELECT COUNT(*) FROM files WHERE xxhash64 IS NULL OR sha256 IS NULL OR hash_pending = True&quot;</span>
+    <span class="p">)</span>
+    <span class="n">total_files</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total archivos pendientes de hashing: </span><span class="si">{</span><span class="n">total_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">total_files</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;No hay archivos pendientes. Saliendo.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Inicialización de colas compartidas entre procesos.</span>
+    <span class="n">file_queue</span><span class="p">:</span>   <span class="n">Queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">FILE_QUEUE_SIZE</span><span class="p">)</span>
+    <span class="n">result_queue</span><span class="p">:</span> <span class="n">Queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">RESULT_QUEUE_SIZE</span><span class="p">)</span>
+
+    <span class="c1"># --- Arranque del writer (consumidor de resultados) ---</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">db_writer</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">result_queue</span><span class="p">,</span> <span class="n">total_files</span><span class="p">))</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># --- Arranque de los workers (productores de hashes) ---</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process_worker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">file_queue</span><span class="p">,</span> <span class="n">result_queue</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_WORKERS</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># --- El reader corre en el proceso principal ---</span>
+    <span class="n">db_reader</span><span class="p">(</span><span class="n">file_queue</span><span class="p">)</span>
+
+    <span class="c1"># Enviamos un centinela por cada worker para señalizar el fin de la cola.</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">file_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Esperamos a que todos los workers finalicen antes de cerrar el writer.</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="c1"># Señalizamos al writer que no habrá más resultados.</span>
+    <span class="n">result_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot; Hashing completado: xxhash64 + SHA-256 calculados correctamente.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.hash_files.db_reader" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">db_reader</span><span class="p">(</span><span class="n">file_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Lee en lotes los registros pendientes de hashing desde la BD e
+inyecta cada uno como (file_id, full_path) en file_queue.</p>
+<p>La condición <code>hash_pending = True OR xxhash64 IS NULL OR sha256 IS NULL</code>
+garantiza que archivos con hashing parcial (sólo uno de los dos algoritmos
+calculado) sean reprocesados en su totalidad.</p>
+<p>La paginación por <code>id &gt; last_id</code> evita OFFSET costoso en tablas grandes.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/hash_files.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">db_reader</span><span class="p">(</span><span class="n">file_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lee en lotes los registros pendientes de hashing desde la BD e</span>
+<span class="sd">    inyecta cada uno como (file_id, full_path) en file_queue.</span>
+
+<span class="sd">    La condición `hash_pending = True OR xxhash64 IS NULL OR sha256 IS NULL`</span>
+<span class="sd">    garantiza que archivos con hashing parcial (sólo uno de los dos algoritmos</span>
+<span class="sd">    calculado) sean reprocesados en su totalidad.</span>
+
+<span class="sd">    La paginación por `id &gt; last_id` evita OFFSET costoso en tablas grandes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">cur</span>  <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">last_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            SELECT id, full_path</span>
+<span class="sd">            FROM   files</span>
+<span class="sd">            WHERE  (xxhash64 IS NULL OR sha256 IS NULL OR hash_pending = True)</span>
+<span class="sd">              AND  id &gt; %s</span>
+<span class="sd">            ORDER  BY id</span>
+<span class="sd">            LIMIT  %s</span>
+<span class="sd">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">last_id</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">last_id</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">file_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.hash_files.db_writer" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">db_writer</span><span class="p">(</span><span class="n">result_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">total_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Consume tripletas (xxhash64, sha256, file_id) desde result_queue,
+las acumula en un buffer y las persiste en BD cuando se alcanza
+BATCH_SIZE o cuando se recibe el centinela de fin.</p>
+<p>Muestra una barra de progreso en tiempo real con tqdm.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>result_queue</code>
+            </td>
+            <td>
+                  <code><span title="multiprocessing.Queue">Queue</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Cola de resultados producida por los workers.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>total_files</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Total de archivos a procesar (para la barra de progreso).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/hash_files.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">db_writer</span><span class="p">(</span><span class="n">result_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">total_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Consume tripletas (xxhash64, sha256, file_id) desde result_queue,</span>
+<span class="sd">    las acumula en un buffer y las persiste en BD cuando se alcanza</span>
+<span class="sd">    BATCH_SIZE o cuando se recibe el centinela de fin.</span>
+
+<span class="sd">    Muestra una barra de progreso en tiempo real con tqdm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        result_queue: Cola de resultados producida por los workers.</span>
+<span class="sd">        total_files: Total de archivos a procesar (para la barra de progreso).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span>   <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">buffer</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pbar</span>   <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_files</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Hashing (xxhash64 + sha256)&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">result_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Centinela: no hay más resultados; flusheamos el buffer residual.</span>
+            <span class="k">break</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">BATCH_SIZE</span><span class="p">:</span>
+            <span class="n">update_with_retries</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+            <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1"># Flush final de registros que no llegaron a completar un lote.</span>
+    <span class="k">if</span> <span class="n">buffer</span><span class="p">:</span>
+        <span class="n">update_with_retries</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="clasificacion-de-imagenes">🖼️ Clasificación de Imágenes</h2>
+<p>Analiza visualmente los archivos de imagen mediante OpenCV para determinar si contienen texto o estructura documental que requiera procesamiento OCR posterior.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_1.mark_img_ocr" class="doc doc-heading">
+            <code>scripts.phase_1.mark_img_ocr</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.mark_img_ocr.IMAGE_EXTENSIONS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">IMAGE_EXTENSIONS</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpeg&#39;</span><span class="p">,</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.tiff&#39;</span><span class="p">,</span> <span class="s1">&#39;.bmp&#39;</span><span class="p">,</span> <span class="s1">&#39;.webp&#39;</span><span class="p">}</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Conjunto de extensiones soportadas para el análisis visual.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="scripts.phase_1.mark_img_ocr.MAX_IMAGE_SIZE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_IMAGE_SIZE</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Dimensión máxima (ancho o alto) para redimensionar antes del análisis, optimizando CPU.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.mark_img_ocr.main" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Orquesta el marcado de imágenes que requieren OCR usando deduplicación por hash.</p>
+<p>Flujo de trabajo:</p>
+<ol>
+<li><strong>Evitar duplicados</strong>: Obtiene hashes únicos de imágenes ya procesadas para evitar redundancia.</li>
+<li><strong>Carga en Lotes</strong>: Lee de la BD usando un cursor con <code>LIMIT</code> y <code>OFFSET</code>.</li>
+<li><strong>Paralelismo</strong>: Distribuye el análisis de píxeles entre los núcleos de la CPU (<code>Pool</code>).</li>
+<li><strong>Persistencia</strong>: Actualiza masivamente el campo <code>ocr_needed</code> en la tabla <code>files</code>.</li>
+</ol>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/mark_img_ocr.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orquesta el marcado de imágenes que requieren OCR usando deduplicación por hash.</span>
+
+<span class="sd">    Flujo de trabajo:</span>
+
+
+<span class="sd">    1. **Evitar duplicados**: Obtiene hashes únicos de imágenes ya procesadas para evitar redundancia.</span>
+<span class="sd">    2. **Carga en Lotes**: Lee de la BD usando un cursor con `LIMIT` y `OFFSET`.</span>
+<span class="sd">    3. **Paralelismo**: Distribuye el análisis de píxeles entre los núcleos de la CPU (`Pool`).</span>
+<span class="sd">    4. **Persistencia**: Actualiza masivamente el campo `ocr_needed` en la tabla `files`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting image OCR_needed marking (deduplicated by xxhash64)...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Obtener extensiones formateadas para SQL</span>
+    <span class="n">ext_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ext</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">IMAGE_EXTENSIONS</span><span class="p">)</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+        <span class="s2">&quot;SELECT DISTINCT xxhash64 FROM files WHERE ocr_needed IS FALSE &quot;</span>
+        <span class="s2">&quot;AND LOWER(SPLIT_PART(full_path,&#39;.&#39;, -1)) IN </span><span class="si">%s</span><span class="s2"> AND xxhash64 IS NOT NULL&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">ext_list</span><span class="p">,)</span>
+    <span class="p">)</span>
+    <span class="n">unique_hashes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()}</span>
+
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">cpu_count</span><span class="p">())</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT id, full_path, xxhash64 FROM files WHERE ocr_needed IS FALSE &quot;</span>
+            <span class="s2">&quot;AND LOWER(SPLIT_PART(full_path,&#39;.&#39;, -1)) IN </span><span class="si">%s</span><span class="s2"> AND xxhash64 IS NOT NULL &quot;</span>
+            <span class="s2">&quot;ORDER BY id LIMIT </span><span class="si">%s</span><span class="s2"> OFFSET </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">ext_list</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">batch</span><span class="p">:</span> <span class="k">break</span>
+
+        <span class="n">filtered_batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seen_hashes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">file_id</span><span class="p">,</span> <span class="n">full_path</span><span class="p">,</span> <span class="n">xxhash64</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">xxhash64</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_hashes</span> <span class="ow">and</span> <span class="n">xxhash64</span> <span class="ow">in</span> <span class="n">unique_hashes</span><span class="p">:</span>
+                <span class="n">filtered_batch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">file_id</span><span class="p">,</span> <span class="n">full_path</span><span class="p">))</span>
+                <span class="n">seen_hashes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xxhash64</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filtered_batch</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">process_image</span><span class="p">,</span> <span class="n">filtered_batch</span><span class="p">)</span>
+            <span class="n">valid_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">valid_results</span><span class="p">:</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s2">&quot;UPDATE files SET ocr_needed=</span><span class="si">%s</span><span class="s2"> WHERE id=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">valid_results</span><span class="p">)</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processed batch at offset </span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">offset</span> <span class="o">+=</span> <span class="n">BATCH_SIZE</span>
+
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Image OCR_needed marking completed.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.mark_img_ocr.process_image" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">process_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Analiza una imagen para determinar si contiene texto que requiera OCR.</p>
+<p>Utiliza OpenCV para leer el archivo, redimensionarlo si excede <code>MAX_IMAGE_SIZE</code>
+y ejecutar el algoritmo de detección de documentos.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>row</code>
+            </td>
+            <td>
+                  <code><span title="typing.Tuple">Tuple</span>[<span title="int">int</span>, <span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tupla conteniendo (file_id, full_path).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Tuple">Tuple</span>[<span title="bool">bool</span>, <span title="int">int</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tupla (ocr_needed, file_id) o None si el archivo no es una imagen válida.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/mark_img_ocr.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analiza una imagen para determinar si contiene texto que requiera OCR.</span>
+
+<span class="sd">    Utiliza OpenCV para leer el archivo, redimensionarlo si excede `MAX_IMAGE_SIZE`</span>
+<span class="sd">    y ejecutar el algoritmo de detección de documentos.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        row: Tupla conteniendo (file_id, full_path).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tupla (ocr_needed, file_id) o None si el archivo no es una imagen válida.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_id</span><span class="p">,</span> <span class="n">full_path</span> <span class="o">=</span> <span class="n">row</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">full_path</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">IMAGE_EXTENSIONS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_GRAYSCALE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_id</span><span class="p">)</span>
+
+        <span class="c1"># Redimensionar para mejorar performance de detección</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_IMAGE_SIZE</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">MAX_IMAGE_SIZE</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">scale</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)))</span>
+
+        <span class="c1"># looks_like_document debe estar definida o importada</span>
+        <span class="n">is_doc</span> <span class="o">=</span> <span class="n">looks_like_document</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> 
+        <span class="n">is_doc</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Placeholder para la lógica de detección</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">is_doc</span><span class="p">,</span> <span class="n">file_id</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error procesando imagen </span><span class="si">{</span><span class="n">full_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="reporte-de-integridad-y-duplicados">📊 Reporte de Integridad y Duplicados</h2>
+<p>Analiza las firmas digitales almacenadas en la base de datos para identificar colisiones de contenido exacto. Genera informes técnicos y ejecutivos sobre la salud y redundancia del repositorio.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="scripts.phase_1.generate_phase_1_report" class="doc doc-heading">
+            <code>scripts.phase_1.generate_phase_1_report</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="scripts.phase_1.generate_phase_1_report.generate_reports" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">generate_reports</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Genera informes analíticos sobre archivos duplicados detectados por hash.</p>
+<p>El proceso realiza las siguientes acciones:</p>
+<ol>
+<li><strong>Identificación SQL</strong>: Agrupa registros por <code>xxhash64</code> y <code>sha256</code> donde el conteo es &gt; 1.</li>
+<li><strong>Exportación CSV</strong>: Genera un listado técnico detallado en <code>DUPLICATES_FILE</code>.</li>
+<li><strong>Informe Ejecutivo</strong>: Crea un resumen legible en <code>SUMMARY_FILE</code> con estadísticas de grupos y rutas.</li>
+</ol>
+<p>Este reporte es fundamental para procesos posteriores de deduplicación o ahorro de espacio.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>scripts/phase_1/generate_phase_1_report.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_reports</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Genera informes analíticos sobre archivos duplicados detectados por hash.</span>
+
+<span class="sd">    El proceso realiza las siguientes acciones:</span>
+
+<span class="sd">    1.  **Identificación SQL**: Agrupa registros por `xxhash64` y `sha256` donde el conteo es &gt; 1.</span>
+<span class="sd">    2.  **Exportación CSV**: Genera un listado técnico detallado en `DUPLICATES_FILE`.</span>
+<span class="sd">    3.  **Informe Ejecutivo**: Crea un resumen legible en `SUMMARY_FILE` con estadísticas de grupos y rutas.</span>
+
+<span class="sd">    Este reporte es fundamental para procesos posteriores de deduplicación o ahorro de espacio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">largest_group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">get_db_connection</span><span class="p">()</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># Consulta de duplicados mediante agregación de rutas</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT</span>
+<span class="s2">                xxhash64,</span>
+<span class="s2">                sha256,</span>
+<span class="s2">                COUNT(*) AS total,</span>
+<span class="s2">                ARRAY_AGG(full_path ORDER BY full_path) AS paths</span>
+<span class="s2">            FROM files</span>
+<span class="s2">            WHERE sha256 IS NOT NULL</span>
+<span class="s2">            GROUP BY xxhash64, sha256</span>
+<span class="s2">            HAVING COUNT(*) &gt; 1</span>
+<span class="s2">            ORDER BY total DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">duplicates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">total_groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span>
+        <span class="n">total_files</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
+            <span class="n">largest_group</span> <span class="o">=</span> <span class="n">duplicates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Preparación de archivos de salida</span>
+        <span class="n">csv_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DUPLICATES_FILE</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">csv_file</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;xxhash64&quot;</span><span class="p">,</span> <span class="s2">&quot;sha256&quot;</span><span class="p">,</span> <span class="s2">&quot;total_files&quot;</span><span class="p">,</span> <span class="s2">&quot;paths&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">xxh</span><span class="p">,</span> <span class="n">sha</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">paths</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">xxh</span><span class="p">,</span> <span class="n">sha</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paths</span><span class="p">)])</span>
+
+        <span class="n">report_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REPORTS_DIR</span><span class="p">,</span> <span class="n">SUMMARY_FILE</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">report_file</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">report_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== Phase 1 Duplicate Files Report ===</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total duplicate groups: </span><span class="si">{</span><span class="n">total_groups</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total files involved in duplicates: </span><span class="si">{</span><span class="n">total_files</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">largest_group</span><span class="p">:</span>
+                <span class="n">first_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">largest_group</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">largest_group</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Largest duplicate group: </span><span class="si">{</span><span class="n">largest_group</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> files, </span><span class="si">{</span><span class="n">first_file_name</span><span class="si">}</span><span class="s2">, xxhash64=</span><span class="si">{</span><span class="n">largest_group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Summary of all duplicate groups:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">xxh</span><span class="p">,</span> <span class="n">sha</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">paths</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+                <span class="n">first_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">paths</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> files, </span><span class="si">{</span><span class="n">first_file_name</span><span class="si">}</span><span class="s2">, xxhash64=</span><span class="si">{</span><span class="n">xxh</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Report generation completed ✅</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Phase 1 report generated: &quot;</span> <span class="o">+</span> <span class="n">report_file</span><span class="p">)</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;❌ Fatal error in generate_phase1_report&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="archivos-generados">📑 Archivos Generados</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Archivo</th>
+<th style="text-align: left;">Formato</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>duplicates.csv</code></td>
+<td style="text-align: left;">CSV</td>
+<td style="text-align: left;">Listado técnico de hashes con todas sus rutas asociadas.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>phase_1_summary.csv</code></td>
+<td style="text-align: left;">CSV</td>
+<td style="text-align: left;">Resumen ejecutivo con estadísticas de duplicados y grupos mayores.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>run_X_phase_1.log</code></td>
+<td style="text-align: left;">LOG</td>
+<td style="text-align: left;">Trazabilidad completa de errores y tiempos de ejecución.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

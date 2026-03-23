@@ -1,0 +1,4366 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../phase_3/">
+      
+      
+        <link rel="next" href="../helpers_orchestrate/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Configuración - Pipeline v0 - Doc Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuracion-del-sistema" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-header__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pipeline v0 - Doc Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuración
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pipeline v0 - Doc Técnica" class="md-nav__button md-logo" aria-label="Pipeline v0 - Doc Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pipeline v0 - Doc Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API & Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API & Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Endpoints (Main)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelos y BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mensajeria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline (Procesamiento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline (Procesamiento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestador
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 0 (Escaneo)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 1 (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 2 (Extracción)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fase 3 (IA/OCR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración General
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros-por-fase-de-procesamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros por Fase de Procesamiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros por Fase de Procesamiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-0-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 0: Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.AUDIT_SUMMARY_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AUDIT_SUMMARY_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BASE_PATH" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BASE_PATH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BATCH_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BATCH_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BUFFER_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUFFER_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_OCR_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_OCR_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.MAX_THREADS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_THREADS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-1-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 1: Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_HOST" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_HOST
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_NAME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_PASS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_PASS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_PORT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_PORT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_USER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_USER
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DUPLICATES_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DUPLICATES_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.SUMMARY_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SUMMARY_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-2-refinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 2: Refinement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.EMBEDDING_MODEL_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMBEDDING_MODEL_NAME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.SEMANTIC_SIM_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEMANTIC_SIM_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.SIZE_BUCKET_BYTES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIZE_BUCKET_BYTES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.TEXT_CHAR_LIMIT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TEXT_CHAR_LIMIT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-3-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 3: Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-de-variables-criticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen de Variables Críticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helpers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Helpers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_orchestrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestacion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helpers_db_status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estados BBDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excepciones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración General
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.general.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros-por-fase-de-procesamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros por Fase de Procesamiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros por Fase de Procesamiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-0-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 0: Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.AUDIT_SUMMARY_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AUDIT_SUMMARY_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BASE_PATH" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BASE_PATH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BATCH_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BATCH_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.BUFFER_SIZE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUFFER_SIZE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.CSV_OCR_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_OCR_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.MAX_THREADS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_THREADS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_0.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-1-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 1: Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_HOST" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_HOST
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_NAME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_PASS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_PASS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_PORT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_PORT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DB_USER" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DB_USER
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.DUPLICATES_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DUPLICATES_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.SUMMARY_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SUMMARY_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_1.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-2-refinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 2: Refinement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.EMBEDDING_MODEL_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMBEDDING_MODEL_NAME
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.SEMANTIC_SIM_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEMANTIC_SIM_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.SIZE_BUCKET_BYTES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIZE_BUCKET_BYTES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.TEXT_CHAR_LIMIT" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TEXT_CHAR_LIMIT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_2.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TMP_DIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fase-3-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fase 3: Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        phase_3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.CSV_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LARGE_FILE_THRESHOLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LARGE_FILE_THRESHOLD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LOG_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.LOG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOG_FILE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.MAX_RETRIES" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAX_RETRIES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.PROJECT_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROJECT_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.REPORTS_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPORTS_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.RESOURCES_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESOURCES_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.RETRY_DELAY" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RETRY_DELAY
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts.config.phase_3.TMP_DIR" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TMP_DIR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-de-variables-criticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen de Variables Críticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="configuracion-del-sistema">Configuración del Sistema</h1>
+<p>Esta sección describe las constantes, variables de entorno y parámetros técnicos que rigen el comportamiento del pipeline en todas sus etapas de ejecución.</p>
+<h2 id="configuracion-general">Configuración General</h2>
+<p>Define las variables globales del proyecto, incluyendo las rutas base del sistema de archivos, credenciales de acceso a bases de datos y la configuración del broker de mensajería (Redis).</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+        <p>Configuración General del Proyecto.
+Gestiona las rutas del sistema, límites de archivos y políticas de reintentos.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.CSV_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de CSV</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.LARGE_FILE_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LARGE_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Umbral para considerar un archivo como 'grande' (por defecto 100MB).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.LOG_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de logs</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.MAX_RETRIES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número máximo de reintentos para operaciones fallidas en la pipeline.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.PROJECT_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PROJECT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta absoluta al directorio raíz del proyecto.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.REPORTS_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">REPORTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de reportes</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.RESOURCES_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RESOURCES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_DIR</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de recursos</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.RETRY_DELAY" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RETRY_DELAY</span> <span class="o">=</span> <span class="mi">60</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Tiempo de espera (en segundos) entre reintentos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.general.TMP_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TMP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio temporal</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="parametros-por-fase-de-procesamiento">Parámetros por Fase de Procesamiento</h2>
+<p>La configuración está segmentada por fases para permitir un ajuste fino de los umbrales de procesamiento, extensiones de archivo permitidas y lógica específica de cada etapa.</p>
+<h3 id="fase-0-discovery">Fase 0: Discovery</h3>
+<p>Parámetros relacionados con el escaneo inicial del sistema de archivos y la profundidad del rastreo.
+</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="scripts.config.phase_0"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.AUDIT_SUMMARY_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">AUDIT_SUMMARY_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REPORTS_DIR</span><span class="p">,</span> <span class="s1">&#39;audit_summary_2.csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.BASE_PATH" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">BASE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;BASE_PATH&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.BATCH_SIZE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">1000</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.BUFFER_SIZE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">BUFFER_SIZE</span> <span class="o">=</span> <span class="mi">10000</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.CSV_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de CSV</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.CSV_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CSV_DIR</span><span class="p">,</span> <span class="s1">&#39;file_audit_2.csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.CSV_OCR_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_OCR_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CSV_DIR</span><span class="p">,</span> <span class="s1">&#39;file_audit_ocr_2.csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.LARGE_FILE_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LARGE_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Umbral para considerar un archivo como 'grande' (por defecto 100MB).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.LOG_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de logs</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.LOG_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;run_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;X&#39;</span><span class="p">)</span><span class="si">}</span><span class="s1">_phase_0.log&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.MAX_RETRIES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número máximo de reintentos para operaciones fallidas en la pipeline.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.MAX_THREADS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_THREADS</span> <span class="o">=</span> <span class="mi">2</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.PROJECT_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PROJECT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta absoluta al directorio raíz del proyecto.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.REPORTS_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">REPORTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de reportes</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.RESOURCES_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RESOURCES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_DIR</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de recursos</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.RETRY_DELAY" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RETRY_DELAY</span> <span class="o">=</span> <span class="mi">60</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Tiempo de espera (en segundos) entre reintentos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_0.TMP_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TMP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio temporal</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="fase-1-integrity">Fase 1: Integrity</h3>
+<p>Configuración de los algoritmos de hashing y validación de integridad de los archivos ingestados.
+</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="scripts.config.phase_1"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.CSV_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de CSV</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DB_HOST" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DB_HOST</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DB_NAME" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DB_NAME</span> <span class="o">=</span> <span class="s1">&#39;auditdb&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DB_PASS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DB_PASS</span> <span class="o">=</span> <span class="s1">&#39;pass&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DB_PORT" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DB_PORT</span> <span class="o">=</span> <span class="mi">5432</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DB_USER" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DB_USER</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.DUPLICATES_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">DUPLICATES_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CSV_DIR</span><span class="p">,</span> <span class="s1">&#39;duplicates.csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.LARGE_FILE_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LARGE_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Umbral para considerar un archivo como 'grande' (por defecto 100MB).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.LOG_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de logs</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.LOG_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;run_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;X&#39;</span><span class="p">)</span><span class="si">}</span><span class="s1">_phase_1.log&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.MAX_RETRIES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número máximo de reintentos para operaciones fallidas en la pipeline.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.PROJECT_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PROJECT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta absoluta al directorio raíz del proyecto.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.REPORTS_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">REPORTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de reportes</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.RESOURCES_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RESOURCES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_DIR</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de recursos</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.RETRY_DELAY" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RETRY_DELAY</span> <span class="o">=</span> <span class="mi">60</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Tiempo de espera (en segundos) entre reintentos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.SUMMARY_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">SUMMARY_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REPORTS_DIR</span><span class="p">,</span> <span class="s1">&#39;phase_1_summary.csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_1.TMP_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TMP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio temporal</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="fase-2-refinement">Fase 2: Refinement</h3>
+<p>Configuración de los motores de deduplicación y criterios de limpieza de metadatos.
+</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="scripts.config.phase_2"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.CSV_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de CSV</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.EMBEDDING_MODEL_NAME" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">EMBEDDING_MODEL_NAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;EMBEDDING_MODEL_NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;sentence-transformers/all-MiniLM-L6-v2&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.LARGE_FILE_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LARGE_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Umbral para considerar un archivo como 'grande' (por defecto 100MB).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.LOG_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de logs</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.LOG_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;run_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;X&#39;</span><span class="p">)</span><span class="si">}</span><span class="s1">_phase_2.log&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.MAX_RETRIES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número máximo de reintentos para operaciones fallidas en la pipeline.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.PROJECT_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PROJECT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta absoluta al directorio raíz del proyecto.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.REPORTS_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">REPORTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de reportes</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.RESOURCES_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RESOURCES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_DIR</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de recursos</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.RETRY_DELAY" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RETRY_DELAY</span> <span class="o">=</span> <span class="mi">60</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Tiempo de espera (en segundos) entre reintentos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.SEMANTIC_SIM_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">SEMANTIC_SIM_THRESHOLD</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SEMANTIC_SIM_THRESHOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;0.9&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.SIZE_BUCKET_BYTES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">SIZE_BUCKET_BYTES</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SIZE_BUCKET_BYTES&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.TEXT_CHAR_LIMIT" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TEXT_CHAR_LIMIT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;TEXT_CHAR_LIMIT&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_2.TMP_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TMP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio temporal</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="fase-3-enrichment">Fase 3: Enrichment</h3>
+<p>Configuración crítica de los modelos de Inteligencia Artificial (LLM/VLM) y los motores de OCR, incluyendo URLs de endpoints y parámetros de inferencia.
+</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="scripts.config.phase_3"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.CSV_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">CSV_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de CSV</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.LARGE_FILE_THRESHOLD" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LARGE_FILE_THRESHOLD</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Umbral para considerar un archivo como 'grande' (por defecto 100MB).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.LOG_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de logs</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.LOG_FILE" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;run_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;X&#39;</span><span class="p">)</span><span class="si">}</span><span class="s1">_phase_3.log&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.MAX_RETRIES" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Número máximo de reintentos para operaciones fallidas en la pipeline.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.PROJECT_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">PROJECT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta absoluta al directorio raíz del proyecto.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.REPORTS_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">REPORTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de reportes</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.RESOURCES_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RESOURCES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_DIR</span><span class="p">,</span> <span class="s1">&#39;resources&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio de recursos</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.RETRY_DELAY" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RETRY_DELAY</span> <span class="o">=</span> <span class="mi">60</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Tiempo de espera (en segundos) entre reintentos.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="scripts.config.phase_3.TMP_DIR" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">TMP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">RESOURCES_DIR</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ruta al directorio temporal</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+<h2 id="resumen-de-variables-criticas">Resumen de Variables Críticas</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Descripción</th>
+<th style="text-align: left;">Ubicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>MAX_RETRIES</code></td>
+<td style="text-align: left;">Número máximo de reintentos para scripts fallidos.</td>
+<td style="text-align: left;"><code>config.general</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BATCH_SIZE</code></td>
+<td style="text-align: left;">Tamaño de lote para envíos a colas de Redis.</td>
+<td style="text-align: left;"><code>config.phase_3</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>LOG_FILE</code></td>
+<td style="text-align: left;">Ruta absoluta al archivo de registro de la ejecución.</td>
+<td style="text-align: left;"><code>config.general</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>RETRY_DELAY</code></td>
+<td style="text-align: left;">Tiempo de espera entre reintentos automáticos.</td>
+<td style="text-align: left;"><code>config.general</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
