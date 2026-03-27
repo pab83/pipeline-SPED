@@ -3,6 +3,7 @@ import logging
 import requests
 import psycopg2
 from psycopg2.extras import DictCursor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 import json
 import re
@@ -56,41 +57,40 @@ def clasificar_documento(file: Dict[str, Any]) -> Dict[str, str]:
     
     Implementa una política de reintentos (3) ante errores 400 o JSON inválido.
     """
-    text_excerpt = sanitize_text(file.get('text_excerpt', ''), max_chars=3000)
-    path = sanitize_text(file.get('full_path', ''), max_chars=1000)
+    text_excerpt = sanitize_text(file.get('text_excerpt', ''), max_chars=500)
+    path = sanitize_text(file.get('full_path', ''), max_chars=500)
 
     prompt = f"""
-Eres un clasificador documental. Categorias: Factura, Presupuesto, Boletines, Informe, Fotografia, Otro. 
+        Eres un clasificador documental. Categorias: Factura, Presupuesto, Boletines, Informe, Fotografia, Otro. 
 
-Para cada archivo:
-- Usa el full_path y text_excerpt para inferir el proyecto (códigos de 6 letras, por ejemplo CSBORA).
-- Usa file_type, full_path y text_excerpt para decidir a que categoria de clasificación corresponde.
-- Usa el creation_year SOLO si no hay un año explícito en el texto.
-- Responde SOLO con un objeto JSON con keys "categoria", "anio" y "proyecto".
+        Para cada archivo:
+        - Usa el full_path y text_excerpt para inferir el proyecto (códigos de 6 letras, por ejemplo CSBORA).
+        - Usa file_type, full_path y text_excerpt para decidir a que categoria de clasificación corresponde.
+        - Usa el creation_year SOLO si no hay un año explícito en el texto.
+        - Responde SOLO con un objeto JSON con keys "categoria", "anio" y "proyecto".
 
-Ruta: {path}
-Tipo: {file['file_type']}
-Año Creación: {file.get('creation_year', 'Desconocido')}
+        Ruta: {path}
+        Tipo: {file['file_type']}
+        Año Creación: {file.get('creation_year', 'Desconocido')}
 
-Texto OCR:
-{text_excerpt}
+        Texto OCR o descripción de imagen:
+        {text_excerpt}
 
-Descripcion imagen:
-{file.get('descripcion_imagen', '')} 
-"""
+        """
 
     payload = {
-        "model": "qwen2.5-3b-instruct",
+        "model": "qwen2.5-7b-instruct-q4_k_m",
         "messages": [
             {"role": "system", "content": "Eres un clasificador documental experto."},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0
+        "temperature": 0,
+        "max_tokens": 60
     }
 
     for attempt in range(3):
         try:
-            response = requests.post(LLM_URL, json=payload, timeout=60)
+            response = requests.post(LLM_URL, json=payload, timeout=300)
             response.raise_for_status()
             raw_text = response.json()["choices"][0]["message"]["content"].strip()
             
@@ -108,41 +108,79 @@ Descripcion imagen:
 
 def procesar_archivos():
     """
-    Orquesta el batch de clasificación.
+    Orquesta el batch de clasificación en bucle continuo.
     
     1. Asegura la existencia de columnas de metadatos en la DB.
-    2. Selecciona registros pendientes de clasificación.
+    2. Procesa en batches de BATCH_SIZE hasta que no queden registros pendientes.
     3. Actualiza la DB con la inferencia del LLM.
     """
     conn_str = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
     
     with psycopg2.connect(conn_str, cursor_factory=DictCursor) as conn:
+
+        # ── Migración: añadir columnas si no existen ──────────────────────────
         with conn.cursor() as cur:
-            # Migración "on-the-fly" para metadatos de clasificación
             cur.execute("""
                 ALTER TABLE files ADD COLUMN IF NOT EXISTS categoria TEXT;
+                ALTER TABLE files ADD COLUMN IF NOT EXISTS proyecto TEXT;
+                ALTER TABLE files ADD COLUMN IF NOT EXISTS anio TEXT;
                 ALTER TABLE files ADD COLUMN IF NOT EXISTS last_classified TIMESTAMP;
             """)
             conn.commit()
 
-            cur.execute("SELECT * FROM files WHERE categoria IS NULL LIMIT %s", (BATCH_SIZE,))
-            rows = cur.fetchall()
+        # ── Bucle principal: un batch por iteración ───────────────────────────
+        batch_num = 0
+        total_clasificados = 0
+
+        while True:
+            batch_num += 1
+
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT * FROM files WHERE categoria IS NULL AND text_excerpt IS NOT NULL LIMIT %s",
+                    (BATCH_SIZE,)
+                )
+                rows = [dict(r) for r in cur.fetchall()]
 
             if not rows:
-                logger.info("Dormido: No hay archivos para clasificar.")
-                return
+                logger.info(
+                    f"Sin registros pendientes. "
+                    f"Proceso completado: {total_clasificados} archivos clasificados en {batch_num - 1} batch(es)."
+                )
+                break
 
-            for row in tqdm(rows, desc="Clasificando"):
-                res = clasificar_documento(row)
-                
-                cur.execute("""
-                    UPDATE files 
-                    SET categoria = %s, last_classified = NOW() 
-                    WHERE id = %s
-                """, (res["categoria"], row['id']))
-                conn.commit()
-                
-                logger.info(f"ID {row['id']} -> {res['categoria']} | Proyecto: {res['proyecto']}")
+            logger.info(f"[Batch {batch_num}] Procesando {len(rows)} registros...")
 
+            # ── Clasificación paralela (4 workers = --parallel 4 del LLM) ────
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                futures = {executor.submit(clasificar_documento, row): row for row in rows}
+
+                for future in tqdm(
+                    as_completed(futures),
+                    total=len(rows),
+                    desc=f"Batch {batch_num}",
+                ):
+                    row = futures[future]
+                    try:
+                        res = future.result()
+                        with conn.cursor() as cur:
+                            cur.execute(
+                                """
+                                UPDATE files
+                                SET categoria = %s,
+                                    proyecto  = %s,
+                                    anio      = %s,
+                                    last_classified = NOW()
+                                WHERE id = %s
+                                """,
+                                (res["categoria"], res["proyecto"], res["anio"], row["id"]),
+                            )
+                            conn.commit()
+                        total_clasificados += 1
+                        logger.info(f"ID {row['id']} -> {res['categoria']} | Proyecto: {res['proyecto']}")
+                    except Exception as e:
+                        conn.rollback()
+                        logger.error(f"Error en ID {row['id']}: {e}")
+                    
 if __name__ == "__main__":
     procesar_archivos()
