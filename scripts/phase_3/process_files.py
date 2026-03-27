@@ -137,7 +137,7 @@ def procesar_archivos():
 
             with conn.cursor() as cur:
                 cur.execute(
-                    "SELECT * FROM files WHERE categoria IS NULL AND text_excerpt IS NOT NULL LIMIT %s",
+                    "SELECT * FROM files WHERE categoria IS NULL AND text_excerpt IS NOT NULL AND canonical_id IS NULL LIMIT %s",
                     (BATCH_SIZE,)
                 )
                 rows = [dict(r) for r in cur.fetchall()]

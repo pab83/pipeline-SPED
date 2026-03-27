@@ -65,6 +65,7 @@ def count_pending_images(conn: Any) -> int:
         LEFT JOIN moondream_task_map m ON f.id = m.file_id
         WHERE LOWER(f.file_type) IN ('.png','.jpg','.jpeg','.gif','.bmp','.tiff','.webp')
           AND m.file_id IS NULL
+          AND canonical_id IS NULL
     """)
     total = cur.fetchone()[0]
     cur.close()

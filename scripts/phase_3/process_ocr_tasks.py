@@ -90,6 +90,7 @@ def send_ocr_tasks(conn: Any, correlation_to_file_id: Dict[str, int]) -> int:
         FROM files
         WHERE ocr_needed = TRUE
           AND (text_excerpt IS NULL OR text_excerpt = '')
+          AND canonical_id IS NULL
         ORDER BY id
         """
     )
