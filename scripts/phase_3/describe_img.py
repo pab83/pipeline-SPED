@@ -158,9 +158,12 @@ def process_moondream_results(conn: Any, correlation_to_file_id: Dict[str, int],
 
             cur = conn.cursor()
             if result.status == Status.SUCCESS:
-                # Lógica de persistencia (comentada temporalmente para validación de flujo)
-                cur.execute("UPDATE files SET text_excerpt=%s, last_seen=NOW() WHERE id=%s", ...)
-                log(f"Descripción guardada file_id={file_id}")
+                caption = result.result if isinstance(result.result, str) else str(result.result)
+                cur.execute(
+                    "UPDATE files SET text_excerpt=%s, last_seen=NOW() WHERE id=%s",
+                    (caption, file_id)
+                )
+                log(f"Descripción guardada file_id={file_id} ({len(caption)} chars)")
             else:
                 log(f"Error para file_id={file_id}: {result.error}")
             

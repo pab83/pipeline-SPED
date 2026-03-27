@@ -221,6 +221,7 @@ def process_ocr_results(
         mq_client.consume(RESULT_QUEUE, handle_result)
             
     except KeyboardInterrupt:
+        conn.rollback()
         log("Interrumpido por el usuario o límite alcanzado")
     
     return processed_count

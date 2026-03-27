@@ -41,7 +41,12 @@ def _normalize_target_model(target_model: Union[str, TargetModel]) -> TargetMode
     Raises:
         ValueError: Si el modelo proporcionado no está soportado por la pipeline.
     """
-
+    if isinstance(target_model, TargetModel):
+        return target_model
+    try:
+        return TargetModel(target_model.lower())
+    except ValueError:
+        raise ValueError(f"Modelo no soportado: '{target_model}'. Usa: {[m.value for m in TargetModel]}")
 
 def send_task(
     file_path: str,
